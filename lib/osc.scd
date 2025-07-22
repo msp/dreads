@@ -9,6 +9,8 @@ s.defaultGroup.freeAll;
 ~plaits.do { |instance, instanceIndex|
 	var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
 
+	["binding plaits ------------------->", instanceIndex].postln;
+
 	// Special case: start/stop
 	OSCdef.new(
 		("plaitsStart" ++ instanceNum).asSymbol,
@@ -26,6 +28,7 @@ s.defaultGroup.freeAll;
 
 	// Generic parameter handling - OSC keys match data structure keys
 	instance.keys.select({ |key| key != \pattern }).do { |paramKey|
+		// ["binding key", paramKey].postln;
 		OSCdef.new(
 			("plaits" ++ instanceNum ++ paramKey).asSymbol,
 			{
@@ -42,8 +45,28 @@ s.defaultGroup.freeAll;
 					~plaits[instanceIndex][paramKey] = value;
 				};
 			},
-			("/plaits/" ++ instanceNum ++ "/" ++ paramKey).asString
+			"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString
 		);
 	};
 };
+
+// Push current state values to UI
+~pushStateToUI = {
+	~ui = NetAddr("127.0.0.1", 8080);
+
+	~plaits.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+
+		// Send all parameter values to UI
+		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+			var value = instance[paramKey];
+			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
+			["Sending:", path, value].postln;
+			~ui.sendMsg(path, value);
+		};
+	};
+	"Plaits state pushed to UI".postln;
+};
+
+~pushStateToUI.value;
 )
