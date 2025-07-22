@@ -3,7 +3,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 (
+
 // Bipolar modulation function for UI parameter mapping
+//
+// Gradually introduce the sequence values until they are full at uiValue of 0.5.
+// After 0.5, gradually pull them towards 1.
+// You can pass a sequence of 0.5 values to use without a sequence so the UI knob
+// acts as expected e.g. Pseq([0.5], inf).asStream
 ~modulateBipolar = { |seqValue, uiValue|
 	var output = 0.5;
 
