@@ -19,7 +19,7 @@ s.defaultGroup.freeAll;
 			var value = msg[1];
 			msg.postln;
 			if (value == 1.0,
-				{ x.play },
+				{ x.play(~tempoClock) },
 				{ x.stop }
 			);
 		},
@@ -36,9 +36,9 @@ s.defaultGroup.freeAll;
 				var value = msg[1];
 				msg.round(0.001).postln;
 
-				// Special handling for speed (affects global tempo clock)
-				if (paramKey == 'speed') {
-					~plaits[instanceIndex].speed = value;
+				// Special handling for tempo (affects global tempo clock)
+				if (paramKey == 'tempo') {
+					~plaits[instanceIndex].tempo = value;
 					~tempoClock.tempo = (value.max(0.1))/60;
 				} {
 					// Generic parameter update

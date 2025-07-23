@@ -27,15 +27,13 @@
 };
 
 // Duration calculation with safety bounds
-~setDuration = { |seqValue, divSeqValue, uiValue|
+~setDuration = { |seqValue, divSeqValue|
 	var output = 1;
-	uiValue = uiValue.clip(0.8, 1.4);
 	divSeqValue = divSeqValue.max(0.001);
-	uiValue = uiValue.max(0.001);
-	output = seqValue / divSeqValue / uiValue;
-	output = output.clip(0.001, 100);
+	output = seqValue / divSeqValue;
+	output = output.clip(0.001, 500);
 
-	// ['~setDuration:', uiValue.round(0.0001), output.round(0.0001)].postln;
+	// ['~setDuration:', output.round(0.0001)].postln;
 
 	output;
 };

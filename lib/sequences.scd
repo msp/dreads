@@ -19,8 +19,7 @@ x = Pdef(\plaitsSequence,
 
 				~plaits[0].dur = ~setDuration.(
 					~plaits[0].sequences.duration.next,
-					~plaits[0].sequences.div.next,
-					~plaits[0].speed
+					~plaits[0].sequences.div.next
 				);
 
 				~plaits[0].pitch ;
