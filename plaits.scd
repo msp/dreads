@@ -25,12 +25,12 @@ s.options.memSize = 8192 * 16;
 s.waitForBoot {
 	(Document.current.dir ++ "/lib/synthdefs.scd").load;
 	(Document.current.dir ++ "/lib/osc.scd").load;
-}
+};
 )
 
 ////////////////////////////////////////////////////////////////////////////////
 // (2) PLAY
 ////////////////////////////////////////////////////////////////////////////////
 (
-(Document.current.dir ++ "/lib/sequences.scd").load;
+(Document.current.dir ++ "/lib/sequences2.scd").load;
 )

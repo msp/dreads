@@ -26,6 +26,15 @@
 	output;
 };
 
+~modulateLayered = { |seqValue, lfoValue, uiValue, lfoAmount=0.3|
+	// First combine sequence + LFO
+	var combinedMod = seqValue + ((lfoValue - 0.5) * lfoAmount);
+	combinedMod = combinedMod.clip(0, 1);
+
+	// Then apply existing bipolar logic with UI
+	~modulateBipolar.(combinedMod, uiValue);
+};
+
 // Duration calculation with safety bounds
 ~setDuration = { |seqValue, divSeqValue|
 	var output = 1;
