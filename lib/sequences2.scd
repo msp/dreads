@@ -31,7 +31,14 @@ x = Pdef(\plaitsSequence,
 				~plaits[0].dur
 			},
 			\decay, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.decay.next, ~plaits[0].decay)
+				// ~modulateBipolar.(~plaits[0].sequences.decay.next, ~plaits[0].decay)
+				~modulateLayered.(
+					~plaits[0].sequences.decay.next,
+					~decayLFO.next,
+					~plaits[0].decay,
+					0.3 // LFO Amount
+				)
+
 			},
 			\harm, Pfunc { |event|
 				~modulateBipolar.(~plaits[0].sequences.harm.next, ~plaits[0].harm)
@@ -66,6 +73,11 @@ x = Pdef(\plaitsSequence,
 				~setEngine.(~plaits[0].sequences.engine.next)
 			},
 			\mul, Pfunc { |event| ~plaits[0].mul },
+			\rev_drywet, Pfunc { |event| ~plaits[0].rev_drywet },
+			\rev_time, Pfunc { |event| ~plaits[0].rev_time },
+			\rev_damp, Pfunc { |event| ~plaits[0].rev_damp },
+			\rev_hp, Pfunc { |event| ~plaits[0].rev_hp },
+			\rev_freeze, Pfunc { |event| ~plaits[0].rev_freeze },
 			\volume, Pfunc { |event| ~plaits[0].volume },
 			\out, Pseq(
 				[
@@ -74,86 +86,86 @@ x = Pdef(\plaitsSequence,
 			], inf),
 		),
 		/// Plaits 2 (kick) //////////////////////////////////////////////////////////
-		Pbind(
-			\instrument, \plaits,
-			\dur, Pfunc { |event|
-				~plaits[0].dur
-			},
-			\pitch, 36,
-			\harm, 0.55,
-			\timbre, 0.8,
-			\morph, Pseq(
-				[0.4, 0.1, 0.2, 0.1, 0.4, 0.1, 0.1, 0.05, Pseq([0.5, 0.3, 0.1])
-			] * 0.5, inf),
-			\engine, Pseq([13,13,13,13, 13,13,13,13], inf),
-			// \decay, 0.2,
-			\mul, 0.0,
-			\out, 0
-
-		),
+		// Pbind(
+		// 	\instrument, \plaits,
+		// 	\dur, Pfunc { |event|
+		// 		~plaits[0].dur
+		// 	},
+		// 	\pitch, 36,
+		// 	\harm, 0.55,
+		// 	\timbre, 0.8,
+		// 	\morph, Pseq(
+		// 		[0.4, 0.1, 0.2, 0.1, 0.4, 0.1, 0.1, 0.05, Pseq([0.5, 0.3, 0.1])
+		// 	] * 0.5, inf),
+		// 	\engine, Pseq([13,13,13,13, 13,13,13,13], inf),
+		// 	// \decay, 0.2,
+		// 	\mul, 0.0,
+		// 	\out, 0
+		//
+		// ),
 		/// Plaits 3 (hats / claps) //////////////////////////////////////////////////
-		Pbind(
-			\instrument, \plaits,
-			\dur, Pseq([
-				Prand([2, Rest(2)]),
-				2,
-				Rest(2),
-				Rest(2),
-				Pwrand([1.0, Rest(1)], [0.8, 0.2].normalizeSum)
-			]/3, inf),
-			\pitch, Pseq([45, 45, 45, 45, 30], inf),
-			\harm, Pseq([0.1, 0.6, 0.7, 0.8, 0.4], inf),
-			\timbre, Pseq([0.9, 0.6, 0.7, 0.8, 0.2], inf),
-			\morph, Pseq([0.1, 0.01, 0.1, 0.1, 0.15], inf),
-			\decay, 0.3, //only effects first sound!
-			\engine, Pseq([
-				// Prand([9, 10, 15]), //9 is the accent
-				9,
-				15, 15,
-				Prand([14, 15]),
-				Pwrand([14, 10], [0.8, 0.2].normalizeSum),
-			], inf),
-			// \mul, Pseq([1.05, 0.45, 0.45, 0.45, 1.2] -0.3, inf),
-			\mul, 0.0,
-			\out, 0
-		),
+		// Pbind(
+		// 	\instrument, \plaits,
+		// 	\dur, Pseq([
+		// 		Prand([2, Rest(2)]),
+		// 		2,
+		// 		Rest(2),
+		// 		Rest(2),
+		// 		Pwrand([1.0, Rest(1)], [0.8, 0.2].normalizeSum)
+		// 	]/3, inf),
+		// 	\pitch, Pseq([45, 45, 45, 45, 30], inf),
+		// 	\harm, Pseq([0.1, 0.6, 0.7, 0.8, 0.4], inf),
+		// 	\timbre, Pseq([0.9, 0.6, 0.7, 0.8, 0.2], inf),
+		// 	\morph, Pseq([0.1, 0.01, 0.1, 0.1, 0.15], inf),
+		// 	\decay, 0.3, //only effects first sound!
+		// 	\engine, Pseq([
+		// 		// Prand([9, 10, 15]), //9 is the accent
+		// 		9,
+		// 		15, 15,
+		// 		Prand([14, 15]),
+		// 		Pwrand([14, 10], [0.8, 0.2].normalizeSum),
+		// 	], inf),
+		// 	// \mul, Pseq([1.05, 0.45, 0.45, 0.45, 1.2] -0.3, inf),
+		// 	\mul, 0.0,
+		// 	\out, 0
+		// ),
 		// More hats! /////////////////////////////////////////
-		Pbind(
-			\instrument, \plaits,
-			\dur, Pseq([
-				Rest(1),
-				Prand([Rest(1), 1, 1, 1]),
-				1
-			], inf) / Pseq([3, 3, 3, 1.5], inf),
-			// \dur, Pseq([Rest(1/1.5), 1/1.5 ] / 3, inf),
-			\pitch, Pseq([65, 45, 55, 45, 30], inf),
-			\harm, Pseq([0.1, 0.6, 0.7, 0.8, 0.4], inf),
-			\timbre, Pseq([0.9, 0.6, 0.7, 0.8, 0.2], inf),
-			\morph, Pseq([0.1, 0.01, 0.1, 0.1, 0.15] * 2, inf),
-			\decay, 0.05,
-			\engine, Pseq([
-				15
-			], inf),
-			// \mul, Pseq([0.01], inf),
-			\mul, 0.0,
-			\out, 0
-		),
+		// Pbind(
+		// 	\instrument, \plaits,
+		// 	\dur, Pseq([
+		// 		Rest(1),
+		// 		Prand([Rest(1), 1, 1, 1]),
+		// 		1
+		// 	], inf) / Pseq([3, 3, 3, 1.5], inf),
+		// 	// \dur, Pseq([Rest(1/1.5), 1/1.5 ] / 3, inf),
+		// 	\pitch, Pseq([65, 45, 55, 45, 30], inf),
+		// 	\harm, Pseq([0.1, 0.6, 0.7, 0.8, 0.4], inf),
+		// 	\timbre, Pseq([0.9, 0.6, 0.7, 0.8, 0.2], inf),
+		// 	\morph, Pseq([0.1, 0.01, 0.1, 0.1, 0.15] * 2, inf),
+		// 	\decay, 0.05,
+		// 	\engine, Pseq([
+		// 		15
+		// 	], inf),
+		// 	// \mul, Pseq([0.01], inf),
+		// 	\mul, 0.0,
+		// 	\out, 0
+		// ),
 		/// Plaits 3 (chords) ////////////////////////////////////////////////////////
-		Pbind(
-			\instrument, \plaits,
-			\dur, Pseq([2.5, Rest(0.5), Rest(1.5)]/ (1.5/16), inf),
-			\pitch, Pseq([[88, 95, 102]] - 30, inf),
-			\harm, Pseq([0.2], inf),
-			\timbre, Pseq([0.2], inf),
-			\morph, Pseq([0.5] * 2, inf),
-			\decay, 1.0,
-			\engine, Pseq([8, 9], inf),
-			\reverb_time, 1.1,
-			\drywet, 0.75,
-			// \mul, Pseq([0.1, 0.3], inf),
-			\mul, 0.0,
-			\out, 0
-		)
+		// Pbind(
+		// 	\instrument, \plaits,
+		// 	\dur, Pseq([2.5, Rest(0.5), Rest(1.5)]/ (1.5/16), inf),
+		// 	\pitch, Pseq([[88, 95, 102]] - 30, inf),
+		// 	\harm, Pseq([0.2], inf),
+		// 	\timbre, Pseq([0.2], inf),
+		// 	\morph, Pseq([0.5] * 2, inf),
+		// 	\decay, 1.0,
+		// 	\engine, Pseq([8, 9], inf),
+		// 	\reverb_time, 1.1,
+		// 	\drywet, 0.75,
+		// 	// \mul, Pseq([0.1, 0.3], inf),
+		// 	\mul, 0.0,
+		// 	\out, 0
+		// )
 	])
 ).play(~tempoClock);
 

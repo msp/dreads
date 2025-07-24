@@ -18,7 +18,7 @@
 (
 SynthDef(\plaits,
 	{
-		arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fm_mod=0.0, lpg_colour=0.5, mul=0.5, gate=1.0, drywet=0.25, reverb_time=0.3, volume=0.7;
+		arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fm_mod=0.0, lpg_colour=0.5, mul=0.5, gate=1.0, rev_drywet=0.25, rev_time=0.3, rev_damp=0.8, rev_hp=0.7, rev_freeze=0, volume=0.7;
 
 		/*
 		var trig = Select.kr(trigger, [
@@ -59,11 +59,12 @@ SynthDef(\plaits,
 
 		sig = MiVerb.ar(
 			(sig * env).tanh,
-			time: reverb_time.clip(0, 1),
-			drywet: drywet.clip(0, 1),
-			damp: 0.8,
-			hp: 0.7,
-			freeze: TRand.kr(-1, 1, Dust.kr(0.7)),
+			time: rev_time.clip(0, 1.25),
+			drywet: rev_drywet.clip(0, 1),
+			damp: rev_damp.clip(0, 1),
+			hp: rev_hp.clip(0, 1),
+			// freeze: TRand.kr(-1, 1, Dust.kr(0.7)),
+			freeze: rev_freeze.clip(0, 1),
 			// freeze: 1,
 			diff: 0.625,
 			mul: volume.clip(0, 1),

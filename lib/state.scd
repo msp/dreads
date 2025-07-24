@@ -5,15 +5,21 @@
 ~plaits = [
 	// plaits/1
 	(
-		pitch: 49, harm: 0.48, timbre: 0.44, morph: 0.43,
-		decay: 0.59, engine: 1, fm_mod: 0.0, lpg_colour: 0.5,
-		timb_mod: 0.3, morph_mod: 0.4, mul: 0.5, volume: 0.7,
-		tempo: 165, dur: 0.5, legato: 9.0,
+		// pitch: 49, harm: 0.48, timbre: 0.44, morph: 0.43,
+		// decay: 0.59, engine: 1, fm_mod: 0.0, lpg_colour: 0.5,
+		// timb_mod: 0.3, morph_mod: 0.4, mul: 0.5, volume: 0.7,
+		// tempo: 165, dur: 0.5, legato: 9.0, rev_drywet: 0.25,
+		// rev_time: 0.3, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0,
+		pitch: 49, harm: 0.48, timbre: 0.39, morph: 0.3,
+		decay: 0.59, engine: 6, fm_mod: 0.0, lpg_colour: 0.5,
+		timb_mod: 0.6, morph_mod: 0.4, mul: 0.5, volume: 0.8,
+		tempo: 165, dur: 0.59, legato: 9.0, rev_drywet: 0.46,
+		rev_time: 1.08, rev_damp: 0.82, rev_hp: 0.45, rev_freeze: 0,
 		sequences: (
 			// timbre: Pseq([0.5], inf).asStream,
 			timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
-			decay: Pseq([0.5], inf).asStream,
-			// decay: Pseq([0.4, 0.2, Pseq([0.6, 0.1, 0.8] / 6)] / 3, inf).asStream,
+			// decay: Pseq([0.5], inf).asStream,
+			decay: Pseq([0.5, 0.3, Pseq([0.6, 0.1, 0.8] / 3)] / 1, inf).asStream,
 			morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,
 			// morph: Pseq([0.5], inf).asStream,
 			harm: Pseq([0.5], inf).asStream,
@@ -30,7 +36,7 @@
 			// 	"e",
 			// 	0,
 			// ], inf).asStream,
-			engine: Pseq(["e"], inf).asStream,
+			engine: Pseq(["e", "e", "e", "e", "e", "e+6"] , inf).asStream,
 			// duration: (
 			// 	Pseq([
 			// 		Rest(1.0),
@@ -76,4 +82,6 @@
 
 ~timbreLFO = ~lfoSine.(3);
 ~morphLFO = ~lfoSine.(4);
+~decayLFO = ~lfoSine.(1);
+// ~tempoClock.tempo = 165/60;
 )
