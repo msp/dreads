@@ -61,11 +61,11 @@ s.defaultGroup.freeAll;
 		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
-			["Sending:", path, value].postln;
+			// ["Sending:", path, value].postln;
 			~ui.sendMsg(path, value);
 		};
 	};
-	"Plaits state pushed to UI".postln;
+	"Plaits state pushed to UI!".postln;
 };
 
 ~pushStateToUI.value;

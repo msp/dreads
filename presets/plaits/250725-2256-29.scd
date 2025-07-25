@@ -3,39 +3,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 (
 ~plaits = [
-	// plaits/1
+	// $PLAITS1
 	(
-		// one
-		//
-		// pitch: 49, harm: 0.48, timbre: 0.44, morph: 0.43,
-		// decay: 0.59, engine: 1, fm_mod: 0.0, lpg_colour: 0.5,
-		// timb_mod: 0.3, morph_mod: 0.4, mul: 0.5, volume: 0.7,
-		// tempo: 165, dur: 0.5, legato: 9.0, rev_drywet: 0.25,
-		// rev_time: 0.3, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0,
-		//
-		// two
-		//
-		pitch: 49, harm: 0.48, timbre: 0.39, morph: 0.3,
-		decay: 0.59, engine: 6, fm_mod: 0.0, lpg_colour: 0.5,
-		timb_mod: 0.6, morph_mod: 0.4, mul: 0.5, volume: 0.8,
-		tempo: 165, dur: 0.59, legato: 9.0, rev_drywet: 0.46,
-		rev_time: 1.08, rev_damp: 0.82, rev_hp: 0.45, rev_freeze: 0,
-		//
-		// three
-		//
-		// pitch: 42, harm: 0.42, timbre: 0.38, morph: 0.53,
-		// decay: 0.62, engine: 11, fm_mod: 0.85, lpg_colour: 0.5,
-		// timb_mod: 0.6, morph_mod: 0.75, mul: 0.7, volume: 0.9,
-		// tempo: 165, dur: 0.59, legato: 9.0, rev_drywet: 0.28,
-		// rev_time: 0.56, rev_damp: 0.78, rev_hp: 0.61, rev_freeze: 0,
-		//
-		// four
-		//
-		// pitch: 36.68, harm: 0.64, timbre: 0.05, morph: 0.0,
-		// decay: 1.0, engine: 0, fm_mod: -0.68, lpg_colour: 0.5,
-		// timb_mod: 0.89, morph_mod: 1.0, mul: 0.7, volume: 0.9,
-		// tempo: 85, dur: 0.59, legato: 9.0, rev_drywet: 0.3,
-		// rev_time: 1.08, rev_damp: 0.78, rev_hp: 0.25, rev_freeze: 0,
+		// $PRESET_SCALARS_START
+		pitch: 18.22, harm: 0.6, timbre: 0.77, morph: 0.74,
+		decay: 1.0, engine: 8.0, fm_mod: -0.45, lpg_colour: 0.5,
+		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 1.32,
+		tempo: 15.0, dur: 0.7, legato: 18.0, rev_drywet: 0.28,
+		rev_time: 1.15, rev_damp: 0.36, rev_hp: 0.45, rev_freeze: 0.0,
+		// $PRESET_SCALARS_END
 		sequences: (
 			// timbre: Pseq([0.5], inf).asStream,
 			timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
@@ -82,20 +58,24 @@
 			div: Pseq([1], inf).asStream
 		)
 	),
-	// plaits/2
+	// PLAITS2
 	(
-		pitch: 51, harm: 0.19, timbre: 0.74, morph: 0.07,
-		decay: 0.59, engine: 6, fm_mod: 0.0, lpg_colour: 0.5,
-		timb_mod: 0.0, morph_mod: 0.0, mul: 0.0, volume: 0.7,
-		tempo: 165, dur: 0.5, legato: 1.0,
+		// $PRESET_SCALARS_START
+		pitch: 18.22, harm: 0.6, timbre: 0.77, morph: 0.74,
+		decay: 1.0, engine: 8.0, fm_mod: -0.45, lpg_colour: 0.5,
+		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 1.32,
+		tempo: 85.0, dur: 0.7, legato: 18.0,
+		// $PRESET_SCALARS_END
 		sequences: ()
 	),
-	// plaits/3
+	// PLAITS3
 	(
-		pitch: 45, harm: 0.3, timbre: 0.6, morph: 0.2,
-		decay: 0.4, engine: 2, fm_mod: 0.1, lpg_colour: 0.3,
-		timb_mod: 0.0, morph_mod: 0.0, mul: 0.0, volume: 0.7,
-		tempo: 165, dur: 0.5, legato: 1.0,
+		// $PRESET_SCALARS_START
+		pitch: 18.22, harm: 0.6, timbre: 0.77, morph: 0.74,
+		decay: 1.0, engine: 8.0, fm_mod: -0.45, lpg_colour: 0.5,
+		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 1.32,
+		tempo: 85.0, dur: 0.7, legato: 18.0,
+		// $PRESET_SCALARS_END
 		sequences: ()
 	)
 ];
@@ -114,5 +94,7 @@
 ~timbreLFO = ~lfoSine.(3);
 ~morphLFO = ~lfoSine.(4);
 ~decayLFO = ~lfoSine.(1);
-// ~tempoClock.tempo = 85/60;
+~tempoClock.tempo = ~plaits[0].tempo/60;
+
+~pushStateToUI.();
 )

@@ -19,7 +19,12 @@ s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
 
-(Document.current.dir ++ "/lib/state.scd").load;
+~currentPresetTemplate = (Document.current.dir ++ "/presets/plaits/default.scd").standardizePath;
+
+~tempoClock = TempoClock.new(~plaits[0].tempo/60);
+
+(Document.current.dir ++ "/presets/plaits/default.scd").load;
+(Document.current.dir ++ "/lib/presets.scd").load;
 (Document.current.dir ++ "/lib/utils.scd").load;
 
 s.waitForBoot {
