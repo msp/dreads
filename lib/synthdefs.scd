@@ -67,7 +67,7 @@ SynthDef(\plaits,
 			freeze: rev_freeze.clip(0, 1),
 			// freeze: 1,
 			diff: 0.625,
-			mul: volume.clip(0, 1),
+			mul: volume.clip(0, 2.0),
 			add: 0.0
 		);
 
