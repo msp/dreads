@@ -18,10 +18,12 @@
 s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
+s.freeAll;
 
 ~currentPresetTemplate = (Document.current.dir ++ "/presets/plaits/default.scd").standardizePath;
 
-~tempoClock = TempoClock.new(~plaits[0].tempo/60);
+// Default tempo, will be updated by presets
+~tempoClock = TempoClock.new(120/60);
 
 (Document.current.dir ++ "/presets/plaits/default.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
