@@ -11,6 +11,7 @@
 		timb_mod: 0.89, morph_mod: 1.0, mul: 0.7, volume: 0.9,
 		tempo: 15, dur: 0.59, legato: 18.0, rev_drywet: 0.3,
 		rev_time: 1.08, rev_damp: 0.78, rev_hp: 0.25, rev_freeze: 0,
+		delay_send: 0.3,
 		// $PRESET_SCALARS_END
 		sequences: (
 			// timbre: Pseq([0.5], inf).asStream,

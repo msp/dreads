@@ -25,6 +25,8 @@ s.freeAll;
 // Default tempo, will be updated by presets
 ~tempoClock = TempoClock.new(120/60);
 
+~delayBus = Bus.audio(s, 2);
+
 (Document.current.dir ++ "/presets/plaits/default.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
 (Document.current.dir ++ "/lib/utils.scd").load;
@@ -39,5 +41,9 @@ s.waitForBoot {
 // (2) PLAY
 ////////////////////////////////////////////////////////////////////////////////
 (
+// Start delay effect
+~delayFX = Synth(\filterDelay, [\out, 0], addAction: \addToTail);
+"Delay effect started".postln;
+
 (Document.current.dir ++ "/lib/sequences2.scd").load;
 )

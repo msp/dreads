@@ -6,12 +6,12 @@
 	// $PLAITS1
 	(
 		// $PRESET_SCALARS_START
-		pitch: 18.22, harm: 0.6, timbre: 0.77, morph: 0.74,
-		decay: 1.0, engine: 8.0, fm_mod: -0.45, lpg_colour: 0.5,
-		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 1.32,
-		tempo: 15.0, dur: 0.7, legato: 18.0, rev_drywet: 0.28,
-		rev_time: 1.15, rev_damp: 0.36, rev_hp: 0.45, rev_freeze: 0.0,
-		delay_send: 0.1,
+		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
+		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
+		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.23,
+		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.18,
+		rev_time: 1.03, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
+		delay_send: 0.4,
 		// $PRESET_SCALARS_END
 		sequences: (
 			// timbre: Pseq([0.5], inf).asStream,
@@ -35,7 +35,7 @@
 			// 	"e",
 			// 	0,
 			// ], inf).asStream,
-			engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"] , inf).asStream,
+			engine: Pseq(["e", "e", "e+2", "e", "e", "e-2"] , inf).asStream,
 			// duration: (
 			// 	Pseq([
 			// 		Rest(1.0),
@@ -62,20 +62,20 @@
 	// PLAITS2
 	(
 		// $PRESET_SCALARS_START
-		pitch: 18.22, harm: 0.6, timbre: 0.77, morph: 0.74,
-		decay: 1.0, engine: 8.0, fm_mod: -0.45, lpg_colour: 0.5,
-		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 1.32,
-		tempo: 85.0, dur: 0.7, legato: 18.0,
+		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
+		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
+		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.23,
+		tempo: 165.0, dur: 0.35, legato: 9.0,
 		// $PRESET_SCALARS_END
 		sequences: ()
 	),
 	// PLAITS3
 	(
 		// $PRESET_SCALARS_START
-		pitch: 18.22, harm: 0.6, timbre: 0.77, morph: 0.74,
-		decay: 1.0, engine: 8.0, fm_mod: -0.45, lpg_colour: 0.5,
-		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 1.32,
-		tempo: 85.0, dur: 0.7, legato: 18.0,
+		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
+		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
+		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.23,
+		tempo: 165.0, dur: 0.35, legato: 9.0,
 		// $PRESET_SCALARS_END
 		sequences: ()
 	)
