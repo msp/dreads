@@ -76,6 +76,7 @@ x = Pdef(\plaitsSequence,
 			\rev_hp, Pfunc { |event| ~plaits[0].rev_hp },
 			\rev_freeze, Pfunc { |event| ~plaits[0].rev_freeze },
 			\delay_send, Pfunc { |event| ~plaits[0].delay_send },
+			\reverb_send, Pfunc { |event| ~plaits[0].reverb_send },
 			\volume, Pfunc { |event| ~plaits[0].volume },
 			\out, Pseq(
 				[

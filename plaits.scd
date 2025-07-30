@@ -26,6 +26,7 @@ s.freeAll;
 ~tempoClock = TempoClock.new(120/60);
 
 ~delayBus = Bus.audio(s, 2);
+~reverbBus = Bus.audio(s, 2);
 
 (Document.current.dir ++ "/presets/plaits/default.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
@@ -41,9 +42,10 @@ s.waitForBoot {
 // (2) PLAY
 ////////////////////////////////////////////////////////////////////////////////
 (
-// Start delay effect
-~delayFX = Synth(\filterDelay, [\out, 0], addAction: \addToTail);
-"Delay effect started".postln;
+// Start global effects
+~delayFX = Synth(\globalFilterDelay, [\out, 0], addAction: \addToTail);
+
+~reverbFX = Synth(\globalReverb, [\out, 0], addAction: \addToTail);
 
 (Document.current.dir ++ "/lib/sequences2.scd").load;
 )

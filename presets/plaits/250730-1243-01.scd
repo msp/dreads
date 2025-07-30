@@ -6,13 +6,13 @@
 	// $PLAITS1
 	(
 		// $PRESET_SCALARS_START
-		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
-		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
-		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.23,
-		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.18,
-		rev_time: 1.03, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
-		delay_send: 0.4,
-		reverb_send: 0.0,
+		pitch: 93.51, harm: 0.48, timbre: 0.72, morph: 0.89,
+		decay: 0.44, engine: 8.0, fm_mod: -0.32, lpg_colour: 0.5,
+		timb_mod: 0.69, morph_mod: 0.76, mul: 0.5, volume: 1.3,
+		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.71,
+		rev_time: 0.0, rev_damp: 0.77, rev_hp: 0.3, rev_freeze: 0.0,
+		delay_send: 1.0,
+		reverb_send: 0.88,
 		// $PRESET_SCALARS_END
 		sequences: (
 			// timbre: Pseq([0.5], inf).asStream,
@@ -36,7 +36,7 @@
 			// 	"e",
 			// 	0,
 			// ], inf).asStream,
-			engine: Pseq(["e", "e", "e+2", "e", "e", "e-2"] , inf).asStream,
+			engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"] , inf).asStream,
 			// duration: (
 			// 	Pseq([
 			// 		Rest(1.0),
@@ -63,26 +63,26 @@
 	// PLAITS2
 	(
 		// $PRESET_SCALARS_START
-		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
-		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
-		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.23,
-		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.18,
-		rev_time: 1.03, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
-		delay_send: 0.4,
-		reverb_send: 0.0,
+		pitch: 93.51, harm: 0.48, timbre: 0.72, morph: 0.89,
+		decay: 0.44, engine: 8.0, fm_mod: -0.32, lpg_colour: 0.5,
+		timb_mod: 0.69, morph_mod: 0.76, mul: 0.5, volume: 1.3,
+		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.71,
+		rev_time: 0.0, rev_damp: 0.77, rev_hp: 0.3, rev_freeze: 0.0,
+		delay_send: 1.0,
+		reverb_send: 0.88,
 		// $PRESET_SCALARS_END
 		sequences: ()
 	),
 	// PLAITS3
 	(
 		// $PRESET_SCALARS_START
-		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
-		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
-		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.23,
-		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.18,
-		rev_time: 1.03, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
-		delay_send: 0.4,
-		reverb_send: 0.0,
+		pitch: 93.51, harm: 0.48, timbre: 0.72, morph: 0.89,
+		decay: 0.44, engine: 8.0, fm_mod: -0.32, lpg_colour: 0.5,
+		timb_mod: 0.69, morph_mod: 0.76, mul: 0.5, volume: 1.3,
+		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.71,
+		rev_time: 0.0, rev_damp: 0.77, rev_hp: 0.3, rev_freeze: 0.0,
+		delay_send: 1.0,
+		reverb_send: 0.88,
 		// $PRESET_SCALARS_END
 		sequences: ()
 	)

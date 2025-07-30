@@ -24,22 +24,6 @@ OSCdef.new(
 	var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
 
 	["binding plaits ------------------->", instanceIndex].postln;
-
-	// Special case: start/stop
-	OSCdef.new(
-		("plaitsStart" ++ instanceNum).asSymbol,
-		{
-			arg msg, time, addr, port;
-			var value = msg[1];
-			msg.postln;
-			if (value == 1.0,
-				{ x.play(~tempoClock) },
-				{ x.stop }
-			);
-		},
-		("/plaits/" ++ instanceNum ++ "/start").asString
-	);
-
 	// Generic parameter handling - OSC keys match data structure keys
 	instance.keys.select({ |key| key != \pattern }).do { |paramKey|
 		// ["binding key", paramKey].postln;
@@ -72,7 +56,7 @@ OSCdef.new(
 		{
 			arg msg, time, addr, port;
 			var value = msg[1];
-			[paramKey, value].postln;
+			["dly", paramKey, value].postln;
 			if (~delayFX.notNil) {
 				~delayFX.set(paramKey, value);
 				// ["Set", paramKey, "to", value].postln;
@@ -81,6 +65,25 @@ OSCdef.new(
 			};
 		},
 		"/delay/" ++ paramKey.asString
+	);
+};
+
+// Global Reverb Effect OSC Handlers
+[\time, \damp, \hp, \diffuse, \freeze].do { |paramKey|
+	['binding reverb->', paramKey].postln;
+	OSCdef.new(
+		("reverb" ++ paramKey).asSymbol,
+		{
+			arg msg, time, addr, port;
+			var value = msg[1];
+			["rvb", paramKey, value].postln;
+			if (~reverbFX.notNil) {
+				~reverbFX.set(paramKey, value);
+			} {
+				"ERROR: ~reverbFX is nil!".postln;
+			};
+		},
+		"/reverb/" ++ paramKey.asString
 	);
 };
 
