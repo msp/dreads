@@ -60,7 +60,7 @@
 			div: Pseq([2], inf).asStream
 		)
 	),
-	// PLAITS2
+	// $PLAITS2
 	(
 		// $PRESET_SCALARS_START
 		pitch: 80.38, harm: 0.75, timbre: 0.94, morph: 0.08,
@@ -91,12 +91,12 @@
 			div: Pseq([2], inf).asStream
 		)
 	),
-	// PLAITS3
+	// $PLAITS3
 	(
 		// $PRESET_SCALARS_START
 		pitch: 33.51, harm: 0.28, timbre: 0.48, morph: 0.87,
 		decay: 0.44, engine: 13.0, fm_mod: 0.3, lpg_colour: 0.5,
-		timb_mod: 1.0, morph_mod: 0.0, mul: 0.5, volume: 1.3,
+		timb_mod: 1.0, morph_mod: 0.0, mul: 0.5, volume: 0.0,
 		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.0,
 		rev_time: 0.0, rev_damp: 0.77, rev_hp: 0.3, rev_freeze: 0.0,
 		delay_send: 0.2,
