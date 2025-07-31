@@ -3,9 +3,15 @@ x.play(~tempoClock)
 
 x.stop;
 
+~currentPresetTemplate.postln;
+
 ~savePreset.();
 
 ~loadPreset.("default")
+
+~loadPreset.("/Users/Shared/GitHub/mutable-sc/presets/plaits/250731-2001-54.scd".asSymbol)
+
+~loadPreset.("250731-2001-54")
 
 ~loadPreset.("250730-1243-01")
 
@@ -19,7 +25,6 @@ x.stop;
 
 
 
-~currentPresetTemplate.postln;
 
 ~delayFX = Synth(\filterDelay, [\out, 0], addAction: \addToTail);
 

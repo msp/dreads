@@ -1,6 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 // Plaits OSC Setup - Dynamic OSC listener creation for all instances
 //////////////////////////////////////////////////////////////////////////////
+
+OSCFunc.trace(true, hideStatusMsg: true); // Turn posting on
+OSCFunc.trace(false); // Turn posting off
+
 (
 OSCdef.freeAll;
 s.defaultGroup.freeAll;
@@ -87,6 +91,28 @@ OSCdef.new(
 	);
 };
 
+OSCdef.new(
+	\loadPreset.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var value = msg[1];
+		["loadPreset", value].postln;
+		~loadPreset.(value.asString)
+	},
+	"/loadPreset"
+);
+
+OSCdef.new(
+	\savePreset.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var value = msg[1];
+		["savePreset", value].postln;
+		~savePreset.()
+	},
+	"/savePreset"
+);
+
 // Push current state values to UI
 ~pushStateToUI = {
 	~ui = NetAddr("127.0.0.1", 8080);
@@ -105,15 +131,17 @@ OSCdef.new(
 	"Plaits state pushed to UI!".postln;
 };
 
-// Catch-all OSCdef for debugging unhandled addresses
-OSCdef.new(
-	\catchAll,
-	{
-		arg msg, time, addr, port;
-		["UNHANDLED OSC:", msg].postln;
-	},
-	nil  // matches any address - this will catch all unmatched messages
-);
+// Debug OSCFunc for catching missed messages
+OSCFunc({ |msg, time, addr, port|
+	var path = msg[0];
+	// Only show messages that might be typos in our namespaces
+	if (path.asString.contains("/plaits") ||
+	    path.asString.contains("/delay") ||
+	    path.asString.contains("/reverb") ||
+	    path.asString.contains("/preset")) {
+		["POSSIBLE TYPO:", msg].postln;
+	};
+});
 
 ~pushStateToUI.value;
 )

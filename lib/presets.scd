@@ -132,9 +132,18 @@
 	("New preset template: " ++ filepath).postln;
 };
 
-~loadPreset = { |name|
-	var basePath = thisProcess.nowExecutingPath.dirname;
-	var filepath = basePath +/+ "presets/plaits" +/+ (name ++ ".scd");
+~loadPreset = { |nameOrPath|
+	var filepath;
+	
+	// Check if it's already a full path
+	if (nameOrPath.contains("/")) {
+		filepath = nameOrPath.standardizePath;
+	} {
+		// It's just a name, build the path
+		var basePath = thisProcess.nowExecutingPath.dirname;
+		filepath = basePath +/+ "presets/plaits" +/+ (nameOrPath ++ ".scd");
+	};
+	
 	this.executeFile(filepath);
 	Document.open(filepath);
 	("Preset loaded: " ++ filepath).postln;
