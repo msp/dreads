@@ -11,7 +11,13 @@
 
 Platform.systemExtensionDir
 
+Quarks.gui
+
+CrossoverDistortion.ar
+
 "e" ! 8 ++ 'e-5'
+
+1 ! 1 ++ (0.5)
 
 // Fading spike
 
@@ -24,6 +30,7 @@ Platform.systemExtensionDir
 ~fadeOut.(2)
 )
 
+Decimator.ar
 
 s.queryAllNodes;  // This will show all running synths and their parameters
 

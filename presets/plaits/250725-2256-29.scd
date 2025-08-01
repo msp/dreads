@@ -11,6 +11,7 @@
 		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 1.32,
 		tempo: 15.0, dur: 0.7, legato: 18.0, rev_drywet: 0.28,
 		rev_time: 1.15, rev_damp: 0.36, rev_hp: 0.45, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
 		delay_send: 0.1,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
@@ -24,6 +25,8 @@
 			// harm: Pseq([0.5], inf).asStream,
 			harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
 			fm_mod: Pseq([0.5], inf).asStream,
+			delay_send: Pseq([0.5], inf).asStream,
+			reverb_send: Pseq([0.5], inf).asStream,
 			lpg_colour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
 			// lpg_colour: Pseq([0.5], inf).asStream,
 			// engine: Pseq([
@@ -68,6 +71,7 @@
 		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 0.0,
 		tempo: 85.0, dur: 0.7, legato: 18.0, rev_drywet: 0.28,
 		rev_time: 1.15, rev_damp: 0.36, rev_hp: 0.45, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
 		delay_send: 0.1,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
@@ -77,6 +81,8 @@
 			morph: Pseq([0.5], inf).asStream,
 			harm: Pseq([0.5], inf).asStream,
 			fm_mod: Pseq([0.5], inf).asStream,
+			delay_send: Pseq([0.5], inf).asStream,
+			reverb_send: Pseq([0.5], inf).asStream,
 			lpg_colour: Pseq([0.5], inf).asStream,
 			engine: Pseq(["e", "e", "e", "e", "e", "e"] , inf).asStream,
 			duration: Pseq(
@@ -97,6 +103,7 @@
 		timb_mod: 0.51, morph_mod: 0.7, mul: 0.7, volume: 0.0,
 		tempo: 85.0, dur: 0.7, legato: 18.0, rev_drywet: 0.28,
 		rev_time: 1.15, rev_damp: 0.36, rev_hp: 0.45, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
 		delay_send: 0.1,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
@@ -106,6 +113,8 @@
 			morph: Pseq([0.5], inf).asStream,
 			harm: Pseq([0.5], inf).asStream,
 			fm_mod: Pseq([0.5], inf).asStream,
+			delay_send: Pseq([0.5], inf).asStream,
+			reverb_send: Pseq([0.5], inf).asStream,
 			lpg_colour: Pseq([0.5], inf).asStream,
 			engine: Pseq(["e", "e", "e", "e", "e", "e"] , inf).asStream,
 			duration: Pseq(

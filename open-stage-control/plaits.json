@@ -4470,7 +4470,7 @@
         "visible": true,
         "interaction": true,
         "comments": "",
-        "width": 168.79157427937915,
+        "width": 160,
         "height": 56.674057649667404,
         "expand": false,
         "colorText": "auto",
@@ -9962,7 +9962,7 @@
       },
       {
         "type": "button",
-        "top": 245,
+        "top": 235,
         "left": 1016,
         "lock": false,
         "id": "savePreset",
@@ -10008,8 +10008,8 @@
       },
       {
         "type": "button",
-        "top": 245,
-        "left": 1116,
+        "top": 235,
+        "left": 1106,
         "lock": false,
         "id": "savePresetAs",
         "visible": true,

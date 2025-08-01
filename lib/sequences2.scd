@@ -76,8 +76,15 @@ x = Pdef(\plaitsSequence,
 				\rev_damp, Pfunc { |event| ~plaits[instanceIndex].rev_damp },
 				\rev_hp, Pfunc { |event| ~plaits[instanceIndex].rev_hp },
 				\rev_freeze, Pfunc { |event| ~plaits[instanceIndex].rev_freeze },
-				\delay_send, Pfunc { |event| ~plaits[instanceIndex].delay_send },
-				\reverb_send, Pfunc { |event| ~plaits[instanceIndex].reverb_send },
+				\delay_send, Pfunc { |event|
+					~modulateBipolar.(~plaits[instanceIndex].sequences.delay_send.next, ~plaits[instanceIndex].delay_send);
+				},
+				\reverb_send, Pfunc { |event|
+					~modulateBipolar.(~plaits[instanceIndex].sequences.reverb_send.next, ~plaits[instanceIndex].reverb_send);
+				},
+				\dist_drive, Pfunc { |event| ~plaits[instanceIndex].dist_drive },
+				\dist_amount, Pfunc { |event| ~plaits[instanceIndex].dist_amount },
+				\stereoMode, Pfunc { |event| ~plaits[instanceIndex].stereoMode },
 				\volume, Pfunc { |event| ~plaits[instanceIndex].volume },
 				\out, Pseq([0], inf),
 			)

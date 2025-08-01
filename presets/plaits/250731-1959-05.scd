@@ -6,14 +6,14 @@
 	// $PLAITS1
 	(
 		// $PRESET_SCALARS_START
-		pitch: 93.51, harm: 0.48, timbre: 0.72, morph: 0.89,
-		decay: 0.1, engine: 8.0, fm_mod: -0.32, lpg_colour: 0.5,
-		timb_mod: 0.69, morph_mod: 0.76, mul: 0.5, volume: 1.21,
-		tempo: 165.0, dur: 0.35, legato: 0.4, rev_drywet: 0.32,
-		rev_time: 0.33, rev_damp: 0.47, rev_hp: 0.3, rev_freeze: 0.0,
-		stereoMode: 1.0, dist_drive: 0.55, dist_amount: 0.0,
-		delay_send: 0.8,
-		reverb_send: 0.2,
+		pitch: 49.0, harm: 0.48, timbre: 0.44, morph: 0.43,
+		decay: 0.59, engine: 1.0, fm_mod: 0.01, lpg_colour: 0.5,
+		timb_mod: 0.3, morph_mod: 0.4, mul: 0.5, volume: 0.0,
+		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.21,
+		rev_time: 0.3, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
+		delay_send: 0.0,
+		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
 		sequences: (
 			// timbre: Pseq([0.5], inf).asStream,
@@ -66,47 +66,13 @@
 	// $PLAITS2
 	(
 		// $PRESET_SCALARS_START
-		pitch: 80.38, harm: 0.75, timbre: 0.26, morph: 0.08,
-		decay: 0.24, engine: 11.0, fm_mod: 0.5, lpg_colour: 0.5,
-		timb_mod: 0.94, morph_mod: 0.65, mul: 0.5, volume: 0.75,
-		tempo: 165.0, dur: 0.7, legato: 9.0, rev_drywet: 0.0,
-		rev_time: 0.36, rev_damp: 0.77, rev_hp: 0.3, rev_freeze: 0.0,
-		stereoMode: 0.0, dist_drive: 0.0, dist_amount: 0.0,
-		delay_send: 0.5,
-		reverb_send: 0.0,
-		// $PRESET_SCALARS_END
-		sequences: (
-			timbre: Pseq([0.5], inf).asStream,
-			decay: Pseq([0.5], inf).asStream,
-			morph: Pseq([0.5], inf).asStream,
-			harm: Pseq([0.5], inf).asStream,
-			fm_mod: Pseq(0.0 ! 14 ++ (1.0), inf).asStream,
-			delay_send: Pseq(0.0 ! 29 ++ (0.9), inf).asStream,
-			reverb_send: Pseq([0.5], inf).asStream,
-			lpg_colour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
-			engine: Pseq(["e+1", "e+1", "e", "e", "e", "e-6"] , inf).asStream,
-			duration: Pseq(
-				[
-					// 0.7,
-					Pwrand([0.7, Rest(0.7)], [0.9, 0.1].normalizeSum),
-					0.7,
-					Pwrand([0.7, Rest(1.4)], [0.95, 0.05].normalizeSum),
-					0.7,
-					Pwrand([1.4, 0.7], [0.6, 0.4].normalizeSum),
-			], inf).asStream,
-			div: Pseq([2], inf).asStream
-		)
-	),
-	// $PLAITS3
-	(
-		// $PRESET_SCALARS_START
-		pitch: 33.51, harm: 0.28, timbre: 0.48, morph: 0.87,
-		decay: 0.44, engine: 13.0, fm_mod: 0.3, lpg_colour: 0.5,
-		timb_mod: 1.0, morph_mod: 0.0, mul: 0.5, volume: 1.4,
-		tempo: 165.0, dur: Rest(1.4), legato: 1.0, rev_drywet: 0.0,
-		rev_time: 0.0, rev_damp: 0.77, rev_hp: 0.3, rev_freeze: 0.0,
-		stereoMode: 0.0, dist_drive: 1.5, dist_amount: 0.01,
-		delay_send: 0.15,
+		pitch: 49.0, harm: 0.48, timbre: 0.44, morph: 0.43,
+		decay: 0.59, engine: 1.0, fm_mod: 0.01, lpg_colour: 0.5,
+		timb_mod: 0.3, morph_mod: 0.4, mul: 0.5, volume: 0.0,
+		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.21,
+		rev_time: 0.3, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
+		delay_send: 0.0,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
 		sequences: (
@@ -115,16 +81,7 @@
 			morph: Pseq([0.5], inf).asStream,
 			harm: Pseq([0.5], inf).asStream,
 			fm_mod: Pseq([0.5], inf).asStream,
-			delay_send: Pseq([
-				0.85,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-			], inf).asStream,
+			delay_send: Pseq([0.5], inf).asStream,
 			reverb_send: Pseq([0.5], inf).asStream,
 			lpg_colour: Pseq([0.5], inf).asStream,
 			engine: Pseq(["e", "e", "e", "e", "e", "e"] , inf).asStream,
@@ -135,6 +92,39 @@
 					Rest(0.7),
 					Rest(0.7),
 					// Pwrand([Rest(1.4), 0.7], [0.5, 0.5].normalizeSum),
+			], inf).asStream,
+			div: Pseq([0.5], inf).asStream
+		)
+	),
+	// $PLAITS3
+	(
+		// $PRESET_SCALARS_START
+		pitch: 49.0, harm: 0.48, timbre: 0.44, morph: 0.43,
+		decay: 0.59, engine: 1.0, fm_mod: 0.01, lpg_colour: 0.5,
+		timb_mod: 0.3, morph_mod: 0.4, mul: 0.5, volume: 0.0,
+		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.21,
+		rev_time: 0.3, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
+		delay_send: 0.0,
+		reverb_send: 0.0,
+		// $PRESET_SCALARS_END
+		sequences: (
+			timbre: Pseq([0.5], inf).asStream,
+			decay: Pseq([0.5], inf).asStream,
+			morph: Pseq([0.5], inf).asStream,
+			harm: Pseq([0.5], inf).asStream,
+			fm_mod: Pseq([0.5], inf).asStream,
+			delay_send: Pseq([0.5], inf).asStream,
+			reverb_send: Pseq([0.5], inf).asStream,
+			lpg_colour: Pseq([0.5], inf).asStream,
+			engine: Pseq(["e", "e", "e", "e", "e", "e"] , inf).asStream,
+			duration: Pseq(
+				[
+					0.7,
+					Rest(0.7),
+					Rest(0.7),
+					// Rest(0.7),
+					Pwrand([Rest(1.4), 0.7], [0.5, 0.5].normalizeSum),
 			], inf).asStream,
 			div: Pseq([0.5], inf).asStream
 		)
@@ -152,7 +142,7 @@
 	}.asStream;
 };
 
-~timbreLFO = ~lfoSine.(0.01);
+~timbreLFO = ~lfoSine.(3);
 ~morphLFO = ~lfoSine.(4);
 ~decayLFO = ~lfoSine.(1);
 ~tempoClock.tempo = ~plaits[0].tempo/60;
