@@ -113,6 +113,17 @@ OSCdef.new(
 	"/savePreset"
 );
 
+OSCdef.new(
+	\savePresetAs.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var value = msg[1];
+		["savePresetAs", value].postln;
+		~savePresetAs.()
+	},
+	"/savePresetAs"
+);
+
 // Push current state values to UI
 ~pushStateToUI = {
 	~ui = NetAddr("127.0.0.1", 8080);

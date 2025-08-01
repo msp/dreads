@@ -98,14 +98,29 @@
 	}.join("\n");
 };
 
-// Main preset save function
-~savePreset = { |name|
-	var basePath, presetDir, filepath, content;
+// Save all modified editor documents to capture changes
+~saveAllModified = {
+	Document.allDocuments.collect{ |doc, index|
+		[index, doc.isEdited, doc.path].postln;
+		if (doc.path.notNil && doc.isEdited) {
+			var file = File(doc.path, "w");
+			("Saving editor changes: " ++ doc.path.basename).postln;
+			file.write(doc.string);
+			file.close;
+		};
+	}
+};
 
-	basePath = thisProcess.nowExecutingPath.dirname;
-	presetDir = basePath +/+ "presets/plaits";
+// Save preset with new name (creates new file)
+~savePresetAs = { |name|
+	var presetDir, filepath, content;
 
-	("~savePreset with name: " ++ name).postln;
+	// First save any editor changes
+	~saveAllModified.();
+
+	presetDir = ~basePath +/+ "presets/plaits";
+
+	("~savePresetAs with name: " ++ name).postln;
 
 	// Generate name if not provided
 	if (name.isNil) {
@@ -116,7 +131,7 @@
 	filepath = (presetDir +/+ (name ++ ".scd")).standardizePath;
 
 	// Read and process template
-	content = ~readPresetTemplate.(basePath);
+	content = ~readPresetTemplate.(~basePath);
 	("Original content length: " ++ content.size).postln;
 
 	content = ~replaceScalarValues.(content);
@@ -125,11 +140,36 @@
 	// Save and update state
 	File.mkdir(filepath.dirname);
 	File.use(filepath, "w", { |f| f.write(content) });
-	("Hybrid preset saved: " ++ filepath).postln;
+	("New preset saved: " ++ filepath).postln;
 
 	~currentPresetTemplate = filepath;
 	Document.open(filepath);
 	("New preset template: " ++ filepath).postln;
+};
+
+// Save preset to current template (updates existing file)
+~savePreset = {
+	var content, filepath;
+
+	// First save any editor changes
+	~saveAllModified.();
+
+	if (~currentPresetTemplate.isNil) {
+		("No current template set, using savePresetAs instead").postln;
+		~savePresetAs.();
+	} {
+		filepath = ~currentPresetTemplate.standardizePath;
+
+		("Updating current preset: " ++ filepath.basename).postln;
+
+		// Read and process current template
+		content = ~readPresetTemplate.(~basePath);
+		content = ~replaceScalarValues.(content);
+
+		// Overwrite current template file
+		File.use(filepath, "w", { |f| f.write(content) });
+		("Current preset updated: " ++ filepath).postln;
+	};
 };
 
 ~loadPreset = { |nameOrPath|
@@ -140,18 +180,18 @@
 		filepath = nameOrPath.standardizePath;
 	} {
 		// It's just a name, build the path
-		var basePath = thisProcess.nowExecutingPath.dirname;
-		filepath = basePath +/+ "presets/plaits" +/+ (nameOrPath ++ ".scd");
+		filepath = ~basePath +/+ "presets/plaits" +/+ (nameOrPath ++ ".scd");
 	};
 	
 	this.executeFile(filepath);
 	Document.open(filepath);
+	~currentPresetTemplate = filepath;
 	("Preset loaded: " ++ filepath).postln;
+	("Current preset template updated to: " ++ filepath.basename).postln;
 };
 
 ~loadRandomPreset = {
-	var basePath = thisProcess.nowExecutingPath.dirname;
-	var presetDir = (basePath +/+ "presets/plaits").standardizePath;
+	var presetDir = (~basePath +/+ "presets/plaits").standardizePath;
 	var presetFiles = (presetDir +/+ "*.scd").pathMatch;
 
 	if (presetFiles.size > 0) {

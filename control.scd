@@ -7,6 +7,8 @@ x.stop;
 
 ~savePreset.();
 
+~savePresetAs.();
+
 ~loadPreset.("default")
 
 ~loadPreset.("/Users/Shared/GitHub/mutable-sc/presets/plaits/250731-2001-54.scd".asSymbol)

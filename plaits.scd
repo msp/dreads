@@ -20,7 +20,9 @@ s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
 s.freeAll;
 
-~currentPresetTemplate = (Document.current.dir ++ "/presets/plaits/default.scd").standardizePath;
+// Capture base path for reliable preset operations
+~basePath = Document.current.dir;
+~currentPresetTemplate = (~basePath ++ "/presets/plaits/default.scd").standardizePath;
 
 // Default tempo, will be updated by presets
 ~tempoClock = TempoClock.new(120/60);
