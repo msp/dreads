@@ -11,6 +11,11 @@ x.stop;
 
 ~loadPreset.("/Users/Shared/GitHub/mutable-sc/presets/plaits/250731-2001-54.scd".asSymbol)
 
+~loadPreset.("250725-2240-08")
+
+// jazzy beat
+~loadPreset.("250731-2219-54")
+
 ~loadPreset.("250731-2001-54")
 
 ~loadPreset.("250730-1243-01")
