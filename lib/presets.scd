@@ -98,17 +98,15 @@
 	}.join("\n");
 };
 
-// Save all modified editor documents to capture changes
-~saveAllModified = {
-	Document.allDocuments.collect{ |doc, index|
-		[index, doc.isEdited, doc.path].postln;
-		if (doc.path.notNil && doc.isEdited) {
-			var file = File(doc.path, "w");
-			("Saving editor changes: " ++ doc.path.basename).postln;
-			file.write(doc.string);
-			file.close;
-		};
-	}
+// Update UI preset selector to reflect current preset
+~updatePresetUI = {
+	var presetName;
+
+	if (~currentPresetTemplate.notNil) {
+		presetName = ~currentPresetTemplate.basename.splitext[0];
+		~ui.().sendMsg("/loadPreset", presetName);
+		("UI preset selector updated to: " ++ presetName).postln;
+	};
 };
 
 // Save preset with new name (creates new file)
@@ -145,6 +143,9 @@
 	~currentPresetTemplate = filepath;
 	Document.open(filepath);
 	("New preset template: " ++ filepath).postln;
+
+	// Update UI to show new preset
+	~updatePresetUI.();
 };
 
 // Save preset to current template (updates existing file)
@@ -169,12 +170,15 @@
 		// Overwrite current template file
 		File.use(filepath, "w", { |f| f.write(content) });
 		("Current preset updated: " ++ filepath).postln;
+
+		// Update UI to confirm current preset
+		~updatePresetUI.();
 	};
 };
 
 ~loadPreset = { |nameOrPath|
 	var filepath;
-	
+
 	// Check if it's already a full path
 	if (nameOrPath.contains("/")) {
 		filepath = nameOrPath.standardizePath;
@@ -182,12 +186,15 @@
 		// It's just a name, build the path
 		filepath = ~basePath +/+ "presets/plaits" +/+ (nameOrPath ++ ".scd");
 	};
-	
+
 	this.executeFile(filepath);
 	Document.open(filepath);
 	~currentPresetTemplate = filepath;
 	("Preset loaded: " ++ filepath).postln;
 	("Current preset template updated to: " ++ filepath.basename).postln;
+
+	// Update UI to show loaded preset
+	~updatePresetUI.();
 };
 
 ~loadRandomPreset = {

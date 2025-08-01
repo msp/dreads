@@ -24,12 +24,7 @@ s.freeAll;
 ~basePath = Document.current.dir;
 ~currentPresetTemplate = (~basePath ++ "/presets/plaits/default.scd").standardizePath;
 
-// Default tempo, will be updated by presets
-~tempoClock = TempoClock.new(120/60);
-
-~delayBus = Bus.audio(s, 2);
-~reverbBus = Bus.audio(s, 2);
-
+(Document.current.dir ++ "/lib/globals.scd").load;
 (Document.current.dir ++ "/presets/plaits/default.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
 (Document.current.dir ++ "/lib/utils.scd").load;

@@ -126,7 +126,7 @@ OSCdef.new(
 
 // Push current state values to UI
 ~pushStateToUI = {
-	~ui = NetAddr("127.0.0.1", 8080);
+	var ui = ~ui.();
 
 	~plaits.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
@@ -136,7 +136,7 @@ OSCdef.new(
 			var value = instance[paramKey];
 			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
 			// ["Sending:", path, value].postln;
-			~ui.sendMsg(path, value);
+			ui.sendMsg(path, value);
 		};
 	};
 	"Plaits state pushed to UI!".postln;
