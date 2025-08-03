@@ -124,6 +124,17 @@ OSCdef.new(
 	"/savePresetAs"
 );
 
+OSCdef.new(
+	\fadeOutReverb,
+	{
+		arg msg, time, addr, port;
+		var value = msg[1];
+		"fadeOutReverb".postln;
+		~fadeOutReverb.()
+	},
+	"/fadeOutReverb"
+);
+
 // Push current state values to UI
 ~pushStateToUI = {
 	var ui = ~ui.();
