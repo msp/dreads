@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////////
 // Plaits State - Data structures and synth instance definitions
 ////////////////////////////////////////////////////////////////////////////////
 (
@@ -6,13 +6,13 @@
 	// $PLAITS1
 	(
 		// $PRESET_SCALARS_START
-		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
-		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
-		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.23,
-		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.18,
+		pitch: 49.0, harm: 0.72, timbre: 0.32, morph: 0.29,
+		decay: 0.3, engine: 0.0, fm_mod: -0.07, lpg_colour: 0.5,
+		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.55,
+		tempo: 165.0, dur: 0.7, legato: 9.0, rev_drywet: 0.11,
 		rev_time: 1.03, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
-		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
-		delay_send: 0.4,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.0,
+		delay_send: 0.37,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
 		sequences: (
@@ -66,13 +66,13 @@
 	// $PLAITS2
 	(
 		// $PRESET_SCALARS_START
-		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
-		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
-		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 0.0,
+		pitch: 36.45, harm: 0.8, timbre: 0.75, morph: 0.25,
+		decay: 0.23, engine: 13.0, fm_mod: -0.07, lpg_colour: 0.5,
+		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 1.28,
 		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.18,
 		rev_time: 1.03, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
-		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
-		delay_send: 0.4,
+		stereoMode: 0.0, dist_drive: 0.3, dist_amount: 0.0,
+		delay_send: 0.0,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
 		sequences: (
@@ -92,19 +92,19 @@
 					Rest(0.7),
 					Rest(0.7),
 				], inf).asStream,
-			div: Pseq([0.5], inf).asStream
+			div: Pseq([2], inf).asStream
 		)
 	),
 	// $PLAITS3
 	(
 		// $PRESET_SCALARS_START
-		pitch: 49.0, harm: 0.54, timbre: 0.7, morph: 0.65,
-		decay: 0.23, engine: 2.0, fm_mod: -0.07, lpg_colour: 0.5,
-		timb_mod: 0.43, morph_mod: 0.88, mul: 0.5, volume: 0.0,
-		tempo: 165.0, dur: 0.35, legato: 9.0, rev_drywet: 0.18,
-		rev_time: 1.03, rev_damp: 0.8, rev_hp: 0.7, rev_freeze: 0.0,
-		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.00,
-		delay_send: 0.4,
+		pitch: 37.0, harm: 0.75, timbre: 0.82, morph: 0.66,
+		decay: 0.83, engine: 5.0, fm_mod: -0.07, lpg_colour: 0.5,
+		timb_mod: 0.96, morph_mod: 0.88, mul: 0.5, volume: 0.83,
+		tempo: 165.0, dur: 2.8, legato: 18.0, rev_drywet: 0.51,
+		rev_time: 1.03, rev_damp: 0.49, rev_hp: 0.7, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.0,
+		delay_send: 0.66,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
 		sequences: (
@@ -119,10 +119,10 @@
 			engine: Pseq(["e", "e", "e", "e", "e", "e"] , inf).asStream,
 			duration: Pseq(
 				[
-					0.7,
-					Rest(0.7),
-					Rest(0.7),
-					Rest(0.7),
+					1.4,
+					Rest(1.4),
+					Rest(1.4),
+					Rest(1.4),
 				], inf).asStream,
 			div: Pseq([0.5], inf).asStream
 		)
