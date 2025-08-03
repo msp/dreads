@@ -72,6 +72,7 @@
 		timb_mod: 0.6, morph_mod: 0.4, mul: 0.5, volume: 1.17,
 		tempo: 165.0, dur: 1.4, legato: 9.0, rev_drywet: 0.3,
 		rev_time: 1.08, rev_damp: 0.78, rev_hp: 0.25, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.0,
 		delay_send: 0.3,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END
@@ -103,6 +104,7 @@
 		timb_mod: 0.6, morph_mod: 0.4, mul: 0.5, volume: 1.51,
 		tempo: 165.0, dur: 1.4, legato: 9.0, rev_drywet: 0.3,
 		rev_time: 1.08, rev_damp: 0.78, rev_hp: 0.25, rev_freeze: 0.0,
+		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.0,
 		delay_send: 0.3,
 		reverb_send: 0.0,
 		// $PRESET_SCALARS_END

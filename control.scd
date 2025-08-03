@@ -28,7 +28,7 @@ x.stop;
 
 ~loadRandomPreset.()
 
-~fadeOutReverb.(3);
+~fadeOutReverb.();
 
 
 
