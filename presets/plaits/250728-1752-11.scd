@@ -101,7 +101,7 @@
 		pitch: 37.0, harm: 0.75, timbre: 0.82, morph: 0.66,
 		decay: 0.83, engine: 5.0, fm_mod: -0.07, lpg_colour: 0.5,
 		timb_mod: 0.96, morph_mod: 0.88, mul: 0.5, volume: 0.83,
-		tempo: 165.0, dur: 2.8, legato: 18.0, rev_drywet: 0.51,
+		tempo: 165.0, dur: 2.8, legato: 22.0, rev_drywet: 0.51,
 		rev_time: 1.03, rev_damp: 0.49, rev_hp: 0.7, rev_freeze: 0.0,
 		stereoMode: 1.0, dist_drive: 0.0, dist_amount: 0.0,
 		delay_send: 0.66,
