@@ -2,6 +2,31 @@
 // Preset Utils
 ////////////////////////////////////////////////////////////////////////////////
 (
+// Template factory function to create plaits instances with inheritance
+~plaitsFactory = { |scalarOverrides, sequenceOverrides|
+	var scalars, sequences, sortedSequences;
+	
+	scalars = ~defaultScalars.copy;
+	sequences = ~defaultSequences.copy;
+	
+	// Use empty dictionaries if no overrides provided
+	scalarOverrides = scalarOverrides ?? ();
+	sequenceOverrides = sequenceOverrides ?? ();
+
+	// Merge overrides into defaults
+	scalars.putAll(scalarOverrides);
+	sequences.putAll(sequenceOverrides);
+
+	// Create alphabetically sorted sequences dictionary
+	sortedSequences = ();
+	sequences.keys.asArray.sort.do { |key|
+		sortedSequences.put(key, sequences[key]);
+	};
+
+	// Create the merged instance
+	scalars.putAll((sequences: sortedSequences))
+};
+
 ~generatePresetName = {
 	var timestamp = Date.localtime;
 	timestamp.year.asString[2..] ++
@@ -59,14 +84,16 @@
 	parts.join(",");
 };
 
+
 ~replaceScalarValues = { |content|
-	var lines = content.split($\n);
-	var plaitsIndex = -1;
-	var inScalarsSection = false;
+	var lines, plaitsIndex, inScalarsSection, result, match, currentPlaits, paramLines, currentValue, formattedValue;
+	
+	lines = content.split($\n);
+	plaitsIndex = -1;
+	inScalarsSection = false;
+	result = [];
 
-	lines.collect { |line|
-		var match, trimmedLine, isComment;
-
+	lines.do { |line|
 		// Track plaits instance markers
 		if (line.contains("$PLAITS")) {
 			match = line.findRegexp("\\$PLAITS([0-9]+)");
@@ -76,26 +103,56 @@
 			};
 		};
 
-		// Track scalar section markers
+		// Handle scalar section replacement
 		if (line.contains("$PRESET_SCALARS_START")) {
 			inScalarsSection = true;
-			("Entering scalars section").postln;
+			result = result.add(line);
+			("Entering scalars section for plaits " ++ plaitsIndex).postln;
+			
+			// Generate new scalar section with ALL parameters in alphabetical order
+			if ((plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~plaits.size)) {
+				currentPlaits = ~plaits[plaitsIndex];
+				paramLines = [];
+				
+				// Get all scalar keys in alphabetical order
+				~defaultScalars.keys.asArray.sort.do { |key|
+					if (key != \sequences) {
+						currentValue = currentPlaits[key];
+						if (currentValue.notNil) {
+							formattedValue = if (currentValue.isNumber) {
+								currentValue.round(0.01).asString;
+							} {
+								currentValue.asString;
+							};
+							paramLines = paramLines.add("\t\t\t" ++ key ++ ": " ++ formattedValue ++ ",");
+						};
+					};
+				};
+				
+				// Template format: add opening paren
+				result = result.add("\t\t(");
+				if (paramLines.size > 0) {
+					// Remove trailing comma from last parameter
+					paramLines[paramLines.size - 1] = paramLines[paramLines.size - 1][0..paramLines[paramLines.size - 1].size - 2];
+					result = result.addAll(paramLines);
+				};
+				result = result.add("\t\t),");
+			};
 		};
+		
 		if (line.contains("$PRESET_SCALARS_END")) {
 			inScalarsSection = false;
+			result = result.add(line);
 			("Exiting scalars section").postln;
 		};
+		
+		if (inScalarsSection.not && line.contains("$PRESET_SCALARS_START").not && line.contains("$PRESET_SCALARS_END").not) {
+			// Outside scalar sections, keep all lines as-is
+			result = result.add(line);
+		};
+	};
 
-		// Check if line is commented
-		trimmedLine = line.replace(" ", "").replace("\t", "");
-		isComment = trimmedLine.beginsWith("//");
-
-		// Process parameter lines
-		if (isComment.not && line.contains(":") && inScalarsSection &&
-		   (plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~plaits.size)) {
-			~processParameterLine.(line, plaitsIndex);
-		} { line };
-	}.join("\n");
+	result.join("\n");
 };
 
 // Update UI preset selector to reflect current preset
