@@ -7,23 +7,31 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			pitch: 42,
-			harm: 0.42,
-			timbre: 0.38,
-			morph: 0.53,
 			decay: 0.62,
-			engine: 11,
+			delay_send: 0.1,
+			dist_amount: 0.0,
+			dist_drive: 0.0,
+			dur: 0.59,
+			engine: 11.0,
 			fm_mod: 0.85,
-			timb_mod: 0.6,
+			harm: 0.42,
+			legato: 0.7,
+			lpg_colour: 0.5,
+			morph: 0.53,
 			morph_mod: 0.75,
 			mul: 0.7,
-			volume: 0.9,
-			dur: 0.59,
-			rev_drywet: 0.28,
-			rev_time: 0.56,
+			pitch: 42.0,
 			rev_damp: 0.78,
+			rev_drywet: 0.28,
+			rev_freeze: 0.0,
 			rev_hp: 0.61,
-			delay_send: 0.1
+			rev_time: 0.56,
+			reverb_send: 0.0,
+			stereoMode: 1.0,
+			tempo: 165.0,
+			timb_mod: 0.6,
+			timbre: 0.38,
+			volume: 0.9
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -49,16 +57,31 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			engine: 6.0,
-			timb_mod: 0.6,
-			morph_mod: 0.4,
-			volume: 0.0,
+			decay: 0.5,
+			delay_send: 0.1,
+			dist_amount: 0.0,
+			dist_drive: 0.0,
 			dur: 0.35,
-			rev_drywet: 0.28,
-			rev_time: 0.56,
+			engine: 6.0,
+			fm_mod: 0.0,
+			harm: 0.5,
+			legato: 0.7,
+			lpg_colour: 0.5,
+			morph: 0.5,
+			morph_mod: 0.4,
+			mul: 0.5,
+			pitch: 49.0,
 			rev_damp: 0.78,
+			rev_drywet: 0.28,
+			rev_freeze: 0.0,
 			rev_hp: 0.61,
-			delay_send: 0.1
+			rev_time: 0.56,
+			reverb_send: 0.0,
+			stereoMode: 1.0,
+			tempo: 165.0,
+			timb_mod: 0.6,
+			timbre: 0.5,
+			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -76,16 +99,31 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			engine: 6.0,
-			timb_mod: 0.6,
-			morph_mod: 0.4,
-			volume: 0.0,
+			decay: 0.5,
+			delay_send: 0.1,
+			dist_amount: 0.0,
+			dist_drive: 0.0,
 			dur: 0.35,
-			rev_drywet: 0.28,
-			rev_time: 0.56,
+			engine: 6.0,
+			fm_mod: 0.0,
+			harm: 0.5,
+			legato: 0.7,
+			lpg_colour: 0.5,
+			morph: 0.5,
+			morph_mod: 0.4,
+			mul: 0.5,
+			pitch: 49.0,
 			rev_damp: 0.78,
+			rev_drywet: 0.28,
+			rev_freeze: 0.0,
 			rev_hp: 0.61,
-			delay_send: 0.1
+			rev_time: 0.56,
+			reverb_send: 0.0,
+			stereoMode: 1.0,
+			tempo: 165.0,
+			timb_mod: 0.6,
+			timbre: 0.5,
+			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
 		(
