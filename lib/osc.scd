@@ -24,70 +24,83 @@ OSCdef.new(
 );
 
 // Create OSC listeners for all instances and parameters
-~plaits.do { |instance, instanceIndex|
-	var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
+~setupPlaitsOSC = {
+	~plaits.synths.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
 
-	["binding plaits ------------------->", instanceIndex].postln;
-	// Generic parameter handling - OSC keys match data structure keys
-	instance.keys.select({ |key| key != \pattern }).do { |paramKey|
-		// ["binding key", paramKey].postln;
-		OSCdef.new(
-			("plaits" ++ instanceNum ++ paramKey).asSymbol,
-			{
-				arg msg, time, addr, port;
-				var value = msg[1];
-				msg.round(0.001).postln;
+		["binding plaits ------------------->", instanceIndex].postln;
+		// Generic parameter handling - OSC keys match data structure keys
+		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+			// ["binding key", paramKey].postln;
+			OSCdef.new(
+				("plaits" ++ instanceNum ++ paramKey).asSymbol,
+				{
+					arg msg, time, addr, port;
+					var value = msg[1];
+					msg.round(0.001).postln;
 
-				// Special handling for tempo (affects global tempo clock)
-				if (paramKey == 'tempo') {
-					~plaits[instanceIndex].tempo = value;
-					~tempoClock.tempo = (value.max(0.1))/60;
-				} {
-					// Generic parameter update
-					~plaits[instanceIndex][paramKey] = value;
-				};
-			},
-			"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString
-		);
+					// Special handling for tempo (affects global tempo clock)
+					if (paramKey == 'tempo') {
+						~plaits.synths[instanceIndex][paramKey] = value;
+						~tempoClock.tempo = (value.max(0.1))/60;
+					} {
+						// Generic parameter update
+						~plaits.synths[instanceIndex][paramKey] = value;
+					};
+				},
+				"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString
+			);
+		};
 	};
 };
 
 // Delay Effect OSC Handlers
-[\delayTime, \feedback, \filterFreq, \spread].do { |paramKey|
-	['binding delay->', paramKey].postln;
+[\time, \feedback, \filter_freq, \spread].do { |paramKey|
+	['binding fx/delay->', paramKey].postln;
 	OSCdef.new(
-		("delay" ++ paramKey).asSymbol,
+		("fx_delay_" ++ paramKey).asSymbol,
 		{
 			arg msg, time, addr, port;
 			var value = msg[1];
-			["dly", paramKey, value].postln;
+			var synthParam = ("fx_delay_" ++ paramKey).asSymbol;
+			["fx/delay", paramKey, value].postln;
+			
+			// Update preset FX settings (nested structure)
+			~plaits.fx.delay[paramKey] = value;
+			
+			// Send to synth using clean parameter names
 			if (~delayFX.notNil) {
 				~delayFX.set(paramKey, value);
-				// ["Set", paramKey, "to", value].postln;
 			} {
 				"ERROR: ~delayFX is nil!".postln;
 			};
 		},
-		"/delay/" ++ paramKey.asString
+		"/fx/delay/" ++ paramKey.asString
 	);
 };
 
 // Global Reverb Effect OSC Handlers
 [\time, \damp, \hp, \diffuse, \freeze].do { |paramKey|
-	['binding reverb->', paramKey].postln;
+	['binding fx/reverb->', paramKey].postln;
 	OSCdef.new(
-		("reverb" ++ paramKey).asSymbol,
+		("fx_reverb_" ++ paramKey).asSymbol,
 		{
 			arg msg, time, addr, port;
 			var value = msg[1];
-			["rvb", paramKey, value].postln;
+			var synthParam = ("fx_reverb_" ++ paramKey).asSymbol;
+			["fx/reverb", paramKey, value].postln;
+			
+			// Update preset FX settings (nested structure)
+			~plaits.fx.reverb[paramKey] = value;
+			
+			// Send to synth using clean parameter names
 			if (~reverbFX.notNil) {
 				~reverbFX.set(paramKey, value);
 			} {
 				"ERROR: ~reverbFX is nil!".postln;
 			};
 		},
-		"/reverb/" ++ paramKey.asString
+		"/fx/reverb/" ++ paramKey.asString
 	);
 };
 
@@ -137,19 +150,41 @@ OSCdef.new(
 
 // Push current state values to UI
 ~pushStateToUI = {
-	var ui = ~ui.();
+	var ui, plaitsArray, fxSettings;
+	
+	ui = ~ui.();
+	
+	// Get current synth and FX data with fallback for compatibility
+	if (~plaits.isKindOf(Dictionary)) {
+		plaitsArray = ~plaits.synths;
+		fxSettings = ~plaits.fx ?? ();
+	} {
+		plaitsArray = ~plaits; // Old array format fallback
+		fxSettings = ();
+	};
 
-	~plaits.do { |instance, instanceIndex|
+	// Send synth instance parameters
+	plaitsArray.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 
 		// Send all parameter values to UI
 		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
-			// ["Sending:", path, value].postln;
+			["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
 	};
+	
+	// Send global FX parameters (nested structure)
+	fxSettings.keysValuesDo { |category, categoryParams|
+		categoryParams.keysValuesDo { |param, value|
+			var path = "/fx/" ++ category ++ "/" ++ param;
+			["Sending:", path, value].postln;
+			ui.sendMsg(path, value);
+		};
+	};
+	
 	"Plaits state pushed to UI!".postln;
 };
 
@@ -164,6 +199,9 @@ OSCFunc({ |msg, time, addr, port|
 		["POSSIBLE TYPO:", msg].postln;
 	};
 });
+
+// Setup OSC for plaits instances (called after preset structure is loaded)
+~setupPlaitsOSC.();
 
 ~pushStateToUI.value;
 )

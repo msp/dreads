@@ -5,10 +5,10 @@
 // Template factory function to create plaits instances with inheritance
 ~plaitsFactory = { |scalarOverrides, sequenceOverrides|
 	var scalars, sequences, sortedSequences;
-	
+
 	scalars = ~defaultScalars.copy;
 	sequences = ~defaultSequences.copy;
-	
+
 	// Use empty dictionaries if no overrides provided
 	scalarOverrides = scalarOverrides ?? ();
 	sequenceOverrides = sequenceOverrides ?? ();
@@ -25,6 +25,41 @@
 
 	// Create the merged instance
 	scalars.putAll((sequences: sortedSequences))
+};
+
+// New preset factory function that creates the full preset structure with FX
+~presetFactory = { |synthArray, fxOverrides|
+	var fx, sortedFX;
+
+	fx = ~defaultFX.deepCopy;
+	fxOverrides = fxOverrides ?? ();
+
+	// Merge FX overrides into defaults (nested structure)
+	fxOverrides.keysValuesDo { |category, categoryValues|
+		if (categoryValues.isKindOf(Dictionary)) {
+			categoryValues.keysValuesDo { |param, value|
+				fx[category][param] = value;
+			};
+		} {
+			fx[category] = categoryValues;
+		};
+	};
+
+	// Create alphabetically sorted FX dictionary
+	sortedFX = ();
+	fx.keys.asArray.sort.do { |category|
+		var sortedCategory = ();
+		fx[category].keys.asArray.sort.do { |param|
+			sortedCategory.put(param, fx[category][param]);
+		};
+		sortedFX.put(category, sortedCategory);
+	};
+
+	// Return the new preset structure
+	(
+		synths: synthArray,
+		fx: sortedFX
+	)
 };
 
 ~generatePresetName = {
@@ -86,11 +121,12 @@
 
 
 ~replaceScalarValues = { |content|
-	var lines, plaitsIndex, inScalarsSection, result, match, currentPlaits, paramLines, currentValue, formattedValue;
-	
+	var lines, plaitsIndex, inScalarsSection, inFXSection, result, match, currentPlaits, currentFX, paramLines, currentValue, formattedValue, categoryLines;
+
 	lines = content.split($\n);
 	plaitsIndex = -1;
 	inScalarsSection = false;
+	inFXSection = false;
 	result = [];
 
 	lines.do { |line|
@@ -103,17 +139,65 @@
 			};
 		};
 
+		// Handle FX section replacement
+		if (line.contains("$PRESET_FX_START")) {
+			inFXSection = true;
+			result = result.add(line);
+			("Entering FX section").postln;
+
+			// Generate new FX section with nested structure
+			currentFX = ~plaits.fx ?? ~defaultFX.deepCopy;
+			("Current FX values for save: " ++ currentFX).postln;
+			paramLines = [];
+
+			// Get all FX categories in alphabetical order
+			~defaultFX.keys.asArray.sort.do { |category|
+				paramLines = paramLines.add("\t" ++ category ++ ": (");
+				
+				// Get all parameters within category in alphabetical order
+				categoryLines = [];
+				currentFX[category].keys.asArray.sort.do { |param|
+					currentValue = currentFX[category][param];
+				if (currentValue.notNil) {
+					formattedValue = if (currentValue.isNumber) {
+						currentValue.round(0.01).asString;
+					} {
+						currentValue.asString;
+					};
+						categoryLines = categoryLines.add("\t\t" ++ param ++ ": " ++ formattedValue ++ ",");
+					};
+				};
+				
+				// Remove trailing comma from last parameter in category
+				if (categoryLines.size > 0) {
+					categoryLines[categoryLines.size - 1] = categoryLines[categoryLines.size - 1][0..categoryLines[categoryLines.size - 1].size - 2];
+					paramLines = paramLines.addAll(categoryLines);
+				};
+				
+				paramLines = paramLines.add("\t),");
+			};
+
+			// Template format: add opening paren
+			result = result.add("(");
+			if (paramLines.size > 0) {
+				// Remove trailing comma from last parameter
+				paramLines[paramLines.size - 1] = paramLines[paramLines.size - 1][0..paramLines[paramLines.size - 1].size - 2];
+				result = result.addAll(paramLines);
+			};
+			result = result.add("),");
+		};
+
 		// Handle scalar section replacement
 		if (line.contains("$PRESET_SCALARS_START")) {
 			inScalarsSection = true;
 			result = result.add(line);
-			("Entering scalars section for plaits " ++ plaitsIndex).postln;
-			
+			("Entering scalars section for synth " ++ plaitsIndex).postln;
+
 			// Generate new scalar section with ALL parameters in alphabetical order
-			if ((plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~plaits.size)) {
-				currentPlaits = ~plaits[plaitsIndex];
+			if ((plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~plaits.synths.size)) {
+				currentPlaits = ~plaits.synths[plaitsIndex];
 				paramLines = [];
-				
+
 				// Get all scalar keys in alphabetical order
 				~defaultScalars.keys.asArray.sort.do { |key|
 					if (key != \sequences) {
@@ -128,7 +212,7 @@
 						};
 					};
 				};
-				
+
 				// Template format: add opening paren
 				result = result.add("\t\t(");
 				if (paramLines.size > 0) {
@@ -139,15 +223,25 @@
 				result = result.add("\t\t),");
 			};
 		};
-		
+
+		if (line.contains("$PRESET_FX_END")) {
+			inFXSection = false;
+			result = result.add(line);
+			("Exiting FX section").postln;
+		};
+
 		if (line.contains("$PRESET_SCALARS_END")) {
 			inScalarsSection = false;
 			result = result.add(line);
 			("Exiting scalars section").postln;
 		};
-		
-		if (inScalarsSection.not && line.contains("$PRESET_SCALARS_START").not && line.contains("$PRESET_SCALARS_END").not) {
-			// Outside scalar sections, keep all lines as-is
+
+		if (inScalarsSection.not && inFXSection.not &&
+		   line.contains("$PRESET_SCALARS_START").not &&
+		   line.contains("$PRESET_SCALARS_END").not &&
+		   line.contains("$PRESET_FX_START").not &&
+		   line.contains("$PRESET_FX_END").not) {
+			// Outside sections, keep all lines as-is
 			result = result.add(line);
 		};
 	};

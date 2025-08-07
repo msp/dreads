@@ -5,14 +5,14 @@
 (
 x = Pdef(\plaitsSequence,
 	Ppar(
-		~plaits.collect { |instance, instanceIndex|
+		~plaits.synths.collect { |instance, i|
 			Pbind(
 				\instrument, \plaits,
 				\delayBus, ~delayBus,
 				\reverbBus, ~reverbBus,
 				\pitch, Pfunc { |event|
-					// ["--->", ~state, ~plaits[instanceIndex].engine, ~playCount].postln;
-					if (instanceIndex == 0) {
+					// ["--->", ~state, ~plaits.synths[i].engine, ~playCount].postln;
+					if (i == 0) {
 						~playCount = ~playCount + 1;
 						if (~playCount % 16 == 0) {
 							~state = ~states.next;
@@ -20,72 +20,77 @@ x = Pdef(\plaitsSequence,
 						};
 					};
 
-					~plaits[instanceIndex].pitch;
+					~plaits.synths[i].pitch;
 				},
 				\dur, Pfunc { |event|
-					~plaits[instanceIndex].dur = ~setDuration.(
-						~plaits[instanceIndex].sequences.duration.next,
-						~plaits[instanceIndex].sequences.div.next
+					~plaits.synths[i].dur = ~setDuration.(
+						~plaits.synths[i].sequences.duration.next,
+						~plaits.synths[i].sequences.div.next
 					);
-					~plaits[instanceIndex].dur;
+					~plaits.synths[i].dur;
 				},
 				\decay, Pfunc { |event|
-					// ~modulateBipolar.(~plaits[instanceIndex].sequences.decay.next, ~plaits[instanceIndex].decay)
+					// ~modulateBipolar.(~plaits.synths[i].sequences.decay.next, ~plaits.synths[i].decay)
 					~modulateLayered.(
-						~plaits[instanceIndex].sequences.decay.next,
+						~plaits.synths[i].sequences.decay.next,
 						~decayLFO.next,
-						~plaits[instanceIndex].decay,
+						~plaits.synths[i].decay,
 						0.3 // LFO Amount
 					);
 				},
 				\harm, Pfunc { |event|
-					~modulateBipolar.(~plaits[instanceIndex].sequences.harm.next, ~plaits[instanceIndex].harm);
+					~modulateBipolar.(~plaits.synths[i].sequences.harm.next, ~plaits.synths[i].harm);
 				},
 				\timbre, Pfunc { |event|
-					// ~modulateBipolar.(~plaits[instanceIndex].sequences.timbre.next, ~plaits[instanceIndex].timbre)
-					// ~modulateBipolar.(~timbreLFO.next, ~plaits[instanceIndex].timbre)
+					// ~modulateBipolar.(~plaits.synths[i].sequences.timbre.next, ~plaits.synths[i].timbre)
+					// ~modulateBipolar.(~timbreLFO.next, ~plaits.synths[i].timbre)
 					~modulateLayered.(
-						~plaits[instanceIndex].sequences.timbre.next,
+						~plaits.synths[i].sequences.timbre.next,
 						~timbreLFO.next,
-						~plaits[instanceIndex].timbre,
-						~plaits[instanceIndex].timb_mod
+						~plaits.synths[i].timbre,
+						~plaits.synths[i].timb_mod
 					);
 				},
 				\morph, Pfunc { |event|
-					// ~modulateBipolar.(~plaits[instanceIndex].sequences.morph.next, ~plaits[instanceIndex].morph)
+					// ~modulateBipolar.(~plaits.synths[i].sequences.morph.next, ~plaits.synths[i].morph)
 					~modulateLayered.(
-						~plaits[instanceIndex].sequences.morph.next,
+						~plaits.synths[i].sequences.morph.next,
 						~morphLFO.next,
-						~plaits[instanceIndex].morph,
-						~plaits[instanceIndex].morph_mod
+						~plaits.synths[i].morph,
+						~plaits.synths[i].morph_mod
 					);
 				},
 				\fm_mod, Pfunc { |event|
-					~modulateBipolar.(~plaits[instanceIndex].sequences.fm_mod.next, ~plaits[instanceIndex].fm_mod);
+					~modulateBipolar.(~plaits.synths[i].sequences.fm_mod.next, ~plaits.synths[i].fm_mod);
 				},
 				\lpg_colour, Pfunc { |event|
-					~modulateBipolar.(~plaits[instanceIndex].sequences.lpg_colour.next, ~plaits[instanceIndex].lpg_colour);
+					~modulateBipolar.(~plaits.synths[i].sequences.lpg_colour.next, ~plaits.synths[i].lpg_colour);
 				},
-				\legato, Pfunc { |event| ~plaits[instanceIndex].legato },
+				\legato, Pfunc { |event| ~plaits.synths[i].legato },
 				\engine, Pfunc { |event|
-					~setEngine.(~plaits[instanceIndex].sequences.engine.next, instanceIndex);
+					~setEngine.(~plaits.synths[i].sequences.engine.next, i);
 				},
-				\mul, Pfunc { |event| ~plaits[instanceIndex].mul },
-				\rev_drywet, Pfunc { |event| ~plaits[instanceIndex].rev_drywet },
-				\rev_time, Pfunc { |event| ~plaits[instanceIndex].rev_time },
-				\rev_damp, Pfunc { |event| ~plaits[instanceIndex].rev_damp },
-				\rev_hp, Pfunc { |event| ~plaits[instanceIndex].rev_hp },
-				\rev_freeze, Pfunc { |event| ~plaits[instanceIndex].rev_freeze },
+				\mul, Pfunc { |event| ~plaits.synths[i].mul },
+				\rev_drywet, Pfunc { |event| ~plaits.synths[i].rev_drywet },
+				\rev_time, Pfunc { |event|
+					var out = ~modulateBipolar.(~plaits.synths[i].sequences.rev_time.next, ~plaits.synths[i].rev_time);
+					// ["rev_time", out].postln;
+
+					out
+				},
+				\rev_damp, Pfunc { |event| ~plaits.synths[i].rev_damp },
+				\rev_hp, Pfunc { |event| ~plaits.synths[i].rev_hp },
+				\rev_freeze, Pfunc { |event| ~plaits.synths[i].rev_freeze },
 				\delay_send, Pfunc { |event|
-					~modulateBipolar.(~plaits[instanceIndex].sequences.delay_send.next, ~plaits[instanceIndex].delay_send);
+					~modulateBipolar.(~plaits.synths[i].sequences.delay_send.next, ~plaits.synths[i].delay_send);
 				},
 				\reverb_send, Pfunc { |event|
-					~modulateBipolar.(~plaits[instanceIndex].sequences.reverb_send.next, ~plaits[instanceIndex].reverb_send);
+					~modulateBipolar.(~plaits.synths[i].sequences.reverb_send.next, ~plaits.synths[i].reverb_send);
 				},
-				\dist_drive, Pfunc { |event| ~plaits[instanceIndex].dist_drive },
-				\dist_amount, Pfunc { |event| ~plaits[instanceIndex].dist_amount },
-				\stereoMode, Pfunc { |event| ~plaits[instanceIndex].stereoMode },
-				\volume, Pfunc { |event| ~plaits[instanceIndex].volume },
+				\dist_drive, Pfunc { |event| ~plaits.synths[i].dist_drive },
+				\dist_amount, Pfunc { |event| ~plaits.synths[i].dist_amount },
+				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
+				\volume, Pfunc { |event| ~plaits.synths[i].volume },
 				\out, Pseq([0], inf),
 			)
 		}

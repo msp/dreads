@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Plaits State - Data structures and synth instance definitions
+// Plaits State - Template-based default preset
 ////////////////////////////////////////////////////////////////////////////////
 (
 ~plaits = ~presetFactory.(
@@ -9,49 +9,42 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
-			delay_send: 0.0,
+			decay: 0.81,
+			delay_send: 0.9,
 			dist_amount: 0.0,
 			dist_drive: 0.0,
-			dur: 0.35,
+			dur: 0.5,
 			engine: 1.0,
-			fm_mod: 0.01,
+			fm_mod: 0.0,
 			harm: 0.48,
 			legato: 9.0,
 			lpg_colour: 0.5,
 			morph: 0.43,
 			morph_mod: 0.4,
 			mul: 0.5,
-			pitch: 49.0,
-			rev_damp: 0.8,
-			rev_drywet: 0.21,
+			pitch: 17.37,
+			rev_damp: 0.0,
+			rev_drywet: 0.73,
 			rev_freeze: 0.0,
-			rev_hp: 0.7,
-			rev_time: 0.3,
-			reverb_send: 0.0,
+			rev_hp: 0.0,
+			rev_time: 0.28,
+			reverb_send: 0.76,
 			stereoMode: 1.0,
 			tempo: 165.0,
-			timb_mod: 0.3,
-			timbre: 0.44,
-			volume: 0.8
+			timb_mod: 0.0,
+			timbre: 0.64,
+			volume: 1.11
 		),
 		// $PRESET_SCALARS_END
 		(
+			timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
 			decay: Pseq([0.5, 0.3, Pseq([0.6, 0.1, 0.8] / 3)] / 1, inf).asStream,
-			div: Pseq([2], inf).asStream,
-			duration: Pseq([
-				0.7,
-				Pwrand([0.7, Rest(0.7)], [0.9, 0.1].normalizeSum),
-				0.7,
-				Pwrand([0.7, Rest(1.4)], [0.95, 0.05].normalizeSum),
-				0.7,
-				Pwrand([1.4, 0.7], [0.6, 0.4].normalizeSum),
-			], inf).asStream,
-			engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
+			morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,
 			harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
 			lpg_colour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
-			morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,
-			timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream
+			engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
+			duration: Pseq([0.5], inf).asStream,
+			div: Pseq([1, 2, 1, 1, 2], inf).asStream
 		)
 	),
 	
@@ -59,42 +52,41 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
-			delay_send: 0.0,
+			decay: 0.89,
+			delay_send: 0.4,
 			dist_amount: 0.0,
 			dist_drive: 0.0,
-			dur: 0.35,
-			engine: 1.0,
-			fm_mod: 0.01,
+			dur: Rest(1.4),
+			engine: 2.0,
+			fm_mod: 0.0,
 			harm: 0.48,
 			legato: 9.0,
 			lpg_colour: 0.5,
 			morph: 0.43,
-			morph_mod: 0.4,
+			morph_mod: 0.8,
 			mul: 0.5,
-			pitch: 49.0,
+			pitch: 16.04,
 			rev_damp: 0.8,
-			rev_drywet: 0.21,
+			rev_drywet: 0.25,
 			rev_freeze: 0.0,
 			rev_hp: 0.7,
 			rev_time: 0.3,
-			reverb_send: 0.0,
+			reverb_send: 0.1,
 			stereoMode: 1.0,
 			tempo: 165.0,
-			timb_mod: 0.3,
+			timb_mod: 0.7,
 			timbre: 0.44,
-			volume: 0.7
+			volume: 1.32
 		),
 		// $PRESET_SCALARS_END
 		(
-			div: Pseq([0.5], inf).asStream,
 			duration: Pseq([
 				0.7,
 				Rest(0.7),
 				Rest(0.7),
 				Rest(0.7),
 			], inf).asStream,
-			engine: Pseq(["e", "e", "e", "e", "e", "e"], inf).asStream
+			div: Pseq([0.5], inf).asStream
 		)
 	),
 	
@@ -102,42 +94,41 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
+			decay: 0.59,
 			delay_send: 0.0,
 			dist_amount: 0.0,
 			dist_drive: 0.0,
-			dur: 0.35,
-			engine: 1.0,
-			fm_mod: 0.01,
+			dur: Rest(2.8),
+			engine: 2.0,
+			fm_mod: 0.0,
 			harm: 0.48,
 			legato: 9.0,
 			lpg_colour: 0.5,
 			morph: 0.43,
-			morph_mod: 0.4,
+			morph_mod: 1.0,
 			mul: 0.5,
-			pitch: 49.0,
-			rev_damp: 0.8,
-			rev_drywet: 0.21,
+			pitch: 35.19,
+			rev_damp: 0.4,
+			rev_drywet: 0.58,
 			rev_freeze: 0.0,
-			rev_hp: 0.7,
-			rev_time: 0.3,
+			rev_hp: 0.4,
+			rev_time: 0.99,
 			reverb_send: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
-			timb_mod: 0.3,
+			timb_mod: 1.0,
 			timbre: 0.44,
-			volume: 0.7
+			volume: 1.11
 		),
 		// $PRESET_SCALARS_END
 		(
-			div: Pseq([0.5], inf).asStream,
 			duration: Pseq([
 				0.7,
 				Rest(0.7),
 				Rest(0.7),
 				Pwrand([Rest(1.4), 0.7], [0.5, 0.5].normalizeSum),
 			], inf).asStream,
-			engine: Pseq(["e", "e", "e", "e", "e", "e"], inf).asStream
+			div: Pseq([0.5], inf).asStream
 		)
 	)
 	],

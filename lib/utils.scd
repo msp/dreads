@@ -48,10 +48,10 @@
 };
 
 // Engine selection with expression evaluation
-~setEngine = { |seqExpr, instanceIndex=0|
+~setEngine = { |seqExpr, i=0|
 	// Replace "e" placeholder with actual current engine value in the expression
 	var engines = (0..15);
-	var expr = seqExpr.asString.replace("e", ~plaits[instanceIndex].engine.asString);
+	var expr = seqExpr.asString.replace("e", ~plaits.synths[i].engine.asString);
 	var output = engines.wrapAt(expr.interpret);
 
 	// ['~setEngine:', seqExpr, expr, output].postln;

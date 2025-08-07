@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Plaits State - Data structures and synth instance definitions
+// Plaits State - Template-based default preset
 ////////////////////////////////////////////////////////////////////////////////
 (
 ~plaits = ~presetFactory.(
@@ -9,49 +9,44 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
+			decay: 0.21,
 			delay_send: 0.0,
 			dist_amount: 0.0,
 			dist_drive: 0.0,
-			dur: 0.35,
-			engine: 1.0,
-			fm_mod: 0.01,
-			harm: 0.48,
+			dur: 0.04,
+			engine: 4.0,
+			fm_mod: -0.05,
+			harm: 0.84,
 			legato: 9.0,
 			lpg_colour: 0.5,
-			morph: 0.43,
-			morph_mod: 0.4,
+			morph: 0.37,
+			morph_mod: 1.0,
 			mul: 0.5,
-			pitch: 49.0,
-			rev_damp: 0.8,
-			rev_drywet: 0.21,
+			pitch: 17.37,
+			rev_damp: 0.15,
+			rev_drywet: 0.2,
 			rev_freeze: 0.0,
-			rev_hp: 0.7,
-			rev_time: 0.3,
+			rev_hp: 0.29,
+			rev_time: 0.93,
 			reverb_send: 0.0,
 			stereoMode: 1.0,
-			tempo: 165.0,
-			timb_mod: 0.3,
-			timbre: 0.44,
-			volume: 0.8
+			tempo: 85.0,
+			timb_mod: 1.0,
+			timbre: 0.8,
+			volume: 1.58
 		),
 		// $PRESET_SCALARS_END
 		(
-			decay: Pseq([0.5, 0.3, Pseq([0.6, 0.1, 0.8] / 3)] / 1, inf).asStream,
-			div: Pseq([2], inf).asStream,
-			duration: Pseq([
-				0.7,
-				Pwrand([0.7, Rest(0.7)], [0.9, 0.1].normalizeSum),
-				0.7,
-				Pwrand([0.7, Rest(1.4)], [0.95, 0.05].normalizeSum),
-				0.7,
-				Pwrand([1.4, 0.7], [0.6, 0.4].normalizeSum),
-			], inf).asStream,
-			engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
-			harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
-			lpg_colour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
-			morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,
-			timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream
+			timbre: Pgauss(0.0, 1.0, inf).asStream,
+			decay: Pgauss(0.0, 0.01, inf).asStream,
+			morph: Pgbrown(1.0, 1.0, 1.0, inf).asStream,
+			harm: Pgauss(0.0, 1.0, inf).asStream,
+			// lpg_colour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
+			engine: Pseq(["e", "e", "e+5", "e", "e", "e+4"], inf).asStream,
+			duration: Pgauss(0.01, 1.0, inf).asStream,
+			// div: Pseq([1, 3, 1, 1, 2], inf).asStream,
+			reverb_send: Pgauss(0.0, 0.2, inf).asStream,
+			// rev_time: Pwhite(1.0, 1.2, inf).asStream,
 		)
 	),
 	
@@ -59,42 +54,36 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
-			delay_send: 0.0,
+			decay: 0.1,
+			delay_send: 0.4,
 			dist_amount: 0.0,
 			dist_drive: 0.0,
-			dur: 0.35,
-			engine: 1.0,
-			fm_mod: 0.01,
+			dur: 23.26,
+			engine: 13.0,
+			fm_mod: 0.0,
 			harm: 0.48,
 			legato: 9.0,
 			lpg_colour: 0.5,
 			morph: 0.43,
-			morph_mod: 0.4,
+			morph_mod: 0.8,
 			mul: 0.5,
-			pitch: 49.0,
+			pitch: 26.04,
 			rev_damp: 0.8,
-			rev_drywet: 0.21,
+			rev_drywet: 0.25,
 			rev_freeze: 0.0,
 			rev_hp: 0.7,
 			rev_time: 0.3,
-			reverb_send: 0.0,
+			reverb_send: 0.1,
 			stereoMode: 1.0,
 			tempo: 165.0,
-			timb_mod: 0.3,
+			timb_mod: 0.7,
 			timbre: 0.44,
-			volume: 0.7
+			volume: 1.53
 		),
 		// $PRESET_SCALARS_END
 		(
-			div: Pseq([0.5], inf).asStream,
-			duration: Pseq([
-				0.7,
-				Rest(0.7),
-				Rest(0.7),
-				Rest(0.7),
-			], inf).asStream,
-			engine: Pseq(["e", "e", "e", "e", "e", "e"], inf).asStream
+			duration: Pgauss(1.0, 10.0, inf).asStream,
+			div: Pseq([0.5], inf).asStream
 		)
 	),
 	
@@ -102,42 +91,37 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
+			decay: 0.77,
 			delay_send: 0.0,
 			dist_amount: 0.0,
 			dist_drive: 0.0,
-			dur: 0.35,
-			engine: 1.0,
-			fm_mod: 0.01,
+			dur: 7.25,
+			engine: 15.0,
+			fm_mod: 0.0,
 			harm: 0.48,
 			legato: 9.0,
 			lpg_colour: 0.5,
-			morph: 0.43,
-			morph_mod: 0.4,
+			morph: 1.0,
+			morph_mod: 1.0,
 			mul: 0.5,
-			pitch: 49.0,
-			rev_damp: 0.8,
-			rev_drywet: 0.21,
+			pitch: 35.19,
+			rev_damp: 0.58,
+			rev_drywet: 0.58,
 			rev_freeze: 0.0,
-			rev_hp: 0.7,
-			rev_time: 0.3,
+			rev_hp: 0.45,
+			rev_time: 0.56,
 			reverb_send: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
-			timb_mod: 0.3,
+			timb_mod: 1.0,
 			timbre: 0.44,
-			volume: 0.7
+			volume: 1.34
 		),
 		// $PRESET_SCALARS_END
 		(
-			div: Pseq([0.5], inf).asStream,
-			duration: Pseq([
-				0.7,
-				Rest(0.7),
-				Rest(0.7),
-				Pwrand([Rest(1.4), 0.7], [0.5, 0.5].normalizeSum),
-			], inf).asStream,
-			engine: Pseq(["e", "e", "e", "e", "e", "e"], inf).asStream
+			duration: Pwhite(5.0, 10.0, inf).asStream,
+			// div: Pseq([0.5], inf).asStream,
+			rev_time: Pwhite(0.4, 1.1, inf).asStream,
 		)
 	)
 	],

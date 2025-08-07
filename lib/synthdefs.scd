@@ -105,7 +105,7 @@ SynthDef(\plaits,
 
 // Filter Delay Send Effect
 SynthDef(\globalFilterDelay, {
-	arg out=0, delayTime=0.25, feedback=0.3, filterFreq=2000,
+	arg out=0, time=0.25, feedback=0.3, filter_freq=2000,
 	mix=1.0, gate=1, spread=1.5;
 
 	var maxDelayTime = 4;
@@ -117,12 +117,12 @@ SynthDef(\globalFilterDelay, {
 	#filteredL, filteredR = LocalIn.ar(2);
 
 	// Ping-pong delay: L gets input + R feedback, R gets input + L feedback
-	delayedL = DelayL.ar(input.sum + (filteredR * feedback), maxDelayTime, delayTime);
-	delayedR = DelayL.ar(input.sum + (filteredL * feedback), maxDelayTime, delayTime * spread);
+	delayedL = DelayL.ar(input.sum + (filteredR * feedback), maxDelayTime, time);
+	delayedR = DelayL.ar(input.sum + (filteredL * feedback), maxDelayTime, time * spread);
 
 	// Filter the delayed signals (tape-style)
-	filteredL = LPF.ar(delayedL, filterFreq);
-	filteredR = LPF.ar(delayedR, filterFreq);
+	filteredL = LPF.ar(delayedL, filter_freq);
+	filteredR = LPF.ar(delayedR, filter_freq);
 	LocalOut.ar([filteredL, filteredR]);
 
 	// Output 100% wet (mix=1.0) since it's a send effect

@@ -30,31 +30,48 @@
 
 // Default scalar values for all plaits instances
 ~defaultScalars = (
-	pitch: 49.0,
-	harm: 0.5,
-	timbre: 0.5,
-	morph: 0.5,
 	decay: 0.5,
+	delay_send: 0.0,
+	dist_amount: 0.0,
+	dist_drive: 0.0,
+	dur: 0.25,
 	engine: 1.0,
 	fm_mod: 0.0,
-	lpg_colour: 0.5,
-	timb_mod: 0.0,
-	morph_mod: 0.0,
-	mul: 0.5,
-	volume: 1.0,
-	tempo: 165.0,
-	dur: 0.25,
+	harm: 0.5,
 	legato: 0.7,
-	rev_drywet: 0.0,
-	rev_time: 0.5,
+	lpg_colour: 0.5,
+	morph_mod: 0.0,
+	morph: 0.5,
+	mul: 0.5,
+	pitch: 49.0,
 	rev_damp: 0.8,
-	rev_hp: 0.7,
+	rev_drywet: 0.0,
 	rev_freeze: 0.0,
+	rev_hp: 0.7,
+	rev_time: 0.5,
+	reverb_send: 0.0,
 	stereoMode: 1.0,
-	dist_drive: 0.0,
-	dist_amount: 0.0,
-	delay_send: 0.0,
-	reverb_send: 0.0
+	tempo: 165.0,
+	timb_mod: 0.0,
+	timbre: 0.5,
+	volume: 1.0,
+);
+
+// Default global FX settings for all presets
+~defaultFX = (
+	delay: (
+		feedback: 0.4,
+		filter_freq: 6000,
+		spread: 1.5,
+		time: 0.25
+	),
+	reverb: (
+		damp: 0.2,
+		diffuse: 0.625,
+		freeze: 0.0,
+		hp: 0.3,
+		time: 0.2
+	)
 );
 
 // Default sequence patterns for all plaits instances

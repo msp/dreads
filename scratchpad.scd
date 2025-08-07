@@ -19,6 +19,10 @@ CrossoverDistortion.ar
 
 1 ! 1 ++ (0.5)
 
+~br1.(5,8) ++ (Rest(1) ! 8)
+
+[0.1, 0.2, 0.1, 0.05, 0.8] ++ (0.0 ! 12)
+
 // Fading spike
 
 (
@@ -50,4 +54,20 @@ s.sendMsg('/n_set', 1156, 'fadeGate', 0);
 )
 )
 
-s.defaultGroup.set(\fadeGate, 0);
+s.defaultGroup.se
+
+
+~plaits
+
+
+
+
+(
+~br1 = { | o = 1, p = 4 |
+	(o / p * (0..p - 1)).floor.differentiate.asInteger.min(1)[0] = if (o <= 0) { 0 } { 1 };
+	// Note: the if (o <= 0) statement covers the case when we want 0 beats
+	// in the pattern
+};
+//
+(0..12) do: { | i | postf("bresenham improved. i: %, rhythm: %\n", i, ~br1.(i, 8)) };
+)t(\fadeGate, 0);

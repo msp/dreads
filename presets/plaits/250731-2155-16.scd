@@ -2,7 +2,9 @@
 // Plaits State - Data structures and synth instance definitions
 ////////////////////////////////////////////////////////////////////////////////
 (
-~plaits = [
+~plaits = ~presetFactory.(
+	// Synth instances array
+	[
 	// $PLAITS1
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
@@ -140,7 +142,26 @@
 			engine: Pseq(["e", "e", "e", "e", "e", "e"], inf).asStream
 		)
 	)
-];
+	],
+	// Global FX settings
+	// $PRESET_FX_START
+	(
+		delay: (
+			feedback: 0.4,
+			filter_freq: 6000,
+			spread: 1.5,
+			time: 0.25
+		),
+		reverb: (
+			damp: 0.2,
+			diffuse: 0.625,
+			freeze: 0.0,
+			hp: 0.3,
+			time: 0.2
+		)
+	),
+	// $PRESET_FX_END
+);
 
 ~states = Pseq([\a, \b, \c, \d], inf).asStream;
 ~state = ~states.next;
@@ -156,7 +177,7 @@
 ~timbreLFO = ~lfoSine.(3);
 ~morphLFO = ~lfoSine.(4);
 ~decayLFO = ~lfoSine.(1);
-~tempoClock.tempo = ~plaits[0].tempo/60;
+~tempoClock.tempo = ~plaits.synths[0].tempo/60;
 
 ~pushStateToUI.();
 )
