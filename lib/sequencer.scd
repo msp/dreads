@@ -48,7 +48,7 @@ x = Pdef(\plaitsSequence,
 						~plaits.synths[i].sequences.timbre.next,
 						~timbreLFO.next,
 						~plaits.synths[i].timbre,
-						~plaits.synths[i].timb_mod
+						~plaits.synths[i].timbMod
 					);
 				},
 				\morph, Pfunc { |event|
@@ -57,38 +57,38 @@ x = Pdef(\plaitsSequence,
 						~plaits.synths[i].sequences.morph.next,
 						~morphLFO.next,
 						~plaits.synths[i].morph,
-						~plaits.synths[i].morph_mod
+						~plaits.synths[i].morphMod
 					);
 				},
-				\fm_mod, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.fm_mod.next, ~plaits.synths[i].fm_mod);
+				\fmMod, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.fmMod.next, ~plaits.synths[i].fmMod);
 				},
-				\lpg_colour, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.lpg_colour.next, ~plaits.synths[i].lpg_colour);
+				\lpgColour, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.lpgColour.next, ~plaits.synths[i].lpgColour);
 				},
 				\legato, Pfunc { |event| ~plaits.synths[i].legato },
 				\engine, Pfunc { |event|
 					~setEngine.(~plaits.synths[i].sequences.engine.next, i);
 				},
 				\mul, Pfunc { |event| ~plaits.synths[i].mul },
-				\rev_drywet, Pfunc { |event| ~plaits.synths[i].rev_drywet },
-				\rev_time, Pfunc { |event|
-					var out = ~modulateBipolar.(~plaits.synths[i].sequences.rev_time.next, ~plaits.synths[i].rev_time);
-					// ["rev_time", out].postln;
+				\revDrywet, Pfunc { |event| ~plaits.synths[i].revDrywet },
+				\revTime, Pfunc { |event|
+					var out = ~modulateBipolar.(~plaits.synths[i].sequences.revTime.next, ~plaits.synths[i].revTime);
+					// ["revTime", out].postln;
 
 					out
 				},
-				\rev_damp, Pfunc { |event| ~plaits.synths[i].rev_damp },
-				\rev_hp, Pfunc { |event| ~plaits.synths[i].rev_hp },
-				\rev_freeze, Pfunc { |event| ~plaits.synths[i].rev_freeze },
-				\delay_send, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.delay_send.next, ~plaits.synths[i].delay_send);
+				\revDamp, Pfunc { |event| ~plaits.synths[i].revDamp },
+				\revHp, Pfunc { |event| ~plaits.synths[i].revHp },
+				\revFreeze, Pfunc { |event| ~plaits.synths[i].revFreeze },
+				\delaySend, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.delaySend.next, ~plaits.synths[i].delaySend);
 				},
-				\reverb_send, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.reverb_send.next, ~plaits.synths[i].reverb_send);
+				\reverbSend, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.reverbSend.next, ~plaits.synths[i].reverbSend);
 				},
-				\dist_drive, Pfunc { |event| ~plaits.synths[i].dist_drive },
-				\dist_amount, Pfunc { |event| ~plaits.synths[i].dist_amount },
+				\distDrive, Pfunc { |event| ~plaits.synths[i].distDrive },
+				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~plaits.synths[i].volume },
 				\out, Pseq([0], inf),

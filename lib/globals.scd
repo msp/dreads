@@ -31,28 +31,28 @@
 // Default scalar values for all plaits instances
 ~defaultScalars = (
 	decay: 0.5,
-	delay_send: 0.0,
-	dist_amount: 0.0,
-	dist_drive: 0.0,
+	delaySend: 0.0,
+	distAmount: 0.0,
+	distDrive: 0.0,
 	dur: 0.25,
 	engine: 1.0,
-	fm_mod: 0.0,
+	fmMod: 0.0,
 	harm: 0.5,
 	legato: 0.7,
-	lpg_colour: 0.5,
-	morph_mod: 0.0,
+	lpgColour: 0.5,
+	morphMod: 0.0,
 	morph: 0.5,
 	mul: 0.5,
 	pitch: 49.0,
-	rev_damp: 0.8,
-	rev_drywet: 0.0,
-	rev_freeze: 0.0,
-	rev_hp: 0.7,
-	rev_time: 0.5,
-	reverb_send: 0.0,
+	revDamp: 0.8,
+	revDrywet: 0.0,
+	revFreeze: 0.0,
+	revHp: 0.7,
+	revTime: 0.5,
+	reverbSend: 0.0,
 	stereoMode: 1.0,
 	tempo: 165.0,
-	timb_mod: 0.0,
+	timbMod: 0.0,
 	timbre: 0.5,
 	volume: 1.0,
 );
@@ -61,7 +61,7 @@
 ~defaultFX = (
 	delay: (
 		feedback: 0.4,
-		filter_freq: 6000,
+		filterFreq: 6000,
 		spread: 1.5,
 		time: 0.25
 	),
@@ -77,16 +77,16 @@
 // Default sequence patterns for all plaits instances
 ~defaultSequences = (
 	decay: Pseq([0.5], inf).asStream,
-	delay_send: Pseq([0.5], inf).asStream,
+	delaySend: Pseq([0.5], inf).asStream,
 	div: Pseq([1.0], inf).asStream,
 	duration: Pseq([0.25], inf).asStream,
 	engine: Pseq(["e"], inf).asStream,
-	fm_mod: Pseq([0.5], inf).asStream,
+	fmMod: Pseq([0.5], inf).asStream,
 	harm: Pseq([0.5], inf).asStream,
-	lpg_colour: Pseq([0.5], inf).asStream,
+	lpgColour: Pseq([0.5], inf).asStream,
 	morph: Pseq([0.5], inf).asStream,
-	rev_time: Pseq([0.5], inf).asStream,
-	reverb_send: Pseq([0.5], inf).asStream,
+	revTime: Pseq([0.5], inf).asStream,
+	reverbSend: Pseq([0.5], inf).asStream,
 	timbre: Pseq([0.5], inf).asStream
 );
 )

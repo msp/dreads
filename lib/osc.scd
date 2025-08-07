@@ -55,7 +55,7 @@ OSCdef.new(
 };
 
 // Delay Effect OSC Handlers
-[\time, \feedback, \filter_freq, \spread].do { |paramKey|
+[\time, \feedback, \filterFreq, \spread].do { |paramKey|
 	['binding fx/delay->', paramKey].postln;
 	OSCdef.new(
 		("fx_delay_" ++ paramKey).asSymbol,

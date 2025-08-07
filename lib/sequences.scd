@@ -39,14 +39,14 @@ x = Pdef(\plaitsSequence,
 			\morph, Pfunc { |event|
 				~modulateBipolar.(~plaits[0].sequences.morph.next, ~plaits[0].morph)
 			},
-			\fm_mod, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.fm_mod.next, ~plaits[0].fm_mod)
+			\fmMod, Pfunc { |event|
+				~modulateBipolar.(~plaits[0].sequences.fmMod.next, ~plaits[0].fmMod)
 			},
-			\lpg_colour, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.lpg_colour.next, ~plaits[0].lpg_colour)
+			\lpgColour, Pfunc { |event|
+				~modulateBipolar.(~plaits[0].sequences.lpgColour.next, ~plaits[0].lpgColour)
 			},
-			\timb_mod, ~plaits[0].timb_mod,
-			\morph_mod, ~plaits[0].morph_mod,
+			\timbMod, ~plaits[0].timbMod,
+			\morphMod, ~plaits[0].morphMod,
 			\engine, Pfunc { |event|
 				~setEngine.(~plaits[0].sequences.engine.next)
 			},

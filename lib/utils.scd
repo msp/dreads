@@ -63,7 +63,7 @@
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|
 	// plaits reverbs
-	s.defaultGroup.set(\rev_time, 0.9);
+	s.defaultGroup.set(\revTime, 0.9);
 	// global reverb
 	s.defaultGroup.set(\time, 0.9);
 	("Stopping reverb feedback..").postln;
