@@ -44,5 +44,5 @@ s.waitForBoot {
 
 ~reverbFX = Synth(\globalReverb, [\out, 0], addAction: \addToTail);
 
-(Document.current.dir ++ "/lib/sequences2.scd").load;
+(Document.current.dir ++ "/lib/sequencer.scd").load;
 )
