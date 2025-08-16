@@ -40,6 +40,8 @@ s.waitForBoot {
 ////////////////////////////////////////////////////////////////////////////////
 (
 // Start global effects
+~cloudsFX = Synth(\globalClouds, [\out, 0], addAction: \addToTail);
+
 ~delayFX = Synth(\globalFilterDelay, [\out, 0], addAction: \addToTail);
 
 ~reverbFX = Synth(\globalReverb, [\out, 0], addAction: \addToTail);

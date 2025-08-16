@@ -18,7 +18,7 @@
 (
 SynthDef(\plaits,
 	{
-		arg out=0, delayBus=0, reverbBus=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1;
+		arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1;
 
 		var cleanSig, distSig;
 		// , fadeTime=2.0, fadeGate=1;
@@ -95,6 +95,7 @@ SynthDef(\plaits,
 			add: 0.0
 		);
 
+		Out.ar(~cloudsBus, sig * cloudsSend);
 		Out.ar(~delayBus, sig * delaySend);
 		Out.ar(~reverbBus, sig * reverbSend);
 
@@ -149,6 +150,44 @@ SynthDef(\globalReverb, {
 		mul: mix.clip(0, 2.0)
 	);
 	Out.ar(out, LeakDC.ar(reverb * env));
+}).add;
+
+// Global MiClouds Send Effect
+SynthDef(\globalClouds, {
+	arg out=0, position=0.0, size=0.0, density=0.5, texture=0.5,
+	pitch=0.0, blend=0.5, freeze=0, inGain = 1.0, spread=0.5, reverb=0.0, feedback=0.0, mix=1.0, gate=1, mode=3, lofi=0.0, volume=1.0;
+
+	// var input = InFeedback.ar(~cloudsBus, 2);
+	var input = In.ar(~cloudsBus, 2);
+	var env = EnvGen.kr(Env.asr(0.01, 1, 2), gate, doneAction: 2);
+	var clouds;
+	var dens = LFNoise1.kr(0.3).range(0.3, 0.45);
+
+	clouds = MiClouds.ar(
+		input,
+		pit: pitch.clip(-48, 48),
+		pos: position.clip(0, 1),
+		size: size.clip(0, 1),
+		dens: density.clip(0, 1),
+		tex: texture.clip(0, 1),
+		drywet: 1,
+		in_gain: inGain.clip(0.125, 8),
+		spread: spread.clip(0, 1),
+		rvb: reverb.clip(0, 1),
+		fb: feedback.clip(0, 1),
+		freeze: freeze.clip(0, 1),
+		mode: mode.clip(0, 3),
+		lofi: lofi.clip(0, 1),
+		mul: volume.clip(0, 1)
+	);
+
+	// clouds = PitchShift.ar(input, 0.2, LFNoise1.kr(0.3).range(0.0, 2.00), 0.0, 0.5) * 0.8;
+
+  // Ring modulation - very audible effect:
+	// clouds = clouds * SinOsc.ar(200) * 0.5 + clouds;
+
+	Out.ar(out, LeakDC.ar(clouds * env * mix.clip(0, 2.0)));
+	// Out.ar(out, LeakDC.ar(clouds * mix.clip(0, 2.0)));
 }).add;
 
 )

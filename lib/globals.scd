@@ -7,12 +7,20 @@
 
 ~delayBus = Bus.audio(s, 2);
 ~reverbBus = Bus.audio(s, 2);
+~cloudsBus = Bus.audio(s, 2);
 
 ~ui = {
 	if (~uiAddr.isNil) {
 		~uiAddr = NetAddr("127.0.0.1", 8080);
 	};
 	~uiAddr;
+};
+
+~td = {
+	if (~tdAddr.isNil) {
+		~tdAddr = NetAddr("127.0.0.1", 10000);
+	};
+	~tdAddr;
 };
 
 ~saveAllModified = {
@@ -30,6 +38,7 @@
 
 // Default scalar values for all plaits instances
 ~defaultScalars = (
+	cloudsSend: 1.0,
 	decay: 0.5,
 	delaySend: 0.0,
 	distAmount: 0.0,
@@ -59,6 +68,23 @@
 
 // Default global FX settings for all presets
 ~defaultFX = (
+	clouds: (
+		blend: 0.5,
+		density: 0.7,
+		inGain: 1.0,
+		lofi: 0.0,
+		feedback: 0.0,
+		freeze: 0.0,
+		mode: 3,
+		mix: 1.0,
+		pitch: 0.5,
+		position: 0.5,
+		reverb: 0.0,
+		size: 0.5,
+		spread: 0.5,
+		texture: 0.5,
+		volume: 1.0
+	),
 	delay: (
 		feedback: 0.4,
 		filterFreq: 6000,
@@ -76,6 +102,7 @@
 
 // Default sequence patterns for all plaits instances
 ~defaultSequences = (
+	cloudsSend: Pseq([0.5], inf).asStream,
 	decay: Pseq([0.5], inf).asStream,
 	delaySend: Pseq([0.5], inf).asStream,
 	div: Pseq([1.0], inf).asStream,

@@ -3,9 +3,59 @@
 //////////////////////////////////////////////////////////////////////////////
 
 (
+/*~tdKeys = [
+\pitch, \engine, \harm, \timbre, \morph, \decay, \fmMod, \lpgColour,
+\mul, \revDrywet, \revTime, \revDamp, \revHp, \revFreeze,
+\delaySend, \reverbSend, \cloudsSend, \distDrive, \distAmount,
+\stereoMode, \volume, \out, \dur, \legato
+];*/
+~tdKeys = [
+	\pitch, \engine, \harm, \timbre
+];
+
+~sendEventToTD = { |idx, ev|
+	var msg = ["/plaits/state", idx];
+	~tdKeys.do { |k| var v = ev[k]; if(v.notNil) { msg = msg ++ [k.asString, v] } };
+	["~sendEventToTD", msg].postln;
+	~td.().sendMsg(*msg);
+};
+
+~noteCounter = Array.fill(~plaits.synths.size, 0);
+
+
+
 x = Pdef(\plaitsSequence,
 	Ppar(
 		~plaits.synths.collect { |instance, i|
+			Pcollect({ |ev|
+				var d       = ev[\dur];
+				var isRest  = d.isKindOf(Rest);
+				var durVal  = isRest.if({ d.value }, { d });  // numeric seconds
+
+				if (isRest.not) {
+					// tick only on real notes
+					~noteCounter[i] = (~noteCounter[i] ? 0) + 1;
+
+					// ["event", ~noteCounter[i], durVal].postln;
+
+					~td.().sendMsg("/plaits/state", i,
+						"note",   ~noteCounter[i],
+						"pitch",  ev[\pitch],
+						"engine", ev[\engine],
+						"harm",   ev[\harm],          // <- fixed typo
+						"timbre", ev[\timbre],
+						"decay",  ev[\decay],
+						"dur",    durVal,
+						"volume", (ev[\volume] ?? ev[\mul] ?? 0.0)
+					);
+				}{
+					// Optional: tell TD about a rest (uncomment if you want it)
+					// ~td.().sendMsg("/plaits/rest", i, "dur", durVal);
+				};
+
+				ev
+			},
+
 			Pbind(
 				\instrument, \plaits,
 				\delayBus, ~delayBus,
@@ -87,12 +137,15 @@ x = Pdef(\plaitsSequence,
 				\reverbSend, Pfunc { |event|
 					~modulateBipolar.(~plaits.synths[i].sequences.reverbSend.next, ~plaits.synths[i].reverbSend);
 				},
+				\cloudsSend, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.cloudsSend.next, ~plaits.synths[i].cloudsSend);
+				},
 				\distDrive, Pfunc { |event| ~plaits.synths[i].distDrive },
 				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~plaits.synths[i].volume },
 				\out, Pseq([0], inf),
-			)
+			))
 		}
 	)
 );
