@@ -118,7 +118,7 @@ x = Pdef(\plaitsSequence,
 				},
 				\legato, Pfunc { |event| ~plaits.synths[i].legato },
 				\engine, Pfunc { |event|
-					~setEngine.(~plaits.synths[i].sequences.engine.next, i);
+					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
 				},
 				\mul, Pfunc { |event| ~plaits.synths[i].mul },
 				\revDrywet, Pfunc { |event| ~plaits.synths[i].revDrywet },

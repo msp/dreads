@@ -48,7 +48,7 @@ x = Pdef(\plaitsSequence,
 			\timbMod, ~plaits[0].timbMod,
 			\morphMod, ~plaits[0].morphMod,
 			\engine, Pfunc { |event|
-				~setEngine.(~plaits[0].sequences.engine.next)
+				~setEngine.(~plaits[0].sequences.engine.next, ~plaits[0].engine)
 			},
 			\mul, ~plaits[0].mul,
 			\out, Pseq(

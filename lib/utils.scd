@@ -48,10 +48,10 @@
 };
 
 // Engine selection with expression evaluation
-~setEngine = { |seqExpr, i=0|
-	// Replace "e" placeholder with actual current engine value in the expression
+~setEngine = { |seqExpr, currentEngine=0|
+	// Replace "e" placeholder with current engine value in the expression
 	var engines = (0..15);
-	var expr = seqExpr.asString.replace("e", ~plaits.synths[i].engine.asString);
+	var expr = seqExpr.asString.replace("e", currentEngine.asString);
 	var output = engines.wrapAt(expr.interpret);
 
 	// ['~setEngine:', seqExpr, expr, output].postln;
@@ -68,5 +68,4 @@
 	s.defaultGroup.set(\time, 0.9);
 	("Stopping reverb feedback..").postln;
 };
-
 )

@@ -25,9 +25,9 @@ s.freeAll;
 ~currentPresetTemplate = (~basePath ++ "/presets/plaits/default.scd").standardizePath;
 
 (Document.current.dir ++ "/lib/globals.scd").load;
+(Document.current.dir ++ "/lib/utils.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
 (Document.current.dir ++ "/presets/plaits/default.scd").load;
-(Document.current.dir ++ "/lib/utils.scd").load;
 
 s.waitForBoot {
 	(Document.current.dir ++ "/lib/synthdefs.scd").load;
