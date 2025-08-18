@@ -3736,7 +3736,7 @@
                         "top": 60,
                         "left": 0,
                         "lock": false,
-                        "id": "fx/delay/filter_freq",
+                        "id": "fx/delay/filterFreq",
                         "visible": true,
                         "interaction": true,
                         "comments": "",
