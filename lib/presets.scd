@@ -350,13 +350,29 @@
 
 ~loadRandomPreset = {
 	var presetDir = (~basePath +/+ "presets/plaits").standardizePath;
-	var presetFiles = (presetDir +/+ "*.scd").pathMatch;
+	var presetFiles = [];
+	
+	// Recursive function to find .scd files
+	var findScdFiles = { |dir|
+		var files = (dir +/+ "*").pathMatch;
+		files.do { |path|
+			if (File.exists(path)) {
+				if (path.endsWith(".scd")) {
+					presetFiles = presetFiles.add(path);
+				};
+				if (File.type(path) == \directory) {
+					findScdFiles.(path);
+				};
+			};
+		};
+	};
+	
+	findScdFiles.(presetDir);
 
 	if (presetFiles.size > 0) {
 		var randomFile = presetFiles.choose;
-		var presetName = randomFile.basename.splitext[0];
-		("Loading random preset: " ++ presetName).postln;
-		~loadPreset.(presetName);
+		("Loading random preset: " ++ randomFile.basename).postln;
+		~loadPreset.(randomFile);
 	} {
 		("No preset files found in: " ++ presetDir).postln;
 	};
