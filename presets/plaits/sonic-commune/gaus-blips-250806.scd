@@ -9,31 +9,32 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.21,
-			delaySend: 0.0,
+			cloudsSend: 1.0,
+			decay: 0.32,
+			delaySend: 0.42,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.04,
+			dur: 0.33,
 			engine: 4.0,
-			fmMod: -0.05,
-			harm: 0.84,
+			fmMod: 0.34,
+			harm: 0.03,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.37,
+			morph: 0.12,
 			morphMod: 1.0,
 			mul: 0.5,
-			pitch: 17.37,
+			pitch: 67.06,
 			revDamp: 0.15,
 			revDrywet: 0.2,
 			revFreeze: 0.0,
 			revHp: 0.29,
 			revTime: 0.93,
-			reverbSend: 0.0,
+			reverbSend: 0.75,
 			stereoMode: 1.0,
 			tempo: 85.0,
 			timbMod: 1.0,
-			timbre: 0.8,
-			volume: 1.58
+			timbre: 0.43,
+			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -54,31 +55,32 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.1,
-			delaySend: 0.4,
+			cloudsSend: 1.0,
+			decay: 0.41,
+			delaySend: 0.57,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 23.26,
+			dur: 11.96,
 			engine: 13.0,
 			fmMod: 0.0,
-			harm: 0.48,
+			harm: 0.81,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.43,
+			morph: 0.78,
 			morphMod: 0.8,
 			mul: 0.5,
 			pitch: 26.04,
 			revDamp: 0.8,
 			revDrywet: 0.25,
 			revFreeze: 0.0,
-			revHp: 0.7,
-			revTime: 0.3,
+			revHp: 0.25,
+			revTime: 0.56,
 			reverbSend: 0.1,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.7,
 			timbre: 0.44,
-			volume: 1.53
+			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -91,11 +93,12 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.77,
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 7.25,
+			dur: 9.68,
 			engine: 15.0,
 			fmMod: 0.0,
 			harm: 0.48,
@@ -110,12 +113,12 @@
 			revFreeze: 0.0,
 			revHp: 0.45,
 			revTime: 0.56,
-			reverbSend: 0.0,
+			reverbSend: 0.74,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 1.0,
 			timbre: 0.44,
-			volume: 1.34
+			volume: 0.16
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -127,21 +130,38 @@
 	],
 	// Global FX settings
 	// $PRESET_FX_START
-	(
-		delay: (
-			feedback: 0.4,
-			filterFreq: 6000,
-			spread: 1.5,
-			time: 0.25
-		),
-		reverb: (
-			damp: 0.2,
-			diffuse: 0.625,
-			freeze: 0.0,
-			hp: 0.3,
-			time: 0.2
-		)
+(
+	clouds: (
+		blend: 0.72,
+		density: 1.0,
+		feedback: 0.64,
+		freeze: 1.0,
+		inGain: 1.0,
+		lofi: 0.0,
+		mix: 1.0,
+		mode: 3.0,
+		pitch: 13.46,
+		position: 0.86,
+		reverb: 0.52,
+		size: 0.53,
+		spread: 0.5,
+		texture: 0.7,
+		volume: 0.0
 	),
+	delay: (
+		feedback: 0.91,
+		filterFreq: 4055.84,
+		spread: 1.5,
+		time: 0.23
+	),
+	reverb: (
+		damp: 0.05,
+		diffuse: 0.63,
+		freeze: 0.0,
+		hp: 0.56,
+		time: 1.06
+	)
+),
 	// $PRESET_FX_END
 );
 

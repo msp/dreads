@@ -9,11 +9,12 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.3,
 			delaySend: 0.37,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.7,
+			dur: 0.35,
 			engine: 0.0,
 			fmMod: -0.07,
 			harm: 0.72,
@@ -59,11 +60,12 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.23,
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.3,
-			dur: 0.35,
+			dur: Rest(0.35),
 			engine: 13.0,
 			fmMod: -0.07,
 			harm: 0.8,
@@ -102,11 +104,12 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.83,
-			delaySend: 0.66,
+			delaySend: 0.62,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 2.8,
+			dur: Rest(2.8),
 			engine: 5.0,
 			fmMod: -0.07,
 			harm: 0.75,
@@ -143,21 +146,38 @@
 	],
 	// Global FX settings
 	// $PRESET_FX_START
-	(
-		delay: (
-			feedback: 0.4,
-			filterFreq: 6000,
-			spread: 1.5,
-			time: 0.25
-		),
-		reverb: (
-			damp: 0.2,
-			diffuse: 0.625,
-			freeze: 0.0,
-			hp: 0.3,
-			time: 0.2
-		)
+(
+	clouds: (
+		blend: 0.5,
+		density: 0.7,
+		feedback: 0.0,
+		freeze: 0.0,
+		inGain: 1.0,
+		lofi: 0.0,
+		mix: 1.0,
+		mode: 3.0,
+		pitch: 0.5,
+		position: 0.5,
+		reverb: 0.0,
+		size: 0.5,
+		spread: 0.5,
+		texture: 0.5,
+		volume: 1.0
 	),
+	delay: (
+		feedback: 0.4,
+		filterFreq: 6000.0,
+		spread: 1.5,
+		time: 0.26
+	),
+	reverb: (
+		damp: 0.2,
+		diffuse: 0.63,
+		freeze: 0.0,
+		hp: 0.3,
+		time: 0.2
+	)
+),
 	// $PRESET_FX_END
 );
 

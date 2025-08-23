@@ -114,6 +114,8 @@
 	morph: Pseq([0.5], inf).asStream,
 	revTime: Pseq([0.5], inf).asStream,
 	reverbSend: Pseq([0.5], inf).asStream,
-	timbre: Pseq([0.5], inf).asStream
+	timbre: Pseq([0.5], inf).asStream,
+	volume: Pseq([0.5], inf).asStream,
+	mul: Pseq([0.5], inf).asStream
 );
 )

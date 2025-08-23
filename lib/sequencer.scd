@@ -40,11 +40,13 @@ x = Pdef(\plaitsSequence,
 
 					~td.().sendMsg("/plaits/state", i,
 						"note",   ~noteCounter[i],
+						"tempo",  ~plaits.synths[0].tempo,
 						"pitch",  ev[\pitch],
 						"engine", ev[\engine],
-						"harm",   ev[\harm],          // <- fixed typo
+						"harm",   ev[\harm],
 						"timbre", ev[\timbre],
 						"decay",  ev[\decay],
+						"morph",  ev[\morph],
 						"dur",    durVal,
 						"volume", (ev[\volume] ?? ev[\mul] ?? 0.0)
 					);
@@ -73,10 +75,17 @@ x = Pdef(\plaitsSequence,
 					~plaits.synths[i].pitch;
 				},
 				\dur, Pfunc { |event|
+
+					// var v = ~sineAtBeat.(~tempoClock.beats, 64, 0.15, 0.5);
+					// ~plaits.synths[i].dur = ~setDuration.(v, ~plaits.synths[i].sequences.div.next);
+					// ~plaits.synths[i].dur = v;
+					// ~plaits.synths[i].dur;
+
 					~plaits.synths[i].dur = ~setDuration.(
 						~plaits.synths[i].sequences.duration.next,
 						~plaits.synths[i].sequences.div.next
 					);
+					// ["dur----------------------------", ~plaits.synths[i].dur].postln;
 					~plaits.synths[i].dur;
 				},
 				\decay, Pfunc { |event|
@@ -120,7 +129,7 @@ x = Pdef(\plaitsSequence,
 				\engine, Pfunc { |event|
 					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
 				},
-				\mul, Pfunc { |event| ~plaits.synths[i].mul },
+				\mul, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.mul.next, ~plaits.synths[i].mul); },
 				\revDrywet, Pfunc { |event| ~plaits.synths[i].revDrywet },
 				\revTime, Pfunc { |event|
 					var out = ~modulateBipolar.(~plaits.synths[i].sequences.revTime.next, ~plaits.synths[i].revTime);
@@ -143,7 +152,7 @@ x = Pdef(\plaitsSequence,
 				\distDrive, Pfunc { |event| ~plaits.synths[i].distDrive },
 				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
-				\volume, Pfunc { |event| ~plaits.synths[i].volume },
+				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
 				\out, Pseq([0], inf),
 			))
 		}

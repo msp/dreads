@@ -9,31 +9,32 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.32,
-			delaySend: 0.61,
+			cloudsSend: 0.66,
+			decay: 0.21,
+			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 1.19,
+			dur: 1.05,
 			engine: 4.0,
-			fmMod: 0.34,
-			harm: 0.03,
+			fmMod: -0.05,
+			harm: 0.66,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.12,
+			morph: 0.17,
 			morphMod: 1.0,
 			mul: 0.5,
-			pitch: 67.06,
+			pitch: 17.37,
 			revDamp: 0.15,
 			revDrywet: 0.2,
 			revFreeze: 0.0,
 			revHp: 0.29,
 			revTime: 0.93,
-			reverbSend: 0.75,
+			reverbSend: 0.0,
 			stereoMode: 1.0,
 			tempo: 85.0,
 			timbMod: 1.0,
-			timbre: 0.43,
-			volume: 1.75
+			timbre: 1.0,
+			volume: 1.49
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -42,7 +43,7 @@
 			morph: Pgbrown(1.0, 1.0, 1.0, inf).asStream,
 			harm: Pgauss(0.0, 1.0, inf).asStream,
 			// lpgColour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
-			engine: Pseq(["e", "e", "e+5", "e", "e", "e+4"], inf).asStream,
+			engine: Pseq(["e-2", "e", "e+5", "e", "e+1", "e+4"], inf).asStream,
 			duration: Pgauss(0.01, 1.0, inf).asStream,
 			// div: Pseq([1, 3, 1, 1, 2], inf).asStream,
 			reverbSend: Pgauss(0.0, 0.2, inf).asStream,
@@ -54,17 +55,18 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.41,
+			cloudsSend: 1.0,
+			decay: 0.1,
 			delaySend: 0.4,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 31.0,
+			dur: 21.98,
 			engine: 13.0,
 			fmMod: 0.0,
-			harm: 0.58,
+			harm: 0.48,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.47,
+			morph: 0.43,
 			morphMod: 0.8,
 			mul: 0.5,
 			pitch: 26.04,
@@ -78,7 +80,7 @@
 			tempo: 165.0,
 			timbMod: 0.7,
 			timbre: 0.44,
-			volume: 2.0
+			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -91,12 +93,13 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.77,
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 7.64,
-			engine: 15.0,
+			dur: 6.94,
+			engine: 14.0,
 			fmMod: 0.0,
 			harm: 0.48,
 			legato: 9.0,
@@ -104,18 +107,18 @@
 			morph: 1.0,
 			morphMod: 1.0,
 			mul: 0.5,
-			pitch: 35.19,
+			pitch: 33.09,
 			revDamp: 0.58,
 			revDrywet: 0.58,
 			revFreeze: 0.0,
 			revHp: 0.45,
 			revTime: 0.56,
-			reverbSend: 0.74,
+			reverbSend: 0.19,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 1.0,
 			timbre: 0.44,
-			volume: 0.04
+			volume: 0.5
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -128,18 +131,35 @@
 	// Global FX settings
 	// $PRESET_FX_START
 (
+	clouds: (
+		blend: 0.5,
+		density: 0.7,
+		feedback: 0.0,
+		freeze: 0.0,
+		inGain: 1.0,
+		lofi: 0.0,
+		mix: 1.0,
+		mode: 3.0,
+		pitch: 0.5,
+		position: 0.5,
+		reverb: 0.0,
+		size: 0.5,
+		spread: 0.5,
+		texture: 0.5,
+		volume: 0.09
+	),
 	delay: (
-		feedback: 0.91,
+		feedback: 0.4,
 		filterFreq: 6000.0,
 		spread: 1.5,
-		time: 0.23
+		time: 0.25
 	),
 	reverb: (
-		damp: 0.05,
+		damp: 0.2,
 		diffuse: 0.63,
 		freeze: 0.0,
-		hp: 0.56,
-		time: 1.06
+		hp: 0.3,
+		time: 0.2
 	)
 ),
 	// $PRESET_FX_END

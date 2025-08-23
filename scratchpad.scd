@@ -164,3 +164,90 @@ td.sendBundle(0.0, [
     ["/bundleTest/two", 4.56]
 ]);
 )
+
+
+
+// PATTERNS /////////////////////////////////////
+(
+p = Pbind(
+	// \degree, Pwhite(-4, 11, inf),
+	// \pan, Env(#[-1, 1, -1], #[2, 2], \sin),
+	// \pan, Env.sine(1).range(-1.0, 1.0),
+	// \pan, Pn(Pif(Ptime(inf) <= 4.0, Env(#[-1, 1, -1], #[2, 2], \sin)), inf),
+	// \pan, Pn(Pif(Ptime(inf) <= 4.0, Env.sine(4.0).range(-1.0, 1.0)), inf),
+	// \dur, Pn(Pif(Ptime(inf) <= 8.0, Env.sine(8.0).range(0.05, 0.5)), inf),
+	\dur, ~sinePattern.(),
+	// \dur, 0.125
+).play;
+
+)
+
+p.stop;
+
+
+~sinePattern = { |dur=8.0, lo=0.05, hi=0.5, repeats=inf|
+    Pn(
+        Pif(Ptime(inf) <= dur, Env.sine(dur).range(lo, hi)),
+        repeats
+    )
+};
+
+Env.sine(1, 1).linlin(0, 1, -1, 1).test.plot;
+
+Env.sine(1).range(-1.0, 1.0).test.plot;
+
+Env.linen(0.1, 0.2, 0.1, 0.6).test.plot;
+Env.linen(1, 2, 3, 0.6).test.plot;
+Env.linen(1, 2, 3, 0.6, \sine).test.plot;
+Env.linen(1, 2, 3, 0.6, \welch).test.plot;
+Env.linen(1, 2, 3, 0.6, -3).test.plot;
+Env.linen(1, 2, 3, 0.6, -3).test.plot;
+Env.linen(1, 2, 3, 0.6, [[\sine, \welch, \lin, \exp]]).plot;
+
+// Scale sine envelope to -1 to 1
+Env.sine(1) * 2 - 1
+
+(
+(1..12).do { |i|
+	[i, ~sineAtBeat.(i, 32, 0.05, 0.5)].postln;
+}
+)
+
+(
+~visSender.stop;
+~visSender = Routine {
+	inf.do { |i|
+        var v = ~sineAtBeat.(~tempoClock.beats, 64, 0.15, 0.5);
+		// [i, v].postln;
+		~td.().sendMsg("/plaits/lfo", v);
+        (1/60).wait;  // smooth visual updates
+    }
+}.play(AppClock);       // UI/OSC clock is fine here
+)
+
+'e' ! 5 ++ 2
+
+(2 ! 4) ++ (4 ! 4)
+
+0.2 ! 19 ++ 0.5
+
+Pseq([1,2,3,4]).asStream
+
+Pdrop(3, ~sinePattern.(64, 0.1, 0.2)).asStream
+
+
+
+(
+  p = Pstutter(4, Pdrop(3, ~sinePattern.(64.0, 0.05, 0.5)));
+  q = p.asStream.nextN(50).postln
+)
+
+
+(
+p = Pdrop(3, Pseq([1,2,3,4],inf));
+q = p.asStream.nextN(20).postln;
+)
+
+~filterWithRests.(~sinePattern.(8.0, 0.05, 0.5), 4).asStream
+
+

@@ -13,13 +13,13 @@
 ~modulateBipolar = { |seqValue, uiValue|
 	var output = 0.5;
 
-    uiValue = uiValue.clip(0, 1);  // Optional safety clamp
+	uiValue = uiValue.clip(0, 1);  // Optional safety clamp
 
 	if (uiValue <= 0.5) {
-        output = seqValue * (uiValue * 2)
-    } {
-        output = seqValue + (((uiValue - 0.5) * 2) * (1 - seqValue))
-    };
+		output = seqValue * (uiValue * 2)
+	} {
+		output = seqValue + (((uiValue - 0.5) * 2) * (1 - seqValue))
+	};
 
 	// ['modulateBipolar:', seqValue, uiValue.round(0.0001), output.round(0.0001)].postln;
 
@@ -68,4 +68,34 @@
 	s.defaultGroup.set(\time, 0.9);
 	("Stopping reverb feedback..").postln;
 };
+
+~sinePattern = { |dur=8.0, lo=0.05, hi=0.5, repeats=inf|
+	Pn(
+		Pif(Ptime(inf) <= dur, Env.sine(dur).range(lo, hi)),
+		repeats
+	)
+};
+
+// Smooth 0..1 sine mapped to [lo, hi], driven by beats
+~sineAtBeat = { |beats, cycleBeats = 16.0, lo = 0.05, hi = 0.5|
+	var phase = (beats.asFloat / cycleBeats).frac;      // 0..1
+	var u     = (phase * 2pi).cos.neg * 0.5 + 0.5;      // 0.5 - 0.5*cos(...), in 0..1
+	lo + u * (hi - lo)
+};
+
+~sineAtBeatWithPhase = { |beats, cycleBeats = 16.0, lo = 0.05, hi = 0.5, phaseOffset = 0|
+	var phase = ((beats.asFloat / cycleBeats) + phaseOffset).frac;
+	var u = (phase * 2pi).cos.neg * 0.5 + 0.5;
+	u.linlin(0, 1, lo, hi);
+};
+
+~filterWithRests = { |pattern, every=4|
+	var counter = 0;
+	Pif(
+		Pfunc({ (counter = counter + 1) % every == 1 }),
+		pattern,
+		Rest()
+	)
+};
+
 )
