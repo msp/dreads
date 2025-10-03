@@ -8,6 +8,7 @@
 ~delayBus = Bus.audio(s, 2);
 ~reverbBus = Bus.audio(s, 2);
 ~cloudsBus = Bus.audio(s, 2);
+~sendToPhones = false;
 
 ~ui = {
 	if (~uiAddr.isNil) {
@@ -21,6 +22,13 @@
 		~tdAddr = NetAddr("127.0.0.1", 10000);
 	};
 	~tdAddr;
+};
+
+~ws = {
+	if (~wsAddr.isNil) {
+		~wsAddr = NetAddr("127.0.0.1", 3333);
+	};
+	~wsAddr;
 };
 
 ~saveAllModified = {
@@ -59,6 +67,7 @@
 	revHp: 0.7,
 	revTime: 0.5,
 	reverbSend: 0.0,
+	sendToPhones: 0.0,
 	stereoMode: 1.0,
 	tempo: 165.0,
 	timbMod: 0.0,

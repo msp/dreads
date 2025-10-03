@@ -18,6 +18,7 @@
 s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
+s.options.numOutputBusChannels = 8;
 s.freeAll;
 
 // Capture base path for reliable preset operations
@@ -39,12 +40,14 @@ s.waitForBoot {
 // (2) PLAY
 ////////////////////////////////////////////////////////////////////////////////
 (
-// Start global effects
-~cloudsFX = Synth(\globalClouds, [\out, 0], addAction: \addToTail);
+~voiceGroup = Group.new(s);
+~fxGroup = Group.new(s, \addAfter, ~voiceGroup);
 
-~delayFX = Synth(\globalFilterDelay, [\out, 0], addAction: \addToTail);
+~cloudsFX = Synth(\globalClouds, [\out, 0], ~fxGroup, \addToTail);
 
-~reverbFX = Synth(\globalReverb, [\out, 0], addAction: \addToTail);
+~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
+
+~reverbFX = Synth(\globalReverb, [\out, 0], ~fxGroup, \addToTail);
 
 (Document.current.dir ++ "/lib/sequencer.scd").load;
 )

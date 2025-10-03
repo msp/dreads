@@ -18,6 +18,7 @@
 	~tdKeys.do { |k| var v = ev[k]; if(v.notNil) { msg = msg ++ [k.asString, v] } };
 	["~sendEventToTD", msg].postln;
 	~td.().sendMsg(*msg);
+	~ws.().sendMsg(*msg);
 };
 
 ~noteCounter = Array.fill(~plaits.synths.size, 0);
@@ -50,6 +51,21 @@ x = Pdef(\plaitsSequence,
 						"dur",    durVal,
 						"volume", (ev[\volume] ?? ev[\mul] ?? 0.0)
 					);
+
+					if (~plaits.synths[0].sendToPhones == 1.0) {
+						~ws.().sendMsg("/plaits/state", i,
+							"note",   ~noteCounter[i],
+							"tempo",  ~plaits.synths[0].tempo,
+							"pitch",  ev[\pitch],
+							"engine", ev[\engine],
+							"harm",   ev[\harm],
+							"timbre", ev[\timbre],
+							"decay",  ev[\decay],
+							"morph",  ev[\morph],
+							"dur",    durVal,
+							"volume", (ev[\volume] ?? ev[\mul] ?? 0.0)
+						);
+					}
 				}{
 					// Optional: tell TD about a rest (uncomment if you want it)
 					// ~td.().sendMsg("/plaits/rest", i, "dur", durVal);
@@ -60,6 +76,7 @@ x = Pdef(\plaitsSequence,
 
 			Pbind(
 				\instrument, \plaits,
+				\group, ~voiceGroup,
 				\delayBus, ~delayBus,
 				\reverbBus, ~reverbBus,
 				\pitch, Pfunc { |event|
@@ -153,7 +170,7 @@ x = Pdef(\plaitsSequence,
 				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
-				\out, Pseq([0], inf),
+				\out, Pseq([0,1,2,3,4,5], inf),
 			))
 		}
 	)

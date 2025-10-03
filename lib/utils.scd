@@ -69,6 +69,11 @@
 	("Stopping reverb feedback..").postln;
 };
 
+~activatePhones = { | value = false|
+	[("~activatePhones"), value].postln;
+	~sendToPhones = value;
+};
+
 ~sinePattern = { |dur=8.0, lo=0.05, hi=0.5, repeats=inf|
 	Pn(
 		Pif(Ptime(inf) <= dur, Env.sine(dur).range(lo, hi)),

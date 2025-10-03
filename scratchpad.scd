@@ -1,3 +1,64 @@
+// n = NetAddr("localhost", 3333);
+~ws.().sendMsg('/foo', 440, 0.8, 0.25);
+
+
+([0.1, 0.1, 0.1] ++ (3 ! 5)).flatten
+
+
+s.options.blockSize // s.sampleRate
+
+s.options.collect{|o| o.postln;}
+
+
+s.options.dump
+
+s.options.memSize
+
+// controlPeriod = blockSize / sampleRate
+// controlPeriod = 128 / 48000 = 0.00267 seconds
+
+// duration * legato >= safetyFactor * controlPeriod
+// duration >= (safetyFactor * controlPeriod) / legato
+
+  With safetyFactor = 3:
+  duration >= (3 * 0.00267) / 0.1
+  duration >= 0.08 seconds  // more aggressive minimum
+
+// sound example
+(
+SynthDef(\help_sinegrain,
+	{ arg out=0, freq=440, sustain=0.05, amp=0.1;
+		var env;
+		env = EnvGen.kr(Env.perc(0.01, sustain, 0.2, amp), doneAction: Done.freeSelf);
+		Out.ar(out, SinOsc.ar(freq, 0, env))
+}).add;
+)
+
+
+b.stop;
+
+(
+var a;
+// a = Pgeom(1, 0.9, 70).loop.asStream;
+a = Pseq([
+	// (0.5 ! 4),
+	(1 ! 2),
+	Pgeom(1, 0.9, 50),
+	Pgeom(0.02, 1.1, 30),
+	// Pwrand([0.7, Rest(0.7)], [0.9, 0.1].normalizeSum),
+], inf).flatten.asStream;
+
+b= {
+	a.do { |val|
+		Synth(\help_sinegrain, [\freq, 440]);
+		val.postln;
+		val.wait;
+	}
+}.fork;
+)
+
+b.stop;
+
 (
 {
 	var harm = 0.5;
@@ -160,8 +221,8 @@ x.free;
 var td = NetAddr("127.0.0.1", 10000);  // your TD port
 // A bundle with two messages:
 td.sendBundle(0.0, [
-    ["/bundleTest/one", 123, "abc"],
-    ["/bundleTest/two", 4.56]
+	["/bundleTest/one", 123, "abc"],
+	["/bundleTest/two", 4.56]
 ]);
 )
 
@@ -186,10 +247,10 @@ p.stop;
 
 
 ~sinePattern = { |dur=8.0, lo=0.05, hi=0.5, repeats=inf|
-    Pn(
-        Pif(Ptime(inf) <= dur, Env.sine(dur).range(lo, hi)),
-        repeats
-    )
+	Pn(
+		Pif(Ptime(inf) <= dur, Env.sine(dur).range(lo, hi)),
+		repeats
+	)
 };
 
 Env.sine(1, 1).linlin(0, 1, -1, 1).test.plot;
@@ -217,11 +278,11 @@ Env.sine(1) * 2 - 1
 ~visSender.stop;
 ~visSender = Routine {
 	inf.do { |i|
-        var v = ~sineAtBeat.(~tempoClock.beats, 64, 0.15, 0.5);
+		var v = ~sineAtBeat.(~tempoClock.beats, 64, 0.15, 0.5);
 		// [i, v].postln;
 		~td.().sendMsg("/plaits/lfo", v);
-        (1/60).wait;  // smooth visual updates
-    }
+		(1/60).wait;  // smooth visual updates
+	}
 }.play(AppClock);       // UI/OSC clock is fine here
 )
 
@@ -238,8 +299,8 @@ Pdrop(3, ~sinePattern.(64, 0.1, 0.2)).asStream
 
 
 (
-  p = Pstutter(4, Pdrop(3, ~sinePattern.(64.0, 0.05, 0.5)));
-  q = p.asStream.nextN(50).postln
+p = Pstutter(4, Pdrop(3, ~sinePattern.(64.0, 0.05, 0.5)));
+q = p.asStream.nextN(50).postln
 )
 
 

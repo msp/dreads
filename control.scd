@@ -30,6 +30,10 @@ x.stop;
 
 ~fadeOutReverb.();
 
+~voiceGroup.freeAll;
+
+~fxGroup.freeAll;
+
 
 
 
