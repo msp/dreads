@@ -52,7 +52,7 @@ x = Pdef(\plaitsSequence,
 						"volume", (ev[\volume] ?? ev[\mul] ?? 0.0)
 					);
 
-					if (~plaits.synths[0].sendToPhones == 1.0) {
+					if (~plaits.synths[i].sendToPhones == 1.0) {
 						~ws.().sendMsg("/plaits/state", i,
 							"note",   ~noteCounter[i],
 							"tempo",  ~plaits.synths[0].tempo,
