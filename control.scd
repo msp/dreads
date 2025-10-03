@@ -26,6 +26,8 @@ x.stop;
 
 ~loadPreset.("250725-2240-10")
 
+~loadPreset.(~currentPresetTemplate)
+
 ~loadRandomPreset.()
 
 ~fadeOutReverb.();
