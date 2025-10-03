@@ -163,6 +163,28 @@ OSCdef.new(
 );
 
 OSCdef.new(
+	\reloadPreset.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var value = ~currentPresetTemplate;
+		["reloadPreset", value].postln;
+		~loadPreset.(value);
+	},
+	"/reloadPreset"
+);
+
+OSCdef.new(
+	\flushSynths.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var value = msg[1];
+		["flushSynths", value].postln;
+		~voiceGroup.freeAll;
+	},
+	"/flushSynths"
+);
+
+OSCdef.new(
 	\fadeOutReverb,
 	{
 		arg msg, time, addr, port;
