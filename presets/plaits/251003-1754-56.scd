@@ -10,22 +10,22 @@
 			// $PRESET_SCALARS_START
 		(
 			cloudsSend: 1.0,
-			decay: 0.55,
+			decay: 0.07,
 			delaySend: 0.15,
 			distAmount: 0.15,
 			distDrive: 0.0,
-			dur: 24.0,
-			engine: 5.0,
+			dur: 40.0,
+			engine: 14.0,
 			fmMod: 0.0,
-			harm: 0.87,
+			harm: 0.49,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.75,
+			morph: 0.82,
 			morphMod: 0.4,
 			mul: 0.5,
-			pitch: 90.59,
+			pitch: 53.73,
 			revDamp: 0.08,
-			revDrywet: 0.57,
+			revDrywet: 0.0,
 			revFreeze: 0.0,
 			revHp: 0.0,
 			revTime: 0.67,
@@ -34,8 +34,8 @@
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.0,
-			timbre: 0.71,
-			volume: 0.0
+			timbre: 0.51,
+			volume: 1.24
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -45,15 +45,15 @@
 				harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
 				lpgColour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
 				engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
-				// duration: Pseq([0.5,1,2,3,4,5], inf).asStream,
-				// div: Pseq([1/4, 2, 0.5, 1/8, 2], inf).asStream
-				duration: Pseq([
-					0.7,
-					Rest(0.7),
-					Rest(0.7),
-					Rest(0.7),
-				], inf).asStream,
-				div: Pseq([1], inf).asStream				
+				duration: Pseq([0.5,1,2,3,4,5], inf).asStream,
+				div: Pseq([1/4, 2, 0.5, 1/8, 2], inf).asStream
+				// duration: Pseq([
+				// 	0.7,
+				// 	Rest(0.7),
+				// 	Rest(0.7),
+				// 	Rest(0.7),
+				// ], inf).asStream,
+				// div: Pseq([1], inf).asStream				
 			)
 		),
 
@@ -62,22 +62,22 @@
 			// $PRESET_SCALARS_START
 		(
 			cloudsSend: 1.0,
-			decay: 0.9,
+			decay: 0.1,
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
 			dur: Rest(0.7),
-			engine: 9.0,
+			engine: 13.0,
 			fmMod: 0.0,
-			harm: 1.0,
+			harm: 0.56,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.84,
+			morph: 0.6,
 			morphMod: 0.8,
 			mul: 0.5,
-			pitch: 29.39,
+			pitch: 57.95,
 			revDamp: 0.24,
-			revDrywet: 0.72,
+			revDrywet: 0.0,
 			revFreeze: 0.0,
 			revHp: 0.0,
 			revTime: 0.73,
@@ -86,8 +86,8 @@
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.7,
-			timbre: 0.89,
-			volume: 0.14
+			timbre: 0.73,
+			volume: 0.95
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -121,22 +121,22 @@
 			// $PRESET_SCALARS_START
 		(
 			cloudsSend: 1.0,
-			decay: 1.0,
-			delaySend: 0.0,
+			decay: 0.2,
+			delaySend: 0.52,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(2.8),
-			engine: 5.0,
+			dur: 0.7,
+			engine: 2.0,
 			fmMod: 0.0,
-			harm: 1.0,
+			harm: 0.64,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 1.0,
+			morph: 0.54,
 			morphMod: 1.0,
 			mul: 0.5,
-			pitch: 22.97,
+			pitch: 56.03,
 			revDamp: 0.35,
-			revDrywet: 0.8,
+			revDrywet: 0.0,
 			revFreeze: 0.0,
 			revHp: 0.14,
 			revTime: 0.89,
@@ -145,18 +145,18 @@
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 1.0,
-			timbre: 0.75,
-			volume: 0.52
+			timbre: 0.47,
+			volume: 0.86
 		),
 			// $PRESET_SCALARS_END
 			(
 				duration: Pseq([
-					1.4,
-					Rest(1.4),
-					Rest(1.4),
-					Pwrand([Rest(2.8), 1.4], [0.5, 0.5].normalizeSum),
+					0.5,
+					Rest(1.0),
+					Rest(1.0),
+					Pwrand([Rest(4), 1], [0.5, 0.5].normalizeSum),
 				], inf).asStream,
-				div: Pseq([1], inf).asStream
+				div: Pseq([3], inf).asStream
 			)
 		)
 	],
