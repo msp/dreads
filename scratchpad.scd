@@ -1,9 +1,11 @@
 // n = NetAddr("localhost", 3333);
 ~ws.().sendMsg('/foo', 440, 0.8, 0.25);
 
+s.meter
 
 ([0.1, 0.1, 0.1] ++ (3 ! 5)).flatten
 
+(0..(s.options.numOutputBusChannels-2)).flat
 
 s.options.blockSize // s.sampleRate
 
@@ -14,15 +16,16 @@ s.options.dump
 
 s.options.memSize
 
+
 // controlPeriod = blockSize / sampleRate
 // controlPeriod = 128 / 48000 = 0.00267 seconds
 
 // duration * legato >= safetyFactor * controlPeriod
 // duration >= (safetyFactor * controlPeriod) / legato
 
-  With safetyFactor = 3:
-  duration >= (3 * 0.00267) / 0.1
-  duration >= 0.08 seconds  // more aggressive minimum
+With safetyFactor = 3:
+duration >= (3 * 0.00267) / 0.1
+duration >= 0.08 seconds  // more aggressive minimum
 
 // sound example
 (
