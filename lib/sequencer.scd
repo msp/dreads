@@ -170,7 +170,7 @@ x = Pdef(\plaitsSequence,
 				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
-				\out, Pseq([0,1,2,3,4,5], inf),
+				\out, if(~using6_1, Pseq([0,1,2,3,4,5], inf), 0),
 			))
 		}
 	)

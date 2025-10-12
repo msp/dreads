@@ -14,11 +14,14 @@
 // (1) SETUP
 ////////////////////////////////////////////////////////////////////////////////
 (
+// Set to true for multichannel output, false for stereo
+~using6_1 = false;
+
 // Increase buffer size to reduce late messages
 s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
-s.options.numOutputBusChannels = 8;
+s.options.numOutputBusChannels = if(~using6_1, 8, 2);
 s.freeAll;
 
 // Capture base path for reliable preset operations
