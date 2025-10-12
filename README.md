@@ -48,7 +48,7 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pre
 4. **Launch UI**:
    - Start Open Stage Control
    - Configure launch settings:
-     - **send**: `127.0.0.1:57121` (check `NetAddr.langPort` in SC or the `diagnostic.scd` output)
+     - **send**: `127.0.0.1:57120` (check `NetAddr.langPort` in SC or the `diagnostic.scd` output)
      - **port**: `8080`
      - **load**: Path to `open-stage-control/plaits.json` in your project directory
    - Click the play button (▶) to start
