@@ -20,7 +20,7 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pre
    - On the [Dreads repository page](https://github.com/msp/dreads), click "Code" → "Open with GitHub Desktop"
    - Choose a location to save the project
 
-   ![GitHub Desktop Clone](images/github-desktop.png)
+   <img src="images/github-desktop.png" alt="GitHub Desktop Clone" width="200px">
 
 2. **Install SuperCollider extensions** to `/Library/Application Support/SuperCollider/Extensions/`. More info about [installing extensions here](https://doc.sccode.org/Guides/UsingExtensions.html).
    - Download correct versions for your SC version and architecture (Intel/Apple Silicon)
@@ -53,7 +53,7 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pre
      - **load**: Path to `open-stage-control/plaits.json` in your project directory
    - Click the play button (▶) to start
 
-   ![Open Stage Control Setup](images/open-stage-control-setup.png)
+   <img src="images/open-stage-control-setup.png" alt="Open Stage Control Setup" width="400px">
 
 ## Usage
 
