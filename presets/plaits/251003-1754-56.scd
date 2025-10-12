@@ -53,7 +53,7 @@
 				// 	Rest(0.7),
 				// 	Rest(0.7),
 				// ], inf).asStream,
-				// div: Pseq([1], inf).asStream				
+				// div: Pseq([1], inf).asStream
 			)
 		),
 
@@ -150,13 +150,20 @@
 		),
 			// $PRESET_SCALARS_END
 			(
-				duration: Pseq([
+/*				duration: Pseq([
 					0.5,
 					Rest(1.0),
 					Rest(1.0),
 					Pwrand([Rest(4), 1], [0.5, 0.5].normalizeSum),
 				], inf).asStream,
-				div: Pseq([3], inf).asStream
+				div: Pseq([3], inf).asStream*/
+				duration: Pseq([
+					0.7,
+					Rest(1.4),
+					Rest(1.4),
+					Pwrand([Rest(2.8), 1.4], [0.5, 0.5].normalizeSum),
+				], inf).asStream,
+				div: Pseq([2], inf).asStream
 			)
 		)
 	],
