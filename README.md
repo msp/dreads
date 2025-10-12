@@ -31,11 +31,11 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pre
 
 4. Restart SuperCollider
 
-5. Verify installation:
-   ```supercollider
-   MiPlaits.dumpInterface;
-   CrossoverDistortion.dumpInterface;
-   ```
+5. **Verify installation**:
+   - Open `diagnostics.scd` in SuperCollider
+   - Place cursor inside the code block and press **Cmd+Enter** to execute
+   - Check that all required UGens show ✓ marks
+   - If any show ✗, reinstall the missing extension
 
 ## Setup
 

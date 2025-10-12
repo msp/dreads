@@ -2,6 +2,8 @@
 // DIAGNOSTICS - Run this block to check your system configuration
 ////////////////////////////////////////////////////////////////////////////////
 (
+var missingUGens = [];
+
 "=== SuperCollider Version ===".postln;
 Main.version.postln;
 "".postln;
@@ -31,12 +33,15 @@ LanguageConfig.includePaths.do(_.postln);
 "".postln;
 
 "=== Required UGens Check ===".postln;
+
 "Checking MiPlaits...".postln;
 try {
 	MiPlaits.dumpInterface;
 	"✓ MiPlaits available".postln;
 } {
-	"✗ MiPlaits NOT FOUND - install MI-UGens".postln;
+	"✗✗✗ ERROR: MiPlaits NOT FOUND ✗✗✗".postln;
+	"    Install MI-UGens from: https://github.com/v7b1/mi-UGens/releases".postln;
+	missingUGens = missingUGens.add("MiPlaits");
 };
 
 "Checking CrossoverDistortion...".postln;
@@ -44,7 +49,9 @@ try {
 	CrossoverDistortion.dumpInterface;
 	"✓ CrossoverDistortion available".postln;
 } {
-	"✗ CrossoverDistortion NOT FOUND - install sc3-plugins".postln;
+	"✗✗✗ ERROR: CrossoverDistortion NOT FOUND ✗✗✗".postln;
+	"    Install sc3-plugins from: https://github.com/supercollider/sc3-plugins/releases".postln;
+	missingUGens = missingUGens.add("CrossoverDistortion");
 };
 
 "Checking MiVerb...".postln;
@@ -52,7 +59,9 @@ try {
 	MiVerb.dumpInterface;
 	"✓ MiVerb available".postln;
 } {
-	"✗ MiVerb NOT FOUND - install MI-UGens".postln;
+	"✗✗✗ ERROR: MiVerb NOT FOUND ✗✗✗".postln;
+	"    Install MI-UGens from: https://github.com/v7b1/mi-UGens/releases".postln;
+	missingUGens = missingUGens.add("MiVerb");
 };
 
 "Checking MiClouds...".postln;
@@ -60,9 +69,25 @@ try {
 	MiClouds.dumpInterface;
 	"✓ MiClouds available".postln;
 } {
-	"✗ MiClouds NOT FOUND - install MI-UGens".postln;
+	"✗✗✗ ERROR: MiClouds NOT FOUND ✗✗✗".postln;
+	"    Install MI-UGens from: https://github.com/v7b1/mi-UGens/releases".postln;
+	missingUGens = missingUGens.add("MiClouds");
 };
 "".postln;
+
+if (missingUGens.size > 0) {
+	"".postln;
+	"═══════════════════════════════════════════════════════".postln;
+	"⚠️  INSTALLATION INCOMPLETE ⚠️".postln;
+	("Missing UGens: " ++ missingUGens.join(", ")).postln;
+	"".postln;
+	"ACTION REQUIRED:".postln;
+	"1. Download and install the missing extensions".postln;
+	"2. Restart SuperCollider".postln;
+	"3. Run diagnostics.scd again to verify".postln;
+	"═══════════════════════════════════════════════════════".postln;
+	"".postln;
+};
 
 "=== Dreads Configuration (if loaded) ===".postln;
 if (~using6_1.notNil) {
