@@ -31,13 +31,23 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pre
 
 4. Restart SuperCollider
 
-5. **Verify installation**:
+5. **Allow MI-UGens to run** (macOS only, first time):
+   - On first boot, you'll see security warnings for each MI-UGen plugin
+
+   <img src="images/mi-ugens-security-warning.jpeg" alt="MI-UGens Security Warning" width="200px">
+
+   - Go to **System Settings → Privacy & Security**
+   - Scroll down and click **"Allow Anyway"** for each blocked plugin
+   - Restart SuperCollider after allowing all plugins
+   - More info: [Tidal Cycles forum thread](https://club.tidalcycles.org/t/mutable-instruments-ugens/2730/106)
+
+6. **Verify installation**:
    - Open `diagnostics.scd` in SuperCollider
    - Place cursor inside the code block and press **Cmd+Enter** to execute
    - Check that all required UGens show ✓ marks
    - If any show ✗, reinstall the missing extension
 
-## Setup
+## Running Dreads
 
 1. **Open** `plaits.scd` in Supercollider
 
