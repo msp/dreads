@@ -2,7 +2,9 @@
 
 *Many twisted Plaits.*
 
-Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with presets, pattern sequencing, Open Stage Control user interface and OSC device targets.
+Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with presets, pattern sequencing, Open Stage Control user interface, live coding and OSC device targets.
+
+<img src="images/dreads-2025-10-19.png" alt="Dreads" Xwidth="400px">
 
 ## Requirements
 
