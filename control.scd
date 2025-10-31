@@ -37,6 +37,18 @@ x.stop;
 ~fxGroup.freeAll;
 
 
+// SAMPLER TEST ////////////
+
+// Check sample loaded
+~sampleBuffers.postln;
+
+(
+  ~plaits.samples.postln;
+  ~plaits.samples[0].postln;
+  ~plaits.samples[0].sequences.postln;
+)
+
+
 
 
 ~delayFX = Synth(\filterDelay, [\out, 0], addAction: \addToTail);

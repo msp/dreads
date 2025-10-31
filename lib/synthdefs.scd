@@ -183,11 +183,44 @@ SynthDef(\globalClouds, {
 
 	// clouds = PitchShift.ar(input, 0.2, LFNoise1.kr(0.3).range(0.0, 2.00), 0.0, 0.5) * 0.8;
 
-  // Ring modulation - very audible effect:
+	// Ring modulation - very audible effect:
 	// clouds = clouds * SinOsc.ar(200) * 0.5 + clouds;
 
 	Out.ar(out, LeakDC.ar(clouds * env * mix.clip(0, 2.0)));
 	// Out.ar(out, LeakDC.ar(clouds * mix.clip(0, 2.0)));
+}).add;
+
+SynthDef(\panningSamplePlayer, {
+	|out=0, bufnum=0, numChannels=1, mul=1, rate=1, startPos=0, panDur=5,
+	atk=0.01, decay=0.1, gate=1, volume=0.7,
+	cloudsSend=0.0, delaySend=0.0, reverbSend=0.0|
+
+	var sig, env, pan, monoPlay, stereoPlay, monoSig, stereoSig, trig;
+
+	// Pan from -1 to 1 over panDur
+	pan = Line.kr(-1, 1, panDur);
+	env = EnvGen.kr(Env.perc(atk, decay), gate, doneAction: Done.freeSelf);
+
+	// Always read as mono (works for both mono and stereo buffers)
+	monoPlay = PlayBuf.ar(
+		numChannels: 1,
+		bufnum: bufnum,
+		rate: rate * BufRateScale.kr(bufnum),
+		startPos: startPos,
+		doneAction: 0
+	);
+
+	// Pan and convert to stereo
+	sig = Pan2.ar(monoPlay, pan);
+
+	sig = sig * env * mul * volume;
+
+	// Send to FX buses
+	Out.ar(~cloudsBus, sig * cloudsSend);
+	Out.ar(~delayBus, sig * delaySend);
+	Out.ar(~reverbBus, sig * reverbSend);
+
+	Out.ar(out, LeakDC.ar(sig));
 }).add;
 
 )

@@ -27,12 +27,38 @@
 	scalars.putAll((sequences: sortedSequences))
 };
 
+// Template factory function to create sample instances with inheritance
+~sampleFactory = { |scalarOverrides, sequenceOverrides|
+	var scalars, sequences, sortedSequences;
+
+	scalars = ~defaultSampleScalars.copy;
+	sequences = ~defaultSampleSequences.copy;
+
+	// Use empty dictionaries if no overrides provided
+	scalarOverrides = scalarOverrides ?? ();
+	sequenceOverrides = sequenceOverrides ?? ();
+
+	// Merge overrides into defaults
+	scalars.putAll(scalarOverrides);
+	sequences.putAll(sequenceOverrides);
+
+	// Create alphabetically sorted sequences dictionary
+	sortedSequences = ();
+	sequences.keys.asArray.sort.do { |key|
+		sortedSequences.put(key, sequences[key]);
+	};
+
+	// Create the merged instance
+	scalars.putAll((sequences: sortedSequences))
+};
+
 // New preset factory function that creates the full preset structure with FX
-~presetFactory = { |synthArray, fxOverrides|
+~presetFactory = { |synthArray, samplesArray, fxOverrides|
 	var fx, sortedFX;
 
 	fx = ~defaultFX.deepCopy;
 	fxOverrides = fxOverrides ?? ();
+	samplesArray = samplesArray ?? [];  // Default to empty samples array
 
 	// Merge FX overrides into defaults (nested structure)
 	fxOverrides.keysValuesDo { |category, categoryValues|
@@ -58,6 +84,7 @@
 	// Return the new preset structure
 	(
 		synths: synthArray,
+		samples: samplesArray,
 		fx: sortedFX
 	)
 };
@@ -339,6 +366,14 @@
 	};
 
 	this.executeFile(filepath);
+
+	// Reload sequencer to rebuild pattern with new preset structure
+	// This is critical because the pattern "bakes in" the samples array size at creation:
+	// - If old preset had 1 sample, pattern has code accessing ~plaits.samples[0]
+	// - If new preset has 0 samples, ~plaits.samples[0] is nil → crashes
+	// Reloading sequencer rebuilds pattern to match new samples array length
+	(~basePath +/+ "lib/sequencer.scd").load;
+
 	Document.open(filepath);
 	~currentPresetTemplate = filepath;
 	("Preset loaded: " ++ filepath).postln;

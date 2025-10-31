@@ -172,6 +172,64 @@ x = Pdef(\plaitsSequence,
 				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
 				\out, if(~using6_1, Pseq([0,1,2,3,4,5], inf), 0),
 			))
+		} ++
+		// Sample instances (use lookups for live coding)
+		~plaits.samples.collect { |instance, i|
+			Pbind(
+				\type, \oneShotSample,  // Custom event type: never sends gate=0
+				\instrument, \panningSamplePlayer,
+				\group, ~voiceGroup,
+				\bufnum, Pfunc {
+					var bufferKey = ("sample_" ++ i).asSymbol;
+					~sampleBuffers[bufferKey] ?? 0;
+				},
+				\numChannels, Pfunc {
+					var bufferKey = ("sample_" ++ i).asSymbol;
+					var buf = ~sampleBuffers[bufferKey];
+					if (buf.notNil) { buf.numChannels } { 1 };
+				},
+				\dur, Pfunc {
+					var durSeq = ~plaits.samples[i].sequences.duration.next;
+					var divSeq = ~plaits.samples[i].sequences.div.next;
+					~plaits.samples[i].dur = ~setDuration.(durSeq, divSeq);
+					if (i == 0) { ["Sample", i, "durSeq:", durSeq, "divSeq:", divSeq, "final dur:", ~plaits.samples[i].dur].postln; };
+					~plaits.samples[i].dur;
+				},
+				\mul, Pfunc {
+				var baseMul = ~plaits.samples[i].mul;
+				var result = ~modulateBipolar.(~plaits.samples[i].sequences.mul.next, baseMul);
+					// if (i == 0) { ["Sample", i, "mul:", baseMul, "->", result].postln; };
+				result;
+			},
+				\rate, Pfunc {
+					var rateSeq = ~plaits.samples[i].sequences.rate.next;
+					var baseRate = ~plaits.samples[i].rate;
+					var result = ~multiply.(rateSeq, baseRate);
+					// if (i == 0) { ["Sample", i, "rateSeq:", rateSeq, "baseRate:", baseRate, "->", result].postln; };
+					result;
+				},
+				\startPos, Pfunc {
+					~add.(~plaits.samples[i].sequences.startPos.next, ~plaits.samples[i].startPos);
+				},
+				\atk, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.atk.next, ~plaits.samples[i].atk) },
+				\decay, Pfunc {
+					var seqDecay = ~plaits.samples[i].sequences.decay.next;
+					var uiDecay = ~plaits.samples[i].decay;
+					var result = ~modulateBipolar.(seqDecay, uiDecay, 60.0);
+					if (i == 0) { ["Sample decay - seq:", seqDecay, "ui:", uiDecay, "->", result].postln; };
+					result;
+				},
+				\panDur, Pfunc { ~plaits.samples[i].panDur },
+				\volume, Pfunc {
+				var vol = ~plaits.samples[i].volume;
+					// if (i == 0) { ["Sample", i, "volume:", vol].postln; };
+				vol;
+			},
+				\cloudsSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.cloudsSend.next, ~plaits.samples[i].cloudsSend) },
+				\delaySend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.delaySend.next, ~plaits.samples[i].delaySend) },
+				\reverbSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.reverbSend.next, ~plaits.samples[i].reverbSend) },
+				\out, if(~using6_1, Pseq([0,1,2,3,4,5], inf), 0),
+			)
 		}
 	)
 );

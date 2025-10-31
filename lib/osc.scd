@@ -54,6 +54,51 @@ OSCdef.new(
 	};
 };
 
+// Sample OSC Handlers
+~setupSampleOSC = {
+	~plaits.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+
+		["binding sample ------------------->", instanceIndex].postln;
+		// Generic parameter handling - OSC keys match data structure keys
+		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) }).do { |paramKey|
+			OSCdef.new(
+				("sample" ++ instanceNum ++ paramKey).asSymbol,
+				{
+					arg msg, time, addr, port;
+					var value = msg[1];
+					msg.round(0.001).postln;
+					~plaits.samples[instanceIndex][paramKey] = value;
+				},
+				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString
+			);
+		};
+	};
+};
+
+// Load sample buffer via OSC
+OSCdef(\loadSampleBuffer, {
+	arg msg, time, addr, port;
+	var instanceIndex = msg[1] - 1;  // Convert from 1-based to 0-based
+	var filepath = msg[2];
+	var bufferKey = ("sample_" ++ instanceIndex).asSymbol;
+
+	["Loading sample buffer", instanceIndex, filepath].postln;
+
+	// Free old buffer if exists
+	if (~sampleBuffers[bufferKey].notNil) {
+		~sampleBuffers[bufferKey].free;
+	};
+
+	// Load new buffer
+	~sampleBuffers[bufferKey] = Buffer.read(s, filepath, action: {
+		("Sample loaded: " ++ filepath).postln;
+	});
+
+	// Update instance path
+	~plaits.samples[instanceIndex].samplePath = filepath;
+}, "/samples/load");
+
 // Delay Effect OSC Handlers
 [\time, \feedback, \filterFreq, \spread].do { |paramKey|
 	['binding fx/delay->', paramKey].postln;
@@ -240,6 +285,7 @@ OSCFunc({ |msg, time, addr, port|
 	var path = msg[0];
 	// Only show messages that might be typos in our namespaces
 	if (path.asString.contains("/plaits") ||
+	    path.asString.contains("/samples") ||
 	    path.asString.contains("/delay") ||
 	    path.asString.contains("/reverb") ||
 	    path.asString.contains("/clouds") ||
@@ -250,6 +296,7 @@ OSCFunc({ |msg, time, addr, port|
 
 // Setup OSC for plaits instances (called after preset structure is loaded)
 ~setupPlaitsOSC.();
+~setupSampleOSC.();
 
 ~pushStateToUI.value;
 )

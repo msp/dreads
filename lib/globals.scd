@@ -127,4 +127,38 @@
 	volume: Pseq([0.5], inf).asStream,
 	mul: Pseq([0.5], inf).asStream
 );
+
+// Sample buffer storage (just-in-time loading)
+~sampleBuffers = Dictionary.new;
+
+// Default scalar values for sample instances
+~defaultSampleScalars = (
+	atk: 0.01,
+	cloudsSend: 0.0,
+	decay: 0.1,
+	delaySend: 0.0,
+	dur: 0.25,
+	mul: 1.0,
+	panDur: 5.0,
+	rate: 1.0,
+	reverbSend: 0.0,
+	samplePath: nil,  // Path to sample file on disk
+	startPos: 0,
+	tempo: 165.0,
+	volume: 0.7
+);
+
+// Default sequence patterns for sample instances
+~defaultSampleSequences = (
+	atk: Pseq([0.5], inf).asStream,      // 0-1 normalized (uses ~modulateBipolar)
+	cloudsSend: Pseq([0.0], inf).asStream,
+	decay: Pseq([30.0], inf).asStream,   // Neutral = max/2 = 60/2 (uses ~modulateBipolarScaled)
+	delaySend: Pseq([0.0], inf).asStream,
+	div: Pseq([1.0], inf).asStream,
+	duration: Pseq([0.25], inf).asStream,
+	mul: Pseq([1.0], inf).asStream,
+	rate: Pseq([1.0], inf).asStream,      // Multiplier (uses ~multiply)
+	reverbSend: Pseq([0.0], inf).asStream,
+	startPos: Pseq([0], inf).asStream     // Additive (uses ~add)
+);
 )

@@ -12,9 +12,19 @@ s.options.blockSize // s.sampleRate
 s.options.collect{|o| o.postln;}
 
 
+[(44100 * 1)]
+
 s.options.dump
 
 s.options.memSize
+
+Env.asr(0.01, 1, 5.0).test(0.1).plot;
+
+Env.asr(0.001, 0.5, 1, -4).test(2).plot; // sharper attack
+Env.asr(0.02, 0.5, 1, 'linear').test(2).plot; // linear segments
+
+
+(Document.current.dir +/+ "test_modulate_refactor.scd").load;
 
 
 // controlPeriod = blockSize / sampleRate
