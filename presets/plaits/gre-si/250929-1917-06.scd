@@ -139,6 +139,8 @@
 			)
 		)
 	],
+	// Samples array
+	[],
 	// Global FX settings
 	// $PRESET_FX_START
 (
