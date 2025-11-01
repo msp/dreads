@@ -134,33 +134,148 @@
 	)
 };
 
-// Load a single sample buffer for a given instance index
-~loadSampleBuffer = { |instanceIndex, filepath|
-	var bufferKey = ("sample_" ++ instanceIndex).asSymbol;
+// Load sample library with SuperDirt-style bank/variant structure
+~loadSampleLibrary = {
+	var basePath = ~basePath +/+ "samples";
+	var totalBanks = 0, totalVariants = 0;
 
-	// Free old buffer if exists
-	if (~sampleBuffers[bufferKey].notNil) {
-		~sampleBuffers[bufferKey].free;
+	("Loading sample library from: " ++ basePath).postln;
+
+	if (PathName(basePath).isFolder.not) {
+		("WARNING: Sample library folder not found: " ++ basePath).warn;
+		("Please create the folder and add sample banks").postln;
+		^nil;
 	};
 
-	// Load new buffer
-	("Loading sample " ++ instanceIndex ++ ": " ++ filepath).postln;
-	~sampleBuffers[bufferKey] = Buffer.read(s, filepath, action: {
-		("Sample loaded: " ++ filepath).postln;
-	});
+	PathName(basePath).folders.do { |folder|
+		var bankName = folder.folderName.asSymbol;
+		var buffers = List.new;
+		var paths = List.new;
+		var metadata = List.new;
 
-	// Update instance path in preset
-	~plaits.samples[instanceIndex].samplePath = filepath;
-};
+		// ("  Scanning bank folder: " ++ folder.fullPath).postln;
 
-// Load all sample buffers from current preset
-~loadAllSampleBuffers = {
-	~plaits.samples.do { |sampleInstance, idx|
-		var samplePath = sampleInstance.samplePath;
-		if (samplePath.notNil) {
-			~loadSampleBuffer.(idx, samplePath);
+		// Load all audio files in this bank folder
+		folder.files.do { |file|
+			var ext = (file.fullPath.splitext[1] ? "").toLower;
+			var validExts = ["wav", "aif", "aiff", "aifc"];
+			var isValid = validExts.includesEqual(ext);
+			var buf;
+
+			// ("    File: " ++ file.fileName ++ " ext: '" ++ ext ++ "' valid: " ++ isValid).postln;
+			if (isValid) {
+				// ("    Loading: " ++ file.fileName).postln;
+				buf = Buffer.read(s, file.fullPath, action: { |buffer|
+					if (buffer.notNil) {
+						// Store metadata
+						var meta = (
+							path: file.fullPath,
+							filename: file.fileName,
+							numChannels: buffer.numChannels,
+							numFrames: buffer.numFrames,
+							sampleRate: buffer.sampleRate,
+							duration: buffer.numFrames / buffer.sampleRate
+						);
+						metadata.add(meta);
+					};
+				});
+
+				buffers.add(buf);
+				paths.add(file.fullPath);
+			};
+		};
+
+		if (buffers.size > 0) {
+			~sampleLibrary.banks[bankName] = buffers;
+			~sampleLibrary.paths[bankName] = paths;
+			~sampleLibrary.metadata[bankName] = metadata;
+
+			("  " ++ bankName ++ ": " ++ buffers.size ++ " variants").postln;
+			totalBanks = totalBanks + 1;
+			totalVariants = totalVariants + buffers.size;
 		};
 	};
+
+	("Sample library loaded: " ++ totalBanks ++ " banks, " ++ totalVariants ++ " total samples").postln;
+};
+
+// Free entire sample library
+~freeSampleLibrary = {
+	~sampleLibrary.banks.keysValuesDo { |bankName, buffers|
+		buffers.do { |buf|
+			if (buf.notNil) {
+				buf.free;
+			};
+		};
+	};
+
+	~sampleLibrary.banks.clear;
+	~sampleLibrary.paths.clear;
+	~sampleLibrary.metadata.clear;
+
+	"Sample library freed".postln;
+};
+
+// List all loaded sample banks
+~listSampleBanks = {
+	if (~sampleLibrary.banks.size == 0) {
+		"No sample banks loaded".postln;
+		^nil;
+	};
+
+	"Sample Banks:".postln;
+	~sampleLibrary.banks.keysValuesDo { |bankName, buffers|
+		("  " ++ bankName ++ ": " ++ buffers.size ++ " variants").postln;
+		if (~sampleLibrary.metadata[bankName].notNil) {
+			~sampleLibrary.metadata[bankName].do { |meta, idx|
+				if (meta.notNil) {
+					("    [" ++ idx ++ "] " ++ meta.filename ++
+					 " (" ++ meta.numChannels ++ "ch, " ++
+					 meta.duration.round(0.01) ++ "s)").postln;
+				};
+			};
+		};
+	};
+};
+
+// Get buffer for a bank + variant combination
+~getSampleBuffer = { |bankName, variant = 0|
+	var bank;
+
+	if (bankName.isNil) {
+		^nil;  // Silently return nil if no bank selected
+	};
+
+	bank = ~sampleLibrary.banks[bankName];
+
+	if (bank.isNil) {
+		("WARNING: Sample bank not found: " ++ bankName).warn;
+		^nil;
+	};
+
+	// Use wrapAt for safe indexing (SuperDirt style)
+	bank.wrapAt(variant);
+};
+
+// Lookup bank and variant by file path
+~lookupSampleByPath = { |filepath|
+	var result = nil;
+
+	filepath = filepath.standardizePath;
+
+	~sampleLibrary.paths.keysValuesDo { |bankName, pathsArray|
+		pathsArray.do { |path, idx|
+			if (path.standardizePath == filepath) {
+				result = (bankName: bankName, variant: idx);
+			};
+		};
+	};
+
+	if (result.isNil) {
+		("WARNING: Sample not found in library: " ++ filepath).warn;
+	};
+
+	result;
 };
 
 // Custom event type for one-shot sample playback

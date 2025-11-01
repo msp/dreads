@@ -60,6 +60,7 @@ OSCdef.new(
 		var instanceNum = instanceIndex + 1;
 
 		["binding sample ------------------->", instanceIndex].postln;
+
 		// Generic parameter handling - OSC keys match data structure keys
 		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) }).do { |paramKey|
 			OSCdef.new(
@@ -73,31 +74,41 @@ OSCdef.new(
 				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString
 			);
 		};
+
+		// File browser handler for this instance
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "FileSelected").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var filepath = msg[1].asString;
+				var lookup, metadata, duration;
+
+				["Sample file selected (instance " ++ instanceIndex ++ "):", filepath].postln;
+
+				// Lookup bank and variant from filepath
+				lookup = ~lookupSampleByPath.(filepath);
+
+				if (lookup.notNil) {
+					["  Resolved to bank:", lookup.bankName, "variant:", lookup.variant].postln;
+
+					// Update bankName and variant for this instance
+					~plaits.samples[instanceIndex].bankName = lookup.bankName;
+					~plaits.samples[instanceIndex].variant = lookup.variant;
+
+					// Log sample metadata
+					metadata = ~sampleLibrary.metadata[lookup.bankName];
+					if (metadata.notNil && metadata[lookup.variant].notNil) {
+						duration = metadata[lookup.variant].duration;
+						["  Sample duration:", duration, "seconds"].postln;
+					};
+				} {
+					["  ERROR: Could not find sample in loaded library"].postln;
+				};
+			},
+			"/samples/" ++ instanceNum ++ "/samplePath"
+		);
 	};
 };
-
-// Load sample buffer via OSC
-OSCdef(\loadSampleBuffer, {
-	arg msg, time, addr, port;
-	var instanceIndex = msg[1] - 1;  // Convert from 1-based to 0-based
-	var filepath = msg[2];
-	var bufferKey = ("sample_" ++ instanceIndex).asSymbol;
-
-	["Loading sample buffer", instanceIndex, filepath].postln;
-
-	// Free old buffer if exists
-	if (~sampleBuffers[bufferKey].notNil) {
-		~sampleBuffers[bufferKey].free;
-	};
-
-	// Load new buffer
-	~sampleBuffers[bufferKey] = Buffer.read(s, filepath, action: {
-		("Sample loaded: " ++ filepath).postln;
-	});
-
-	// Update instance path
-	~plaits.samples[instanceIndex].samplePath = filepath;
-}, "/samples/load");
 
 // Delay Effect OSC Handlers
 [\time, \feedback, \filterFreq, \spread].do { |paramKey|
@@ -280,12 +291,27 @@ OSCdef.new(
 	"Plaits state pushed to UI!".postln;
 };
 
-// Debug OSCFunc for catching missed messages
+// OSC handler for refreshing sample library
+OSCdef(\refreshSampleLibrary, {
+	arg msg, time, addr, port;
+
+	"Refreshing sample library...".postln;
+
+	// Reload library
+	~loadSampleLibrary.();
+
+	"Sample library refreshed".postln;
+}, '/refreshSampleLibrary');
+
+// Debug OSCFunc for catching all sample-related messages
 OSCFunc({ |msg, time, addr, port|
 	var path = msg[0];
-	// Only show messages that might be typos in our namespaces
+	// Show all sample-related messages for debugging
+	if (path.asString.contains("/samples")) {
+		["OSC received:", msg].postln;
+	};
+	// Show other possible typos
 	if (path.asString.contains("/plaits") ||
-	    path.asString.contains("/samples") ||
 	    path.asString.contains("/delay") ||
 	    path.asString.contains("/reverb") ||
 	    path.asString.contains("/clouds") ||

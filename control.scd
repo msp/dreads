@@ -39,8 +39,8 @@ x.stop;
 
 // SAMPLER TEST ////////////
 
-// Check sample loaded
-~sampleBuffers.postln;
+// Check sample library loaded
+~sampleLibrary.banks.postln;
 
 (
   ~plaits.samples.postln;

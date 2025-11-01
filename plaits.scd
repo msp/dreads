@@ -52,15 +52,7 @@ s.waitForBoot {
 
 ~reverbFX = Synth(\globalReverb, [\out, 0], ~fxGroup, \addToTail);
 
-// Load sample buffers for all sample instances
-~plaits.samples.do { |sampleInstance, idx|
-	var samplePath = sampleInstance.samplePath;
-	if (samplePath.notNil) {
-		var bufferKey = ("sample_" ++ idx).asSymbol;
-		("Loading sample " ++ idx ++ ": " ++ samplePath).postln;
-		~sampleBuffers[bufferKey] = Buffer.read(s, samplePath);
-	};
-};
+~loadSampleLibrary.();
 
 (Document.current.dir ++ "/lib/sequencer.scd").load;
 )

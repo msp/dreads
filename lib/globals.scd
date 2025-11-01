@@ -128,37 +128,44 @@
 	mul: Pseq([0.5], inf).asStream
 );
 
-// Sample buffer storage (just-in-time loading)
-~sampleBuffers = Dictionary.new;
+// Sample library storage (SuperDirt-style bank/variant structure)
+~sampleLibrary = (
+	banks: Dictionary.new,      // bankName (Symbol) -> Array of Buffers
+	paths: Dictionary.new,      // bankName (Symbol) -> Array of file paths
+	metadata: Dictionary.new    // bankName (Symbol) -> Array of metadata dicts
+);
 
 // Default scalar values for sample instances
 ~defaultSampleScalars = (
-	atk: 0.01,
+	atk: 0.5,               // Normalized 0-1 (scaled to duration/2 in sequencer)
+	bankName: nil,          // Sample bank name (e.g., \kick, \snare)
 	cloudsSend: 0.0,
-	decay: 0.1,
+	decay: 0.5,             // Normalized 0-1 (scaled to duration*2 in sequencer)
 	delaySend: 0.0,
 	dur: 0.25,
 	mul: 1.0,
-	panDur: 5.0,
+	panDur: 0.5,            // Normalized 0-1 (scaled to duration*2 in sequencer)
 	rate: 1.0,
 	reverbSend: 0.0,
-	samplePath: nil,  // Path to sample file on disk
-	startPos: 0,
+	startPos: 0,            // Normalized 0-1 (scaled to duration in sequencer)
 	tempo: 165.0,
+	variant: 0,             // Which variant of the bank to play (0-based index)
 	volume: 0.7
 );
 
 // Default sequence patterns for sample instances
 ~defaultSampleSequences = (
-	atk: Pseq([0.5], inf).asStream,      // 0-1 normalized (uses ~modulateBipolar)
+	atk: Pseq([0.5], inf).asStream,         // 0-1 normalized
 	cloudsSend: Pseq([0.0], inf).asStream,
-	decay: Pseq([30.0], inf).asStream,   // Neutral = max/2 = 60/2 (uses ~modulateBipolarScaled)
+	decay: Pseq([0.5], inf).asStream,       // 0-1 normalized (neutral at midpoint)
 	delaySend: Pseq([0.0], inf).asStream,
 	div: Pseq([1.0], inf).asStream,
 	duration: Pseq([0.25], inf).asStream,
 	mul: Pseq([1.0], inf).asStream,
-	rate: Pseq([1.0], inf).asStream,      // Multiplier (uses ~multiply)
+	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
+	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
 	reverbSend: Pseq([0.0], inf).asStream,
-	startPos: Pseq([0], inf).asStream     // Additive (uses ~add)
+	startPos: Pseq([0.5], inf).asStream,    // 0-1 normalized (neutral at midpoint)
+	variant: Pseq([0], inf).asStream        // Variant index, additive (uses ~add)
 );
 )

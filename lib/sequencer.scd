@@ -179,14 +179,36 @@ x = Pdef(\plaitsSequence,
 				\type, \oneShotSample,  // Custom event type: never sends gate=0
 				\instrument, \panningSamplePlayer,
 				\group, ~voiceGroup,
-				\bufnum, Pfunc {
-					var bufferKey = ("sample_" ++ i).asSymbol;
-					~sampleBuffers[bufferKey] ?? 0;
+				// Calculate variant once per event (evaluated first, then reused)
+				\sampleVariant, Pfunc {
+					var variantSeq = ~plaits.samples[i].sequences.variant.next;
+					var variantBase = ~plaits.samples[i].variant;
+					~add.(variantSeq, variantBase);
 				},
-				\numChannels, Pfunc {
-					var bufferKey = ("sample_" ++ i).asSymbol;
-					var buf = ~sampleBuffers[bufferKey];
-					if (buf.notNil) { buf.numChannels } { 1 };
+				// Get sample duration for scaling normalized values
+				\sampleDuration, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var variant = event[\sampleVariant];
+					var metadata, duration;
+
+					if (bankName.notNil) {
+						metadata = ~sampleLibrary.metadata[bankName];
+						if (metadata.notNil && metadata[variant].notNil) {
+							duration = metadata[variant].duration;
+						};
+					};
+
+					duration ?? 1.0;  // Fallback to 1.0 second if not found
+				},
+				\bufnum, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
+					buffer ?? 0;
+				},
+				\numChannels, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
+					if (buffer.notNil) { buffer.numChannels } { 1 };
 				},
 				\dur, Pfunc {
 					var durSeq = ~plaits.samples[i].sequences.duration.next;
@@ -208,25 +230,48 @@ x = Pdef(\plaitsSequence,
 					// if (i == 0) { ["Sample", i, "rateSeq:", rateSeq, "baseRate:", baseRate, "->", result].postln; };
 					result;
 				},
-				\startPos, Pfunc {
-					var bufferKey = ("sample_" ++ i).asSymbol;
-					var buffer = ~sampleBuffers[bufferKey];
-					var seqSeconds = ~plaits.samples[i].sequences.startPos.next;
-					var baseSeconds = ~plaits.samples[i].startPos;
-					var totalSeconds = ~add.(seqSeconds, baseSeconds);
-					var frames = ~secondsToFrames.(totalSeconds, buffer);
-					// if (i == 0) { ["Sample startPos - seq:", seqSeconds, "base:", baseSeconds, "total:", totalSeconds, "frames:", frames].postln; };
+				\startPos, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
+					var duration = event[\sampleDuration];
+					// UI and sequence are normalized 0-1, scale to sample duration
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.startPos.next,
+						~plaits.samples[i].startPos
+					);
+					var seconds = normalized * duration;  // Scale to actual sample length
+					var frames = ~secondsToFrames.(seconds, buffer);
+					// if (i == 0) { ["Sample startPos - norm:", normalized, "seconds:", seconds, "frames:", frames].postln; };
 					frames;
 				},
-				\atk, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.atk.next, ~plaits.samples[i].atk) },
-				\decay, Pfunc {
-					var seqDecay = ~plaits.samples[i].sequences.decay.next;
-					var uiDecay = ~plaits.samples[i].decay;
-					var result = ~modulateBipolar.(seqDecay, uiDecay, 60.0);
-					if (i == 0) { ["Sample decay - seq:", seqDecay, "ui:", uiDecay, "->", result].postln; };
-					result;
+				\atk, Pfunc { |event|
+					var duration = event[\sampleDuration];
+					// Normalized 0-1, scale to duration/2 (attack shouldn't exceed half the sample)
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.atk.next,
+						~plaits.samples[i].atk
+					);
+					normalized * (duration / 2);
 				},
-				\panDur, Pfunc { ~plaits.samples[i].panDur },
+				\decay, Pfunc { |event|
+					var duration = event[\sampleDuration];
+					// Normalized 0-1, scale to duration*2 (allow longer decay than sample)
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.decay.next,
+						~plaits.samples[i].decay
+					);
+					normalized * (duration * 2);
+				},
+				\panDur, Pfunc { |event|
+					var duration = event[\sampleDuration];
+					// Normalized 0-1, scale to duration*2
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.panDur.next,
+						~plaits.samples[i].panDur
+					);
+					// if (i == 0) { ["Sample panDur - norm:", normalized, "duration:", duration, "->", normalized * (duration * 2), "seconds"].postln; };
+					normalized * (duration * 2);
+				},
 				\volume, Pfunc {
 				var vol = ~plaits.samples[i].volume;
 					// if (i == 0) { ["Sample", i, "volume:", vol].postln; };
