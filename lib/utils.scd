@@ -76,6 +76,20 @@
 	baseValue + seqValue;
 };
 
+// Convert seconds to frame position for sample playback
+// Usage: ~secondsToFrames.(1.5, ~sampleBuffers[\sample_0])
+~secondsToFrames = { |seconds, buffer|
+	var framePosition = 0;
+
+	if (buffer.notNil) {
+		var sampleRate = buffer.sampleRate;
+		framePosition = (seconds * sampleRate).asInteger;
+	} {
+		"Buffer is nil, returning 0".warn;
+	};
+
+	framePosition;
+};
 
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|

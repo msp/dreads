@@ -209,7 +209,14 @@ x = Pdef(\plaitsSequence,
 					result;
 				},
 				\startPos, Pfunc {
-					~add.(~plaits.samples[i].sequences.startPos.next, ~plaits.samples[i].startPos);
+					var bufferKey = ("sample_" ++ i).asSymbol;
+					var buffer = ~sampleBuffers[bufferKey];
+					var seqSeconds = ~plaits.samples[i].sequences.startPos.next;
+					var baseSeconds = ~plaits.samples[i].startPos;
+					var totalSeconds = ~add.(seqSeconds, baseSeconds);
+					var frames = ~secondsToFrames.(totalSeconds, buffer);
+					// if (i == 0) { ["Sample startPos - seq:", seqSeconds, "base:", baseSeconds, "total:", totalSeconds, "frames:", frames].postln; };
+					frames;
 				},
 				\atk, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.atk.next, ~plaits.samples[i].atk) },
 				\decay, Pfunc {
