@@ -138,7 +138,7 @@
 // Default scalar values for sample instances
 ~defaultSampleScalars = (
 	atk: 0.5,               // Normalized 0-1 (scaled to duration/2 in sequencer)
-	bankName: nil,          // Sample bank name (e.g., \kick, \snare)
+	bankName: \default,     // Sample bank name (\default = built-in SC samples)
 	cloudsSend: 0.0,
 	decay: 0.5,             // Normalized 0-1 (scaled to duration*2 in sequencer)
 	delaySend: 0.0,

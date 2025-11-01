@@ -214,7 +214,7 @@ x = Pdef(\plaitsSequence,
 					var durSeq = ~plaits.samples[i].sequences.duration.next;
 					var divSeq = ~plaits.samples[i].sequences.div.next;
 					~plaits.samples[i].dur = ~setDuration.(durSeq, divSeq);
-					if (i == 0) { ["Sample", i, "durSeq:", durSeq, "divSeq:", divSeq, "final dur:", ~plaits.samples[i].dur].postln; };
+					// if (i == 0) { ["Sample", i, "durSeq:", durSeq, "divSeq:", divSeq, "final dur:", ~plaits.samples[i].dur].postln; };
 					~plaits.samples[i].dur;
 				},
 				\mul, Pfunc {
@@ -241,7 +241,7 @@ x = Pdef(\plaitsSequence,
 					);
 					var seconds = normalized * duration;  // Scale to actual sample length
 					var frames = ~secondsToFrames.(seconds, buffer);
-					// if (i == 0) { ["Sample startPos - norm:", normalized, "seconds:", seconds, "frames:", frames].postln; };
+					if (i == 0) { ["Sample startPos - norm:", normalized, "seconds:", seconds, "frames:", frames].postln; };
 					frames;
 				},
 				\atk, Pfunc { |event|

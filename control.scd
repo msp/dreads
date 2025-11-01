@@ -48,6 +48,17 @@ x.stop;
   ~plaits.samples[0].sequences.postln;
 )
 
+~listSampleBanks.()
+
+(
+  ~plaits.samples[0].bankName.postln;
+  ~plaits.samples[0].variant.postln;
+)
+
+(
+(Document.current.dir ++ "/lib/globals.scd").load;
+  ~defaultSampleScalars.postln;  // Check if bankName is now there
+)
 
 
 

@@ -136,63 +136,72 @@
 
 // Load sample library with SuperDirt-style bank/variant structure
 ~loadSampleLibrary = {
-	var basePath = ~basePath +/+ "samples";
-	var totalBanks = 0, totalVariants = 0;
+	var basePath, builtinPath, totalBanks = 0, totalVariants = 0;
+	var loadBankFromPath;
 
+	// Helper function to load a bank from a folder path
+	loadBankFromPath = { |folderPath, bankName|
+		var folder = PathName(folderPath);
+		var buffers = List.new;
+		var paths = List.new;
+		var metadata = List.new;
+
+		if (folder.isFolder) {
+			folder.files.do { |file|
+				var ext = (file.fullPath.splitext[1] ? "").toLower;
+				var validExts = ["wav", "aif", "aiff", "aifc"];
+				var isValid = validExts.includesEqual(ext);
+				var buf;
+
+				if (isValid) {
+					buf = Buffer.read(s, file.fullPath, action: { |buffer|
+						if (buffer.notNil) {
+							var meta = (
+								path: file.fullPath,
+								filename: file.fileName,
+								numChannels: buffer.numChannels,
+								numFrames: buffer.numFrames,
+								sampleRate: buffer.sampleRate,
+								duration: buffer.numFrames / buffer.sampleRate
+							);
+							metadata.add(meta);
+						};
+					});
+
+					buffers.add(buf);
+					paths.add(file.fullPath);
+				};
+			};
+
+			if (buffers.size > 0) {
+				~sampleLibrary.banks[bankName] = buffers;
+				~sampleLibrary.paths[bankName] = paths;
+				~sampleLibrary.metadata[bankName] = metadata;
+
+				("  " ++ bankName ++ ": " ++ buffers.size ++ " variants").postln;
+				totalBanks = totalBanks + 1;
+				totalVariants = totalVariants + buffers.size;
+			};
+		};
+	};
+
+	// Load built-in SC samples as 'default' bank
+	builtinPath = Platform.resourceDir +/+ "sounds";
+	("Loading built-in samples from: " ++ builtinPath).postln;
+	loadBankFromPath.(builtinPath, \default);
+
+	// Load user sample library
+	basePath = ~basePath +/+ "samples";
 	("Loading sample library from: " ++ basePath).postln;
 
 	if (PathName(basePath).isFolder.not) {
 		("WARNING: Sample library folder not found: " ++ basePath).warn;
 		("Please create the folder and add sample banks").postln;
-		^nil;
-	};
-
-	PathName(basePath).folders.do { |folder|
-		var bankName = folder.folderName.asSymbol;
-		var buffers = List.new;
-		var paths = List.new;
-		var metadata = List.new;
-
-		// ("  Scanning bank folder: " ++ folder.fullPath).postln;
-
-		// Load all audio files in this bank folder
-		folder.files.do { |file|
-			var ext = (file.fullPath.splitext[1] ? "").toLower;
-			var validExts = ["wav", "aif", "aiff", "aifc"];
-			var isValid = validExts.includesEqual(ext);
-			var buf;
-
-			// ("    File: " ++ file.fileName ++ " ext: '" ++ ext ++ "' valid: " ++ isValid).postln;
-			if (isValid) {
-				// ("    Loading: " ++ file.fileName).postln;
-				buf = Buffer.read(s, file.fullPath, action: { |buffer|
-					if (buffer.notNil) {
-						// Store metadata
-						var meta = (
-							path: file.fullPath,
-							filename: file.fileName,
-							numChannels: buffer.numChannels,
-							numFrames: buffer.numFrames,
-							sampleRate: buffer.sampleRate,
-							duration: buffer.numFrames / buffer.sampleRate
-						);
-						metadata.add(meta);
-					};
-				});
-
-				buffers.add(buf);
-				paths.add(file.fullPath);
-			};
-		};
-
-		if (buffers.size > 0) {
-			~sampleLibrary.banks[bankName] = buffers;
-			~sampleLibrary.paths[bankName] = paths;
-			~sampleLibrary.metadata[bankName] = metadata;
-
-			("  " ++ bankName ++ ": " ++ buffers.size ++ " variants").postln;
-			totalBanks = totalBanks + 1;
-			totalVariants = totalVariants + buffers.size;
+	} {
+		// Load user banks from samples/ folder
+		PathName(basePath).folders.do { |folder|
+			var bankName = folder.folderName.asSymbol;
+			loadBankFromPath.(folder.fullPath, bankName);
 		};
 	};
 
@@ -283,7 +292,7 @@
 Event.addEventType(\oneShotSample, {
 	var server = ~server ?? { Server.default };
 
-	["oneShotSample event at", thisThread.beats, "dur =", ~dur, "decay =", ~decay].postln;
+	// ["oneShotSample event at", thisThread.beats, "dur =", ~dur, "decay =", ~decay].postln;
 
 	// Build the synth - based on standard 'note' event type
 	// but without storing the node for later gate-off
@@ -312,7 +321,7 @@ Event.addEventType(\oneShotSample, {
 	};
 
 	// Return the delta time for the pattern to wait
-	["oneShotSample returning delta:", ~dur].postln;
+	// ["oneShotSample returning delta:", ~dur].postln;
 	~dur;
 });
 

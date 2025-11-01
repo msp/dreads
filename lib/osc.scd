@@ -279,6 +279,19 @@ OSCdef.new(
 		};
 	};
 
+	// Send sample instance parameters
+	~plaits.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+
+		// Send all parameter values to UI
+		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+			var value = instance[paramKey];
+			var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey;
+			["Sending:", path, value].postln;
+			ui.sendMsg(path, value);
+		};
+	};
+
 	// Send global FX parameters (nested structure)
 	fxSettings.keysValuesDo { |category, categoryParams|
 		categoryParams.keysValuesDo { |param, value|

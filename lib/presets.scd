@@ -148,11 +148,13 @@
 
 
 ~replaceScalarValues = { |content|
-	var lines, plaitsIndex, inScalarsSection, inFXSection, result, match, currentPlaits, currentFX, paramLines, currentValue, formattedValue, categoryLines;
+	var lines, plaitsIndex, sampleIndex, inScalarsSection, inSampleScalarsSection, inFXSection, result, match, currentPlaits, currentSample, currentFX, paramLines, currentValue, formattedValue, categoryLines;
 
 	lines = content.split($\n);
 	plaitsIndex = -1;
+	sampleIndex = -1;
 	inScalarsSection = false;
+	inSampleScalarsSection = false;
 	inFXSection = false;
 	result = [];
 
@@ -163,6 +165,15 @@
 			if (match.notNil && match.size > 1) {
 				plaitsIndex = match[1][1].asInteger - 1;
 				("Processing plaits instance: " ++ plaitsIndex).postln;
+			};
+		};
+
+		// Track sample instance markers
+		if (line.contains("$SAMPLE")) {
+			match = line.findRegexp("\\$SAMPLE([0-9]+)");
+			if (match.notNil && match.size > 1) {
+				sampleIndex = match[1][1].asInteger - 1;
+				("Processing sample instance: " ++ sampleIndex).postln;
 			};
 		};
 
@@ -233,10 +244,57 @@
 							formattedValue = if (currentValue.isNumber) {
 								currentValue.round(0.01).asString;
 							} {
-								currentValue.asString;
+								if (currentValue.isKindOf(Symbol)) {
+									"\\" ++ currentValue.asString;
+								} {
+									currentValue.asString;
+								};
 							};
 							paramLines = paramLines.add("\t\t\t" ++ key ++ ": " ++ formattedValue ++ ",");
 						};
+					};
+				};
+
+				// Template format: add opening paren
+				result = result.add("\t\t(");
+				if (paramLines.size > 0) {
+					// Remove trailing comma from last parameter
+					paramLines[paramLines.size - 1] = paramLines[paramLines.size - 1][0..paramLines[paramLines.size - 1].size - 2];
+					result = result.addAll(paramLines);
+				};
+				result = result.add("\t\t),");
+			};
+		};
+
+		// Handle sample scalar section replacement
+		if (line.contains("$PRESET_SAMPLE_SCALARS_START")) {
+			inSampleScalarsSection = true;
+			result = result.add(line);
+			("Entering sample scalars section for sample " ++ sampleIndex).postln;
+
+			// Generate new sample scalar section with ALL parameters in alphabetical order
+			if ((sampleIndex.isInteger) && (sampleIndex >= 0) && (sampleIndex < ~plaits.samples.size)) {
+				currentSample = ~plaits.samples[sampleIndex];
+				paramLines = [];
+
+				// Get all scalar keys in alphabetical order
+				~defaultSampleScalars.keys.asArray.sort.do { |key|
+					if (key != \sequences) {
+						currentValue = currentSample[key];
+						formattedValue = if (currentValue.isNil) {
+							"nil";
+						} {
+							if (currentValue.isNumber) {
+								currentValue.round(0.01).asString;
+							} {
+								if (currentValue.isKindOf(Symbol)) {
+									"\\" ++ currentValue.asString;
+								} {
+									currentValue.asString;
+								};
+							};
+						};
+						paramLines = paramLines.add("\t\t\t" ++ key ++ ": " ++ formattedValue ++ ",");
 					};
 				};
 
@@ -263,9 +321,17 @@
 			("Exiting scalars section").postln;
 		};
 
-		if (inScalarsSection.not && inFXSection.not &&
+		if (line.contains("$PRESET_SAMPLE_SCALARS_END")) {
+			inSampleScalarsSection = false;
+			result = result.add(line);
+			("Exiting sample scalars section").postln;
+		};
+
+		if (inScalarsSection.not && inSampleScalarsSection.not && inFXSection.not &&
 		   line.contains("$PRESET_SCALARS_START").not &&
 		   line.contains("$PRESET_SCALARS_END").not &&
+		   line.contains("$PRESET_SAMPLE_SCALARS_START").not &&
+		   line.contains("$PRESET_SAMPLE_SCALARS_END").not &&
 		   line.contains("$PRESET_FX_START").not &&
 		   line.contains("$PRESET_FX_END").not) {
 			// Outside sections, keep all lines as-is
