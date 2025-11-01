@@ -150,7 +150,7 @@
 	startPos: 0,            // Normalized 0-1 (scaled to duration in sequencer)
 	tempo: 165.0,
 	variant: 0,             // Which variant of the bank to play (0-based index)
-	volume: 0.7
+	volume: 0.0
 );
 
 // Default sequence patterns for sample instances
@@ -160,7 +160,7 @@
 	decay: Pseq([0.5], inf).asStream,       // 0-1 normalized (neutral at midpoint)
 	delaySend: Pseq([0.0], inf).asStream,
 	div: Pseq([1.0], inf).asStream,
-	duration: Pseq([0.25], inf).asStream,
+	duration: Pseq([1.0], inf).asStream,
 	mul: Pseq([1.0], inf).asStream,
 	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
 	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
