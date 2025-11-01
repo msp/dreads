@@ -136,7 +136,37 @@
 	)
 	],
 	// Samples array
-	[],
+	[
+		// $SAMPLE1
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+			(
+			),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		),
+
+		// $SAMPLE2
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+			(
+			),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		),
+
+		// $SAMPLE3
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+			(
+			),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		)
+	],
 	// Global FX settings
 	// $PRESET_FX_START
 (

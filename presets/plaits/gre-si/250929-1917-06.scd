@@ -14,7 +14,7 @@
 			delaySend: 0.82,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 8.0,
+			dur: 14.0,
 			engine: 2.0,
 			fmMod: 0.0,
 			harm: 0.45,
@@ -102,7 +102,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 1.4,
+			dur: Rest(11.2),
 			engine: 0.0,
 			fmMod: 0.0,
 			harm: 0.49,
@@ -140,7 +140,81 @@
 		)
 	],
 	// Samples array
-	[],
+	[
+		// $SAMPLE1
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+		(
+			atk: 0.5,
+			bankName: \default,
+			cloudsSend: 0.0,
+			decay: 0.25,
+			delaySend: 0.0,
+			dur: 16.0,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.0,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 0.0,
+			volume: 1.37
+		),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+				div: Pseq([1/16], inf).asStream
+			)
+		),
+
+		// $SAMPLE2
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+		(
+			atk: 0.0,
+			bankName: \halfmastv6,
+			cloudsSend: 0.0,
+			decay: 0.56,
+			delaySend: 0.14,
+			dur: 4.0,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 2.55,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 0.0,
+			volume: 0.19
+		),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+				div: Pseq([0.5, 0.25, 1], inf).asStream
+			)
+		),
+
+		// $SAMPLE3
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+		(
+			atk: 0.05,
+			bankName: \halfmastv6,
+			cloudsSend: 0.7,
+			decay: 0.5,
+			delaySend: 0.14,
+			dur: 1.0,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.04,
+			reverbSend: 0.74,
+			startPos: 0.24,
+			tempo: 165.0,
+			variant: 2.0,
+			volume: 0.1
+		),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		)
+	],
 	// Global FX settings
 	// $PRESET_FX_START
 (

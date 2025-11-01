@@ -9,11 +9,12 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.62,
 			delaySend: 0.1,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.59,
+			dur: 0.35,
 			engine: 11.0,
 			fmMod: 0.85,
 			harm: 0.42,
@@ -29,6 +30,7 @@
 			revHp: 0.61,
 			revTime: 0.56,
 			reverbSend: 0.0,
+			sendToPhones: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.6,
@@ -59,11 +61,12 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.5,
 			delaySend: 0.1,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.35,
+			dur: Rest(1.4),
 			engine: 6.0,
 			fmMod: 0.0,
 			harm: 0.5,
@@ -79,6 +82,7 @@
 			revHp: 0.61,
 			revTime: 0.56,
 			reverbSend: 0.0,
+			sendToPhones: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.6,
@@ -101,11 +105,12 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
+			cloudsSend: 1.0,
 			decay: 0.5,
 			delaySend: 0.1,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.35,
+			dur: Rest(1.4),
 			engine: 6.0,
 			fmMod: 0.0,
 			harm: 0.5,
@@ -121,6 +126,7 @@
 			revHp: 0.61,
 			revTime: 0.56,
 			reverbSend: 0.0,
+			sendToPhones: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.6,
@@ -140,24 +146,114 @@
 	)
 	],
 	// Samples array
-	[],
+	[
+		// $SAMPLE1
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+		(
+			atk: 0.5,
+			bankName: \numbers,
+			cloudsSend: 0.0,
+			decay: 0.5,
+			delaySend: 0.0,
+			dur: 2.0,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.0,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 1.0,
+			volume: 0.64
+		),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+				div: Pseq([1/8], inf).asStream
+			)
+		),
+
+		// $SAMPLE2
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+		(
+			atk: 0.5,
+			bankName: \default,
+			cloudsSend: 0.0,
+			decay: 0.5,
+			delaySend: 0.0,
+			dur: 0.25,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.0,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 0.0,
+			volume: 0.0
+		),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		),
+
+		// $SAMPLE3
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+		(
+			atk: 0.5,
+			bankName: \default,
+			cloudsSend: 0.0,
+			decay: 0.5,
+			delaySend: 0.0,
+			dur: 0.25,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.0,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 0.0,
+			volume: 0.0
+		),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		)
+	],
 	// Global FX settings
 	// $PRESET_FX_START
-	(
-		delay: (
-			feedback: 0.4,
-			filterFreq: 6000,
-			spread: 1.5,
-			time: 0.25
-		),
-		reverb: (
-			damp: 0.2,
-			diffuse: 0.625,
-			freeze: 0.0,
-			hp: 0.3,
-			time: 0.2
-		)
+(
+	clouds: (
+		blend: 0.5,
+		density: 0.7,
+		feedback: 0.0,
+		freeze: 0.0,
+		inGain: 1.0,
+		lofi: 0.0,
+		mix: 1.0,
+		mode: 3.0,
+		pitch: 0.5,
+		position: 0.5,
+		reverb: 0.0,
+		size: 0.5,
+		spread: 0.5,
+		texture: 0.5,
+		volume: 1.0
 	),
+	delay: (
+		feedback: 0.4,
+		filterFreq: 6000.0,
+		spread: 1.5,
+		time: 0.25
+	),
+	reverb: (
+		damp: 0.2,
+		diffuse: 0.63,
+		freeze: 0.0,
+		hp: 0.3,
+		time: 0.2
+	)
+),
 	// $PRESET_FX_END
 );
 
