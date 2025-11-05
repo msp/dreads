@@ -121,6 +121,7 @@
 	harm: Pseq([0.5], inf).asStream,
 	lpgColour: Pseq([0.5], inf).asStream,
 	morph: Pseq([0.5], inf).asStream,
+	revDrywet: Pseq([0.5], inf).asStream,
 	revTime: Pseq([0.5], inf).asStream,
 	reverbSend: Pseq([0.5], inf).asStream,
 	timbre: Pseq([0.5], inf).asStream,
@@ -142,11 +143,18 @@
 	cloudsSend: 0.0,
 	decay: 0.5,             // Normalized 0-1 (scaled to duration*2 in sequencer)
 	delaySend: 0.0,
+	distAmount: 0.0,
+	distDrive: 0.0,
 	dur: 0.25,
 	mul: 1.0,
 	panDur: 0.5,            // Normalized 0-1 (scaled to duration*2 in sequencer)
 	rate: 1.0,
 	reverbSend: 0.0,
+	revDamp: 0.8,
+	revDrywet: 0.25,
+	revFreeze: 0.0,
+	revHp: 0.7,
+	revTime: 0.3,
 	startPos: 0,            // Normalized 0-1 (scaled to duration in sequencer)
 	tempo: 165.0,
 	variant: 0,             // Which variant of the bank to play (0-based index)
@@ -165,6 +173,8 @@
 	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
 	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
 	reverbSend: Pseq([0.0], inf).asStream,
+	revDrywet: Pseq([0.5], inf).asStream,
+	revTime: Pseq([0.5], inf).asStream,
 	startPos: Pseq([0.5], inf).asStream,    // 0-1 normalized (neutral at midpoint)
 	variant: Pseq([0], inf).asStream        // Variant index, additive (uses ~add)
 );

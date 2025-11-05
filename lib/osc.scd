@@ -290,6 +290,23 @@ OSCdef.new(
 			["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
+
+		// Resolve and send file path from bankName/variant
+		if (instance.bankName.notNil) {
+			var bankPaths = ~sampleLibrary.paths[instance.bankName];
+			if (bankPaths.notNil) {
+				var filepath = bankPaths[instance.variant.asInteger];
+				if (filepath.notNil) {
+					var path = "/samples/" ++ instanceNum ++ "/samplePath";
+					["Sending resolved sample path:", path, filepath].postln;
+					ui.sendMsg(path, filepath);
+				} {
+					["WARNING: Variant", instance.variant.asInteger, "not found in bank", instance.bankName].postln;
+				};
+			} {
+				["WARNING: Bank", instance.bankName, "not found in sample library"].postln;
+			};
+		};
 	};
 
 	// Send global FX parameters (nested structure)

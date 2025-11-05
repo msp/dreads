@@ -313,7 +313,14 @@ Event.addEventType(\oneShotSample, {
 				\volume, ~volume,
 				\cloudsSend, ~cloudsSend,
 				\delaySend, ~delaySend,
-				\reverbSend, ~reverbSend
+				\reverbSend, ~reverbSend,
+				\distDrive, ~distDrive,
+				\distAmount, ~distAmount,
+				\revDrywet, ~revDrywet,
+				\revTime, ~revTime,
+				\revDamp, ~revDamp,
+				\revHp, ~revHp,
+				\revFreeze, ~revFreeze
 			],
 			~group ?? { server.defaultGroup },
 			\addToHead

@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 (
 // Set to true for multichannel output, false for stereo
-~using6_1 = false;
+~using6_1 = true;
 
 // Increase buffer size to reduce late messages
 s.options.blockSize = 128;
@@ -31,9 +31,10 @@ s.freeAll;
 (Document.current.dir ++ "/lib/globals.scd").load;
 (Document.current.dir ++ "/lib/utils.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
-(Document.current.dir ++ "/presets/plaits/default.scd").load;
 
 s.waitForBoot {
+	~loadSampleLibrary.();
+	(Document.current.dir ++ "/presets/plaits/default.scd").load;
 	(Document.current.dir ++ "/lib/synthdefs.scd").load;
 	(Document.current.dir ++ "/lib/osc.scd").load;
 };
@@ -51,8 +52,6 @@ s.waitForBoot {
 ~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
 
 ~reverbFX = Synth(\globalReverb, [\out, 0], ~fxGroup, \addToTail);
-
-~loadSampleLibrary.();
 
 (Document.current.dir ++ "/lib/sequencer.scd").load;
 )

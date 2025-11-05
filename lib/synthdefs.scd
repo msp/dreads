@@ -193,9 +193,11 @@ SynthDef(\globalClouds, {
 SynthDef(\panningSamplePlayer, {
 	|out=0, bufnum=0, numChannels=1, mul=1, rate=1, startPos=0, panDur=5,
 	atk=0.01, decay=0.1, gate=1, volume=0.7,
-	cloudsSend=0.0, delaySend=0.0, reverbSend=0.0|
+	cloudsSend=0.0, delaySend=0.0, reverbSend=0.0,
+	distDrive=0.0, distAmount=0.0,
+	revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0|
 
-	var sig, env, pan, monoPlay, stereoPlay, monoSig, stereoSig, trig;
+	var sig, env, pan, monoPlay, cleanSig, distSig;
 
 	// Pan from -1 to 1 over panDur
 	pan = Line.kr(-1, 1, panDur);
@@ -213,14 +215,54 @@ SynthDef(\panningSamplePlayer, {
 	// Pan and convert to stereo
 	sig = Pan2.ar(monoPlay, pan);
 
-	sig = sig * env * mul * volume;
+	sig = sig * mul;
+
+	// Distortion (same as plaits)
+	cleanSig = sig;
+	distSig = CrossoverDistortion.ar(sig, distDrive.clip(0.1, 2.0), 0.5);
+	sig = (cleanSig * (1 - distAmount.clip(0, 1))) + (distSig * distAmount.clip(0, 1));
+
+	// Sanitize to kill denormals, infs, and NaNs
+	sig = sig.sanitize;
+
+	// MiVerb insert effect (same as plaits - apply env at input)
+	sig = MiVerb.ar(
+		(sig * env).tanh,
+		time: revTime.clip(0, 1.25),
+		drywet: revDrywet.clip(0, 1),
+		damp: revDamp.clip(0, 1),
+		hp: revHp.clip(0, 1),
+		freeze: revFreeze.clip(0, 1),
+		diff: 0.625,
+		mul: volume.clip(0, 2.0),
+		add: 0.0
+	);
 
 	// Send to FX buses
 	Out.ar(~cloudsBus, sig * cloudsSend);
 	Out.ar(~delayBus, sig * delaySend);
 	Out.ar(~reverbBus, sig * reverbSend);
 
-	Out.ar(out, LeakDC.ar(sig));
+	Out.ar(out, LeakDC.ar(sig.tanh));
+}).add;
+
+SynthDef(\samplePlayer, {
+    |out=0, bufnum=0, amp=1, rate=1, startPos=0, atk=0.01, rel=0.1, gate=1|
+
+    var sig, env;
+
+    env = EnvGen.kr(Env.asr(atk, 1, rel), gate, doneAction: 2);
+
+    sig = PlayBuf.ar(
+        numChannels: 1,
+        bufnum: bufnum,
+        rate: rate * BufRateScale.kr(bufnum),
+		startPos: startPos,
+        doneAction: 0
+    );
+
+    sig = sig * env * amp;
+    Out.ar(out, sig);
 }).add;
 
 )

@@ -26,6 +26,10 @@ Env.asr(0.02, 0.5, 1, 'linear').test(2).plot; // linear segments
 
 (Document.current.dir +/+ "test_modulate_refactor.scd").load;
 
+(
+  ~plaits.samples.size.postln;
+  ~plaits.samples.do { |s, i| [i, s.notNil].postln };
+)
 
 // controlPeriod = blockSize / sampleRate
 // controlPeriod = 128 / 48000 = 0.00267 seconds

@@ -147,7 +147,9 @@ x = Pdef(\plaitsSequence,
 					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
 				},
 				\mul, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.mul.next, ~plaits.synths[i].mul); },
-				\revDrywet, Pfunc { |event| ~plaits.synths[i].revDrywet },
+				\revDrywet, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.revDrywet.next, ~plaits.synths[i].revDrywet);
+				},
 				\revTime, Pfunc { |event|
 					var out = ~modulateBipolar.(~plaits.synths[i].sequences.revTime.next, ~plaits.synths[i].revTime);
 					// ["revTime", out].postln;
@@ -170,7 +172,7 @@ x = Pdef(\plaitsSequence,
 				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
-				\out, if(~using6_1, Pseq([0,1,2,3,4,5], inf), 0),
+				\out, Pseq([0,1,2,3], inf),
 			))
 		} ++
 		// Sample instances (use lookups for live coding)
@@ -280,7 +282,18 @@ x = Pdef(\plaitsSequence,
 				\cloudsSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.cloudsSend.next, ~plaits.samples[i].cloudsSend) },
 				\delaySend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.delaySend.next, ~plaits.samples[i].delaySend) },
 				\reverbSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.reverbSend.next, ~plaits.samples[i].reverbSend) },
-				\out, if(~using6_1, Pseq([0,1,2,3,4,5], inf), 0),
+				\distDrive, Pfunc { |event| ~plaits.samples[i].distDrive },
+				\distAmount, Pfunc { |event| ~plaits.samples[i].distAmount },
+				\revDrywet, Pfunc { |event|
+					~modulateBipolar.(~plaits.samples[i].sequences.revDrywet.next, ~plaits.samples[i].revDrywet);
+				},
+				\revTime, Pfunc { |event|
+					~modulateBipolar.(~plaits.samples[i].sequences.revTime.next, ~plaits.samples[i].revTime);
+				},
+				\revDamp, Pfunc { |event| ~plaits.samples[i].revDamp },
+				\revHp, Pfunc { |event| ~plaits.samples[i].revHp },
+				\revFreeze, Pfunc { |event| ~plaits.samples[i].revFreeze },
+				\out, Pseq([0,1,2,3], inf),
 			)
 		}
 	)
