@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 (
-Pbind(
+t = Pbind(
     \instrument, \samplePlayer,
     \bufnum, Pseq(
 		[
@@ -26,3 +26,5 @@ Pbind(
 	], inf),
 ).play;
 )
+
+t.stop;
