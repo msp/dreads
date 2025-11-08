@@ -14,7 +14,7 @@
 			delaySend: 0.0,
 			distAmount: 0.08,
 			distDrive: 0.0,
-			dur: Rest(0.11),
+			dur: Rest(0.33333333333333),
 			engine: 13.0,
 			fmMod: 0.82,
 			harm: 0.94,
@@ -30,6 +30,7 @@
 			revHp: 0.7,
 			revTime: 0.52,
 			reverbSend: 0.0,
+			sendToPhones: 0.0,
 			stereoMode: 0.0,
 			tempo: 145.0,
 			timbMod: 0.3,
@@ -64,7 +65,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(0.33333333333333),
+			dur: 0.11,
 			engine: 9.0,
 			fmMod: -0.65,
 			harm: 0.8,
@@ -80,6 +81,7 @@
 			revHp: 0.21,
 			revTime: 0.59,
 			reverbSend: 0.0,
+			sendToPhones: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.57,
@@ -105,7 +107,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(0.11),
+			dur: Rest(0.33333333333333),
 			engine: 14.0,
 			fmMod: 0.01,
 			harm: 0.0,
@@ -121,6 +123,7 @@
 			revHp: 0.7,
 			revTime: 0.65,
 			reverbSend: 0.37,
+			sendToPhones: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.77,
@@ -140,8 +143,29 @@
 		// $SAMPLE1
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(
-			),
+		(
+			atk: 0.5,
+			bankName: \default,
+			cloudsSend: 0.0,
+			decay: 0.5,
+			delaySend: 0.0,
+			distAmount: 0.0,
+			distDrive: 0.0,
+			dur: 1.0,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.0,
+			revDamp: 0.8,
+			revDrywet: 0.25,
+			revFreeze: 0.0,
+			revHp: 0.7,
+			revTime: 0.3,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 0.0,
+			volume: 0.0
+		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
 			)
@@ -150,8 +174,29 @@
 		// $SAMPLE2
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(
-			),
+		(
+			atk: 0.5,
+			bankName: \default,
+			cloudsSend: 0.0,
+			decay: 0.5,
+			delaySend: 0.0,
+			distAmount: 0.0,
+			distDrive: 0.0,
+			dur: 1.0,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.0,
+			revDamp: 0.8,
+			revDrywet: 0.25,
+			revFreeze: 0.0,
+			revHp: 0.7,
+			revTime: 0.3,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 0.0,
+			volume: 0.0
+		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
 			)
@@ -160,8 +205,29 @@
 		// $SAMPLE3
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(
-			),
+		(
+			atk: 0.5,
+			bankName: \default,
+			cloudsSend: 0.0,
+			decay: 0.5,
+			delaySend: 0.0,
+			distAmount: 0.0,
+			distDrive: 0.0,
+			dur: 1.0,
+			mul: 1.0,
+			panDur: 0.5,
+			rate: 1.0,
+			revDamp: 0.8,
+			revDrywet: 0.25,
+			revFreeze: 0.0,
+			revHp: 0.7,
+			revTime: 0.3,
+			reverbSend: 0.0,
+			startPos: 0.0,
+			tempo: 165.0,
+			variant: 0.0,
+			volume: 0.0
+		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
 			)

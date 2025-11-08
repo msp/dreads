@@ -5,130 +5,128 @@
 ~plaits = ~presetFactory.(
 	// Synth instances array
 	[
-		// $PLAITS1
-		~plaitsFactory.(
-			// $PRESET_SCALARS_START
+	// $PLAITS1
+	~plaitsFactory.(
+		// $PRESET_SCALARS_START
 		(
-			cloudsSend: 0.5,
-			decay: 0.13,
-			delaySend: 0.13,
-			distAmount: 0.16,
+			cloudsSend: 1.0,
+			decay: 0.06,
+			delaySend: 0.76,
+			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 2.88,
-			engine: 2.0,
-			fmMod: 0.34,
-			harm: 0.85,
-			legato: 0.8,
-			lpgColour: 0.5,
-			morph: 0.67,
-			morphMod: 1.0,
-			mul: 0.5,
-			pitch: 42.14,
-			revDamp: 0.15,
-			revDrywet: 0.2,
-			revFreeze: 0.0,
-			revHp: 0.29,
-			revTime: 0.93,
-			reverbSend: 0.49,
-			sendToPhones: 0.0,
-			stereoMode: 1.0,
-			tempo: 55.0,
-			timbMod: 1.0,
-			timbre: 0.66,
-			volume: 1.44
-		),
-			// $PRESET_SCALARS_END
-			(
-				timbre: Pgauss(0.0, 1.0, inf).asStream,
-				decay: Pgauss(0.0, 0.3, inf).asStream,
-				morph: Pgbrown(1.0, 1.0, 1.0, inf).asStream,
-				harm: Pgauss(0.0, 1.0, inf).asStream,
-				// lpgColour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
-				engine: Pseq(["e", "e", "e+6", "e", "e", "e+4"], inf).asStream,
-				duration: Pgauss(1.0, 8.0, inf).asStream,
-				div: Pseq([1.0], inf).asStream,
-				reverbSend: Pgauss(0.0, 0.2, inf).asStream,
-				// revTime: Pwhite(1.0, 1.2, inf).asStream,
-			)
-		),
-
-		// $PLAITS2
-		~plaitsFactory.(
-			// $PRESET_SCALARS_START
-		(
-			cloudsSend: 0.1,
-			decay: 0.41,
-			delaySend: 0.0,
-			distAmount: 0.4,
-			distDrive: 0.01,
-			dur: 14.61,
-			engine: 13.0,
+			dur: 0.5,
+			engine: 1.0,
 			fmMod: 0.0,
-			harm: 0.58,
-			legato: 0.1,
+			harm: 0.48,
+			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 1.0,
-			morphMod: 0.8,
-			mul: 0.7,
-			pitch: 26.04,
-			revDamp: 0.64,
-			revDrywet: 0.0,
+			morph: 0.43,
+			morphMod: 0.4,
+			mul: 0.5,
+			pitch: 106.59,
+			revDamp: 0.0,
+			revDrywet: 0.58,
 			revFreeze: 0.0,
-			revHp: 0.7,
-			revTime: 0.39,
-			reverbSend: 0.6,
+			revHp: 0.0,
+			revTime: 0.28,
+			reverbSend: 0.76,
+			sendToPhones: 1.0,
+			stereoMode: 1.0,
+			tempo: 165.0,
+			timbMod: 0.0,
+			timbre: 0.44,
+			volume: 0.69
+		),
+		// $PRESET_SCALARS_END
+		(
+			timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
+			decay: Pseq([0.5, 0.3, Pseq([0.6, 0.1, 0.8] / 3)] / 1, inf).asStream,
+			morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,
+			harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
+			lpgColour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
+			engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
+			duration: Pseq([0.5], inf).asStream,
+			div: Pseq([1, 2, 1, 1, 2], inf).asStream
+		)
+	),
+	
+	// $PLAITS2
+	~plaitsFactory.(
+		// $PRESET_SCALARS_START
+		(
+			cloudsSend: 1.0,
+			decay: 0.06,
+			delaySend: 0.0,
+			distAmount: 0.0,
+			distDrive: 0.0,
+			dur: 4.0,
+			engine: 2.0,
+			fmMod: 0.0,
+			harm: 0.69,
+			legato: 9.0,
+			lpgColour: 0.5,
+			morph: 0.57,
+			morphMod: 0.8,
+			mul: 0.5,
+			pitch: 30.34,
+			revDamp: 0.0,
+			revDrywet: 0.87,
+			revFreeze: 0.0,
+			revHp: 0.84,
+			revTime: 0.4,
+			reverbSend: 0.0,
 			sendToPhones: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.7,
-			timbre: 0.7,
-			volume: 2.0
+			timbre: 0.67,
+			volume: 0.66
 		),
-			// $PRESET_SCALARS_END
-			(
-				duration: Pgauss(3.0, 4.0, inf).asStream,
-				div: Pseq([0.5], inf).asStream
-			)
-		),
-
-		// $PLAITS3
-		~plaitsFactory.(
-			// $PRESET_SCALARS_START
+		// $PRESET_SCALARS_END
 		(
-			cloudsSend: 0.3,
-			decay: 0.77,
-			delaySend: 0.19,
+			duration: Pseq([1.0], inf).asStream,
+			div: Pseq([1, 2, 1, 1, 2]/4, inf).asStream
+		)
+	),
+	
+	// $PLAITS3
+	~plaitsFactory.(
+		// $PRESET_SCALARS_START
+		(
+			cloudsSend: 1.0,
+			decay: 0.34,
+			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 7.34,
-			engine: 15.0,
-			fmMod: 0.0,
-			harm: 0.76,
+			dur: 0.5,
+			engine: 10.0,
+			fmMod: 0.54,
+			harm: 0.11,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 1.0,
-			morphMod: 1.0,
+			morph: 0.37,
+			morphMod: 0.4,
 			mul: 0.5,
-			pitch: 1.19,
-			revDamp: 0.58,
-			revDrywet: 0.58,
+			pitch: 49.0,
+			revDamp: 0.4,
+			revDrywet: 0.0,
 			revFreeze: 0.0,
-			revHp: 0.45,
-			revTime: 0.56,
-			reverbSend: 0.74,
+			revHp: 0.4,
+			revTime: 0.9,
+			reverbSend: 0.0,
 			sendToPhones: 0.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
-			timbMod: 1.0,
-			timbre: 0.75,
-			volume: 0.19
+			timbMod: 0.7,
+			timbre: 0.0,
+			volume: 1.51
 		),
-			// $PRESET_SCALARS_END
-			(
-				duration: Pwhite(5.0, 10.0, inf).asStream,
-				revTime: Pwhite(0.4, 1.1, inf).asStream,
-			)
+		// $PRESET_SCALARS_END
+		(
+			duration: Pseq([0.5], inf).asStream,
+			div: Pseq([1, 2, 1, 1, 2], inf).asStream
 		)
+	)
 	],
 	// Samples array
 	[
@@ -137,7 +135,7 @@
 			// $PRESET_SAMPLE_SCALARS_START
 		(
 			atk: 0.5,
-			bankName: \SoundFX,
+			bankName: \default,
 			cloudsSend: 0.0,
 			decay: 0.5,
 			delaySend: 0.0,
@@ -155,13 +153,11 @@
 			reverbSend: 0.0,
 			startPos: 0.0,
 			tempo: 165.0,
-			variant: 10.0,
+			variant: 0.0,
 			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
-				duration: Pgauss(1.0, 4.0, inf).asStream,
-				div: Pseq([1/4], inf).asStream
 			)
 		),
 
@@ -179,7 +175,7 @@
 			dur: 1.0,
 			mul: 1.0,
 			panDur: 0.5,
-			rate: 5.0,
+			rate: 1.0,
 			revDamp: 0.8,
 			revDrywet: 0.25,
 			revFreeze: 0.0,
@@ -193,8 +189,6 @@
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
-				duration: Pgauss(0.5, 2.0, inf).asStream,
-				div: Pseq([1/4], inf).asStream
 			)
 		),
 
@@ -226,8 +220,6 @@
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
-				duration: Pgauss(0.5, 2.0, inf).asStream,
-				div: Pseq([1/4], inf).asStream
 			)
 		)
 	],
@@ -237,32 +229,32 @@
 	clouds: (
 		blend: 0.5,
 		density: 0.7,
-		feedback: 0.51,
+		feedback: 0.0,
 		freeze: 0.0,
 		inGain: 1.0,
 		lofi: 0.0,
 		mix: 1.0,
 		mode: 3.0,
-		pitch: 25.37,
-		position: 0.69,
-		reverb: 0.18,
-		size: 0.21,
+		pitch: 0.5,
+		position: 0.5,
+		reverb: 0.0,
+		size: 0.5,
 		spread: 0.5,
-		texture: 0.91,
-		volume: 0.0
+		texture: 0.5,
+		volume: 1.0
 	),
 	delay: (
-		feedback: 0.91,
+		feedback: 0.4,
 		filterFreq: 6000.0,
 		spread: 1.5,
-		time: 0.23
+		time: 0.25
 	),
 	reverb: (
-		damp: 0.05,
+		damp: 0.2,
 		diffuse: 0.63,
 		freeze: 0.0,
-		hp: 0.2,
-		time: 1.06
+		hp: 0.3,
+		time: 0.2
 	)
 ),
 	// $PRESET_FX_END

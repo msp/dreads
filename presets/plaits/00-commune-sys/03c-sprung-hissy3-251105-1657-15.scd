@@ -67,7 +67,7 @@
 			delaySend: 0.07,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 2.8,
+			dur: Rest(2.8),
 			engine: 13.0,
 			fmMod: 0.0,
 			harm: 0.87,
@@ -111,7 +111,7 @@
 			delaySend: 0.09,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(5.6),
+			dur: Rest(2.8),
 			engine: 9.0,
 			fmMod: 0.0,
 			harm: 0.48,
@@ -159,7 +159,7 @@
 			delaySend: 0.19,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(5.6),
+			dur: 1.4,
 			mul: 1.0,
 			panDur: 0.2,
 			rate: 0.87,
@@ -210,7 +210,11 @@
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
-				div: Pseq([1/4], inf).asStream
+				decay: Pseq([0.1, 0.15, 0.3, 0.4, 0.1], inf).asStream,
+				div: Pseq([1/8], inf).asStream,
+				duration: Pseq([1.4, Rest(1.4 * 4)], inf).asStream,
+				startPos: Pseq([0.1, 0.2, 0.5, 0.8], inf).asStream,
+				rate: Pseq([0.8, 1.0, 0.5, 1.5, 2.0, 0.1], inf).asStream
 			)
 		),
 
@@ -238,11 +242,11 @@
 			startPos: 0.25,
 			tempo: 165.0,
 			variant: 17.0,
-			volume: 0.83
+			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
-				div: Pseq([1/8], inf).asStream
+				div: Pseq([1/4], inf).asStream
 			)
 		)
 	],
