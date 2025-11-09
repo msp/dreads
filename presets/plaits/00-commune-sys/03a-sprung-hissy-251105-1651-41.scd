@@ -35,7 +35,7 @@
 			tempo: 60.0,
 			timbMod: 0.3,
 			timbre: 0.72,
-			volume: 0.48
+			volume: 0.0
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -88,7 +88,7 @@
 			tempo: 120.0,
 			timbMod: 0.7,
 			timbre: 0.92,
-			volume: 0.79
+			volume: 0.0
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -132,7 +132,7 @@
 			tempo: 120.0,
 			timbMod: 0.7,
 			timbre: 0.76,
-			volume: 1.63
+			volume: 0.0
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -159,7 +159,7 @@
 			delaySend: 0.19,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(5.6),
+			dur: Rest(11.2),
 			mul: 1.0,
 			panDur: 0.2,
 			rate: 0.98,
