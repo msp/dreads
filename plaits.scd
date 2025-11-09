@@ -21,7 +21,9 @@
 s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
+s.options.numInputBusChannels = 0;
 s.options.numOutputBusChannels = if(~using6_1, 8, 2);
+s.options.recChannels = if(~using6_1, 8, 2);
 s.freeAll;
 
 // Capture base path for reliable preset operations
