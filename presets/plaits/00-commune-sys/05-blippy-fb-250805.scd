@@ -14,7 +14,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 4.23,
+			dur: 2.46,
 			engine: 4.0,
 			fmMod: -0.05,
 			harm: 0.66,
@@ -35,7 +35,7 @@
 			tempo: 85.0,
 			timbMod: 1.0,
 			timbre: 1.0,
-			volume: 1.49
+			volume: 0.62
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -61,7 +61,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 16.36,
+			dur: 16.29,
 			engine: 13.0,
 			fmMod: 0.0,
 			harm: 0.48,
@@ -82,7 +82,7 @@
 			tempo: 165.0,
 			timbMod: 0.7,
 			timbre: 0.44,
-			volume: 0.7
+			volume: 0.22
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -100,7 +100,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 9.54,
+			dur: 6.2,
 			engine: 14.0,
 			fmMod: 0.0,
 			harm: 0.48,
@@ -144,7 +144,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 2.55,
+			dur: 3.16,
 			mul: 1.0,
 			panDur: 0.5,
 			rate: 1.0,
@@ -179,7 +179,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 2.95,
+			dur: 3.83,
 			mul: 1.0,
 			panDur: 0.5,
 			rate: 1.0,
@@ -214,7 +214,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 3.28,
+			dur: 4.0,
 			mul: 1.0,
 			panDur: 0.5,
 			rate: 1.0,
