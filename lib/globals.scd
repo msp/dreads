@@ -4,10 +4,6 @@
 (
 // Default tempo, will be updated by presets
 ~tempoClock = TempoClock.new(120/60);
-
-~delayBus = Bus.audio(s, 2);
-~reverbBus = Bus.audio(s, 2);
-~cloudsBus = Bus.audio(s, 2);
 ~sendToPhones = false;
 
 ~ui = {
