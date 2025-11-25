@@ -168,11 +168,16 @@ x = Pdef(\plaitsSequence,
 				\cloudsSend, Pfunc { |event|
 					~modulateBipolar.(~plaits.synths[i].sequences.cloudsSend.next, ~plaits.synths[i].cloudsSend);
 				},
-				\distDrive, Pfunc { |event| ~plaits.synths[i].distDrive },
-				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
+				\distDrive, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.distDrive.next, ~plaits.synths[i].distDrive);
+				},
+				\distAmount, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.distAmount.next, ~plaits.synths[i].distAmount);
+				},
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
-				\out, Pseq([0,1,2,3], inf),
+				// \out, Pseq([0,1,2,3], inf),
+				\out, Pseq([0], inf),
 			))
 		} ++
 		// Sample instances (use lookups for live coding)
@@ -219,6 +224,7 @@ x = Pdef(\plaitsSequence,
 					// if (i == 0) { ["Sample", i, "durSeq:", durSeq, "divSeq:", divSeq, "final dur:", ~plaits.samples[i].dur].postln; };
 					~plaits.samples[i].dur;
 				},
+				\legato, Pfunc { |event| ~plaits.samples[i].legato },				
 				\mul, Pfunc {
 				var baseMul = ~plaits.samples[i].mul;
 				var result = ~modulateBipolar.(~plaits.samples[i].sequences.mul.next, baseMul);
@@ -293,7 +299,8 @@ x = Pdef(\plaitsSequence,
 				\revDamp, Pfunc { |event| ~plaits.samples[i].revDamp },
 				\revHp, Pfunc { |event| ~plaits.samples[i].revHp },
 				\revFreeze, Pfunc { |event| ~plaits.samples[i].revFreeze },
-				\out, Pseq([0,1,2,3], inf),
+				// \out, Pseq([0,1,2,3], inf),
+				\out, Pseq([0,1], inf),
 			)
 		}
 	)

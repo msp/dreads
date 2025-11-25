@@ -111,6 +111,8 @@
 	decay: Pseq([0.5], inf).asStream,
 	delaySend: Pseq([0.5], inf).asStream,
 	div: Pseq([1.0], inf).asStream,
+	distAmount: Pseq([0.5], inf).asStream,
+	distDrive: Pseq([0.5], inf).asStream,
 	duration: Pseq([0.25], inf).asStream,
 	engine: Pseq(["e"], inf).asStream,
 	fmMod: Pseq([0.5], inf).asStream,
@@ -142,6 +144,7 @@
 	distAmount: 0.0,
 	distDrive: 0.0,
 	dur: 0.25,
+	legato: 0.7,
 	mul: 1.0,
 	panDur: 0.5,            // Normalized 0-1 (scaled to duration*2 in sequencer)
 	rate: 1.0,
@@ -160,15 +163,15 @@
 // Default sequence patterns for sample instances
 ~defaultSampleSequences = (
 	atk: Pseq([0.5], inf).asStream,         // 0-1 normalized
-	cloudsSend: Pseq([0.0], inf).asStream,
+	cloudsSend: Pseq([0.5], inf).asStream,
 	decay: Pseq([0.5], inf).asStream,       // 0-1 normalized (neutral at midpoint)
-	delaySend: Pseq([0.0], inf).asStream,
+	delaySend: Pseq([0.5], inf).asStream,
 	div: Pseq([1.0], inf).asStream,
 	duration: Pseq([1.0], inf).asStream,
 	mul: Pseq([1.0], inf).asStream,
 	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
 	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
-	reverbSend: Pseq([0.0], inf).asStream,
+	reverbSend: Pseq([0.5], inf).asStream,
 	revDrywet: Pseq([0.5], inf).asStream,
 	revTime: Pseq([0.5], inf).asStream,
 	startPos: Pseq([0.5], inf).asStream,    // 0-1 normalized (neutral at midpoint)
