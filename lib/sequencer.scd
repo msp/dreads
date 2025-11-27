@@ -176,8 +176,7 @@ x = Pdef(\plaitsSequence,
 				},
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
-				// \out, Pseq([0,1,2,3], inf),
-				\out, Pseq([0], inf),
+				\out, Pseq(~outputBuses, inf),
 			))
 		} ++
 		// Sample instances (use lookups for live coding)
@@ -299,8 +298,7 @@ x = Pdef(\plaitsSequence,
 				\revDamp, Pfunc { |event| ~plaits.samples[i].revDamp },
 				\revHp, Pfunc { |event| ~plaits.samples[i].revHp },
 				\revFreeze, Pfunc { |event| ~plaits.samples[i].revFreeze },
-				// \out, Pseq([0,1,2,3], inf),
-				\out, Pseq([0,1], inf),
+				\out, Pseq(~outputBuses, inf),
 			)
 		}
 	)

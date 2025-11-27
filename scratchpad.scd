@@ -386,9 +386,9 @@ q = p.asStream.nextN(20).postln;
 ~test1 = Pbind(
 	\instrument, \default,
 	\dur, Pseq([
-		0.25, 
-		0.25, 
-		0.25, 
+		0.25,
+		0.25,
+		0.25,
 		Pwrand([0.25, Rest(0.25)], [0.7, 0.3].normalizeSum)],
 	inf),
 	\note, Pseq([0, 2, 4, 7], inf),
@@ -415,6 +415,10 @@ q = p.asStream.nextN(20).postln;
 )
 
 ~test3.stop;
+
+~outputBuses
+
+Rotate2
 
 
 

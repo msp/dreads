@@ -17,13 +17,7 @@ t = Pbind(
     \atk, 0.1,
     \rel, 1.0,
     \amp, 0.2,
-	\out, Pseq(
-		[
-			0,
-			1,
-			2,
-			3,
-	], inf),
+	\out, Pseq(~outputBuses, inf),
 ).play;
 )
 

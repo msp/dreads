@@ -2,6 +2,12 @@
 // Global utility functions and shared state
 //////////////////////////////////////////////////////////////////////////////
 (
+// Generate output bus rotation array
+// Note: Plaits outputs stereo, so last speaker won't be used in rotation
+// numSpeakers=4 → [0, 1, 2, 3] (but \out=3 writes to buses 3-4, which is out of range)
+// that's fine for now :)
+~outputBuses = (0..(~numSpeakers - 1));
+
 // Default tempo, will be updated by presets
 ~tempoClock = TempoClock.new(120/60);
 ~sendToPhones = false;
