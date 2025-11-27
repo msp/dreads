@@ -28,7 +28,7 @@ OSCdef.new(
 	~plaits.synths.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
 
-		["binding plaits ------------------->", instanceIndex].postln;
+		// ["binding plaits ------------------->", instanceIndex].postln;
 		// Generic parameter handling - OSC keys match data structure keys
 		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
 			// ["binding key", paramKey].postln;
@@ -59,7 +59,7 @@ OSCdef.new(
 	~plaits.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 
-		["binding sample ------------------->", instanceIndex].postln;
+		// ["binding sample ------------------->", instanceIndex].postln;
 
 		// Generic parameter handling - OSC keys match data structure keys
 		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) }).do { |paramKey|
@@ -112,7 +112,7 @@ OSCdef.new(
 
 // Delay Effect OSC Handlers
 [\time, \feedback, \filterFreq, \spread].do { |paramKey|
-	['binding fx/delay->', paramKey].postln;
+	// ['binding fx/delay->', paramKey].postln;
 	OSCdef.new(
 		("fx_delay_" ++ paramKey).asSymbol,
 		{
@@ -137,7 +137,7 @@ OSCdef.new(
 
 // Global Reverb Effect OSC Handlers
 [\time, \damp, \hp, \diffuse, \freeze].do { |paramKey|
-	['binding fx/reverb->', paramKey].postln;
+	// ['binding fx/reverb->', paramKey].postln;
 	OSCdef.new(
 		("fx_reverb_" ++ paramKey).asSymbol,
 		{
@@ -162,7 +162,7 @@ OSCdef.new(
 
 // Global Clouds Effect OSC Handlers
 [\blend, \density, \freeze, \pitch, \position, \size, \texture, \reverb, \feedback, \spread, \inGain, \mode, \lofi, \volume].do { |paramKey|
-	['binding fx/clouds->', paramKey].postln;
+	// ['binding fx/clouds->', paramKey].postln;
 	OSCdef.new(
 		("fx_clouds_" ++ paramKey).asSymbol,
 		{
@@ -274,7 +274,7 @@ OSCdef.new(
 		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
-			["Sending:", path, value].postln;
+			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
 	};
@@ -287,7 +287,7 @@ OSCdef.new(
 		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey;
-			["Sending:", path, value].postln;
+			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
 
@@ -298,7 +298,7 @@ OSCdef.new(
 				var filepath = bankPaths[instance.variant.asInteger];
 				if (filepath.notNil) {
 					var path = "/samples/" ++ instanceNum ++ "/samplePath";
-					["Sending resolved sample path:", path, filepath].postln;
+					// ["Sending resolved sample path:", path, filepath].postln;
 					ui.sendMsg(path, filepath);
 				} {
 					["WARNING: Variant", instance.variant.asInteger, "not found in bank", instance.bankName].postln;
@@ -313,7 +313,7 @@ OSCdef.new(
 	fxSettings.keysValuesDo { |category, categoryParams|
 		categoryParams.keysValuesDo { |param, value|
 			var path = "/fx/" ++ category ++ "/" ++ param;
-			["Sending:", path, value].postln;
+			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
 	};
