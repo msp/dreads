@@ -11,6 +11,10 @@ Safety
 
 Platform.resourceDir
 
+ExampleFiles.sinedPink
+
+~sampleLibrary.metadata
+
 (
 // Check delay synth exists and its state
 // ~delayFX.postln;
