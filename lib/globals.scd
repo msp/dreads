@@ -70,6 +70,7 @@
 	revTime: 0.5,
 	reverbSend: 0.0,
 	sendToPhones: 0.0,
+	speed: 1.0,
 	stereoMode: 1.0,
 	tempo: 165.0,
 	timbMod: 0.0,
@@ -160,6 +161,7 @@
 	revFreeze: 0.0,
 	revHp: 0.7,
 	revTime: 0.3,
+	speed: 1.0,
 	startPos: 0,            // Normalized 0-1 (scaled to duration in sequencer)
 	tempo: 165.0,
 	variant: 0,             // Which variant of the bank to play (0-based index)

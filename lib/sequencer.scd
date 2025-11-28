@@ -98,11 +98,12 @@ x = Pdef(\plaitsSequence,
 					// ~plaits.synths[i].dur = v;
 					// ~plaits.synths[i].dur;
 
-					~plaits.synths[i].dur = ~setDuration.(
+					var baseDur = ~setDuration.(
 						~plaits.synths[i].sequences.duration.next,
 						~plaits.synths[i].sequences.div.next
 					);
-					// ["dur----------------------------", ~plaits.synths[i].dur].postln;
+					var speed = ~plaits.synths[i].speed.clip(0.01, 100);
+					~plaits.synths[i].dur = baseDur / speed;
 					~plaits.synths[i].dur;
 				},
 				\decay, Pfunc { |event|
@@ -219,8 +220,9 @@ x = Pdef(\plaitsSequence,
 				\dur, Pfunc {
 					var durSeq = ~plaits.samples[i].sequences.duration.next;
 					var divSeq = ~plaits.samples[i].sequences.div.next;
-					~plaits.samples[i].dur = ~setDuration.(durSeq, divSeq);
-					// if (i == 0) { ["Sample", i, "durSeq:", durSeq, "divSeq:", divSeq, "final dur:", ~plaits.samples[i].dur].postln; };
+					var baseDur = ~setDuration.(durSeq, divSeq);
+					var speed = ~plaits.samples[i].speed.clip(0.01, 100);
+					~plaits.samples[i].dur = baseDur / speed;
 					~plaits.samples[i].dur;
 				},
 				\legato, Pfunc { |event| ~plaits.samples[i].legato },				
