@@ -127,7 +127,14 @@ SynthDef(\globalFilterDelay, {
 	// Output 100% wet (mix=1.0) since it's a send effect
 	output = [filteredL, filteredR] * mix * env;
 
-	Out.ar(out, output);
+	// Distribute to all speaker pairs in multi-channel setups
+	if (~numSpeakers > 2) {
+		(~numSpeakers / 2).do { |i|
+			Out.ar(i * 2, output);
+		};
+	} {
+		Out.ar(out, output);
+	};
 }).add;
 
 // Global MiVerb Send Effect
@@ -137,9 +144,8 @@ SynthDef(\globalReverb, {
 
 	var input = In.ar(~reverbBus, 2);
 	var env = EnvGen.kr(Env.asr(0.01, 1, 2), gate, doneAction: 2);
-	var reverb;
 
-	reverb = MiVerb.ar(
+	var reverb = MiVerb.ar(
 		input,
 		time: time.clip(0, 1.25),
 		drywet: 1.0, // Always 100% wet for send effect
@@ -149,7 +155,17 @@ SynthDef(\globalReverb, {
 		diff: diffuse.clip(0, 1),
 		mul: mix.clip(0, 2.0)
 	);
-	Out.ar(out, LeakDC.ar(reverb * env));
+
+	var output = LeakDC.ar(reverb * env);
+
+	// Distribute to all speaker pairs in multi-channel setups
+	if (~numSpeakers > 2) {
+		(~numSpeakers / 2).do { |i|
+			Out.ar(i * 2, output);
+		};
+	} {
+		Out.ar(out, output);
+	};
 }).add;
 
 // Global MiClouds Send Effect
@@ -160,10 +176,9 @@ SynthDef(\globalClouds, {
 	// var input = InFeedback.ar(~cloudsBus, 2);
 	var input = In.ar(~cloudsBus, 2);
 	var env = EnvGen.kr(Env.asr(0.01, 1, 2), gate, doneAction: 2);
-	var clouds;
 	var dens = LFNoise1.kr(0.3).range(0.3, 0.45);
 
-	clouds = MiClouds.ar(
+	var clouds = MiClouds.ar(
 		input,
 		pit: pitch.clip(-48, 48),
 		pos: position.clip(0, 1),
@@ -186,8 +201,16 @@ SynthDef(\globalClouds, {
 	// Ring modulation - very audible effect:
 	// clouds = clouds * SinOsc.ar(200) * 0.5 + clouds;
 
-	Out.ar(out, LeakDC.ar(clouds * env * mix.clip(0, 2.0)));
-	// Out.ar(out, LeakDC.ar(clouds * mix.clip(0, 2.0)));
+	var output = LeakDC.ar(clouds * env * mix.clip(0, 2.0));
+
+	// Distribute to all speaker pairs in multi-channel setups
+	if (~numSpeakers > 2) {
+		(~numSpeakers / 2).do { |i|
+			Out.ar(i * 2, output);
+		};
+	} {
+		Out.ar(out, output);
+	};
 }).add;
 
 SynthDef(\panningSamplePlayer, {
