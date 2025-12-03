@@ -15,6 +15,21 @@ ExampleFiles.sinedPink
 
 ~sampleLibrary.metadata
 
+
+(
+var a, b;
+a = Pwhite(0.0, 0.9, 6);    // return 6 items
+b = a.asStream;
+7.do({ b.next.postln });
+)
+
+(
+var a, b;
+a = Pseries(0.01, 0.1, 6);    // return 6 items
+b = a.asStream;
+7.do({ b.next.postln });
+)
+
 (
 // Check delay synth exists and its state
 // ~delayFX.postln;
