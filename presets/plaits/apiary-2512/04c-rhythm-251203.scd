@@ -12,9 +12,9 @@
 			cloudsSend: 0.05,
 			decay: 1.0,
 			delaySend: 0.0,
-			distAmount: 0.04,
+			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 3.0,
+			dur: 5.0,
 			engine: 2.0,
 			fmMod: 0.0,
 			harm: 0.39,
@@ -24,18 +24,19 @@
 			morphMod: 0.4,
 			mul: 0.5,
 			pitch: 90.59,
-			revDamp: 0.0,
-			revDrywet: 0.0,
+			revDamp: 0.79,
+			revDrywet: 1.0,
 			revFreeze: 0.0,
-			revHp: 0.0,
-			revTime: 0.28,
+			revHp: 0.71,
+			revTime: 0.23,
 			reverbSend: 0.29,
 			sendToPhones: 0.0,
+			speed: 1.0,
 			stereoMode: 1.0,
 			tempo: 85.0,
 			timbMod: 0.0,
 			timbre: 0.71,
-			volume: 0.0
+			volume: 0.04
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -56,32 +57,33 @@
 			// $PRESET_SCALARS_START
 		(
 			cloudsSend: 1.0,
-			decay: 1.0,
+			decay: 0.46,
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.07,
-			engine: 9.0,
-			fmMod: 0.0,
-			harm: 0.16,
+			dur: Rest(0.071428571428571),
+			engine: 13.0,
+			fmMod: 0.05,
+			harm: 0.37,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.55,
+			morph: 0.04,
 			morphMod: 0.8,
 			mul: 0.5,
 			pitch: 29.39,
 			revDamp: 0.24,
-			revDrywet: 0.79,
+			revDrywet: 0.0,
 			revFreeze: 0.0,
 			revHp: 0.1,
 			revTime: 1.09,
 			reverbSend: 0.0,
 			sendToPhones: 0.0,
+			speed: 1.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.7,
-			timbre: 0.1,
-			volume: 0.79
+			timbre: 0.9,
+			volume: 0.94
 		),
 			// $PRESET_SCALARS_END
 			(
@@ -103,7 +105,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 4.0,
+			dur: 20.0,
 			engine: 4.0,
 			fmMod: 0.0,
 			harm: 0.52,
@@ -119,7 +121,8 @@
 			revHp: 0.27,
 			revTime: 0.65,
 			reverbSend: 1.0,
-			sendToPhones: 0.0,
+			sendToPhones: 1.0,
+			speed: 1.0,
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 1.0,
@@ -161,30 +164,30 @@
 			delaySend: 0.0,
 			distAmount: 0.13,
 			distDrive: 0.0,
-			dur: Rest(7.0),
+			dur: 17.46,
 			legato: 9.0,
 			mul: 1.0,
 			panDur: 0.5,
-			rate: 0.22,
+			rate: 3.25,
 			revDamp: 0.0,
 			revDrywet: 0.9,
 			revFreeze: 0.0,
 			revHp: 0.87,
 			revTime: 0.85,
-			reverbSend: 0.0,
+			reverbSend: 0.62,
+			speed: 1.0,
 			startPos: 0.0,
 			tempo: 165.0,
 			variant: 6.0,
-			volume: 0.25
+			volume: 0.15
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
 				duration: Pseq([
-					Rest(1),
-					Rest(1),
+					1,
 					Pgauss(1.0, 4.0, 20),
 				], inf).asStream,
-				div: Pseq([1/7], inf).asStream,
+				div: Pseq([1/4], inf).asStream,
 				variant: Pseq([0, 2, 3], inf).asStream
 			)
 		),
@@ -200,7 +203,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(6.0),
+			dur: 40.91,
 			legato: 0.7,
 			mul: 1.0,
 			panDur: 0.5,
@@ -211,10 +214,11 @@
 			revHp: 0.03,
 			revTime: 0.3,
 			reverbSend: 0.0,
+			speed: 1.0,
 			startPos: 0.0,
 			tempo: 165.0,
 			variant: 0.0,
-			volume: 0.22
+			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
@@ -234,12 +238,12 @@
 		(
 			atk: 0.0,
 			bankName: \default,
-			cloudsSend: 0.0,
+			cloudsSend: 0.66,
 			decay: 0.86,
-			delaySend: 0.23,
+			delaySend: 0.12,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.07,
+			dur: Rest(0.071428571428571),
 			legato: 0.7,
 			mul: 1.0,
 			panDur: 0.5,
@@ -250,10 +254,11 @@
 			revHp: 0.7,
 			revTime: 0.3,
 			reverbSend: 0.76,
+			speed: 1.0,
 			startPos: 0.0,
 			tempo: 165.0,
 			variant: 0.0,
-			volume: 0.0
+			volume: 0.07
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			(
@@ -262,7 +267,7 @@
 					Rest(1),
 					Rest(1),
 				], inf).asStream,
-				div: Pseq([14], inf).asStream				
+				div: Pseq([14], inf).asStream
 			)
 		)
 	],
@@ -271,20 +276,20 @@
 (
 	clouds: (
 		blend: 0.5,
-		density: 0.33,
+		density: 0.63,
 		feedback: 0.59,
-		freeze: 0.0,
+		freeze: 1.0,
 		inGain: 1.0,
 		lofi: 0.0,
 		mix: 1.0,
 		mode: 3.0,
-		pitch: -19.05,
+		pitch: -25.08,
 		position: 0.5,
 		reverb: 0.0,
-		size: 0.18,
+		size: 0.73,
 		spread: 0.5,
-		texture: 0.5,
-		volume: 0.47
+		texture: 0.8,
+		volume: 0.79
 	),
 	delay: (
 		feedback: 0.93,
