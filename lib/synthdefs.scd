@@ -127,7 +127,14 @@ SynthDef(\globalFilterDelay, {
 	// Output 100% wet (mix=1.0) since it's a send effect
 	output = [filteredL, filteredR] * mix * env;
 
-	Out.ar(out, output);
+	// Distribute to all speaker pairs in multi-channel setups
+	if (~numSpeakers > 2) {
+		(~numSpeakers / 2).do { |i|
+			Out.ar(i * 2, output);
+		};
+	} {
+		Out.ar(out, output);
+	};
 }).add;
 
 // Global MiVerb Send Effect
@@ -137,9 +144,8 @@ SynthDef(\globalReverb, {
 
 	var input = In.ar(~reverbBus, 2);
 	var env = EnvGen.kr(Env.asr(0.01, 1, 2), gate, doneAction: 2);
-	var reverb;
 
-	reverb = MiVerb.ar(
+	var reverb = MiVerb.ar(
 		input,
 		time: time.clip(0, 1.25),
 		drywet: 1.0, // Always 100% wet for send effect
@@ -149,7 +155,17 @@ SynthDef(\globalReverb, {
 		diff: diffuse.clip(0, 1),
 		mul: mix.clip(0, 2.0)
 	);
-	Out.ar(out, LeakDC.ar(reverb * env));
+
+	var output = LeakDC.ar(reverb * env);
+
+	// Distribute to all speaker pairs in multi-channel setups
+	if (~numSpeakers > 2) {
+		(~numSpeakers / 2).do { |i|
+			Out.ar(i * 2, output);
+		};
+	} {
+		Out.ar(out, output);
+	};
 }).add;
 
 // Global MiClouds Send Effect
@@ -160,10 +176,9 @@ SynthDef(\globalClouds, {
 	// var input = InFeedback.ar(~cloudsBus, 2);
 	var input = In.ar(~cloudsBus, 2);
 	var env = EnvGen.kr(Env.asr(0.01, 1, 2), gate, doneAction: 2);
-	var clouds;
 	var dens = LFNoise1.kr(0.3).range(0.3, 0.45);
 
-	clouds = MiClouds.ar(
+	var clouds = MiClouds.ar(
 		input,
 		pit: pitch.clip(-48, 48),
 		pos: position.clip(0, 1),
@@ -183,11 +198,94 @@ SynthDef(\globalClouds, {
 
 	// clouds = PitchShift.ar(input, 0.2, LFNoise1.kr(0.3).range(0.0, 2.00), 0.0, 0.5) * 0.8;
 
-  // Ring modulation - very audible effect:
+	// Ring modulation - very audible effect:
 	// clouds = clouds * SinOsc.ar(200) * 0.5 + clouds;
 
-	Out.ar(out, LeakDC.ar(clouds * env * mix.clip(0, 2.0)));
-	// Out.ar(out, LeakDC.ar(clouds * mix.clip(0, 2.0)));
+	var output = LeakDC.ar(clouds * env * mix.clip(0, 2.0));
+
+	// Distribute to all speaker pairs in multi-channel setups
+	if (~numSpeakers > 2) {
+		(~numSpeakers / 2).do { |i|
+			Out.ar(i * 2, output);
+		};
+	} {
+		Out.ar(out, output);
+	};
+}).add;
+
+SynthDef(\panningSamplePlayer, {
+	|out=0, bufnum=0, numChannels=1, mul=1, rate=1, startPos=0, panDur=5,
+	atk=0.01, decay=0.1, gate=1, volume=0.7,
+	cloudsSend=0.0, delaySend=0.0, reverbSend=0.0,
+	distDrive=0.0, distAmount=0.0,
+	revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0|
+
+	var sig, env, pan, monoPlay, cleanSig, distSig;
+
+	// Pan from -1 to 1 over panDur
+	pan = Line.kr(-1, 1, panDur);
+	env = EnvGen.kr(Env.perc(atk, decay), gate, doneAction: Done.freeSelf);
+
+	// Always read as mono (works for both mono and stereo buffers)
+	monoPlay = PlayBuf.ar(
+		numChannels: 1,
+		bufnum: bufnum,
+		rate: rate * BufRateScale.kr(bufnum),
+		startPos: startPos,
+		doneAction: 0
+	);
+
+	// Pan and convert to stereo
+	sig = Pan2.ar(monoPlay, pan);
+
+	sig = sig * mul;
+
+	// Distortion (same as plaits)
+	cleanSig = sig;
+	distSig = CrossoverDistortion.ar(sig, distDrive.clip(0.1, 2.0), 0.5);
+	sig = (cleanSig * (1 - distAmount.clip(0, 1))) + (distSig * distAmount.clip(0, 1));
+
+	// Sanitize to kill denormals, infs, and NaNs
+	sig = sig.sanitize;
+
+	// MiVerb insert effect (same as plaits - apply env at input)
+	sig = MiVerb.ar(
+		(sig * env).tanh,
+		time: revTime.clip(0, 1.25),
+		drywet: revDrywet.clip(0, 1),
+		damp: revDamp.clip(0, 1),
+		hp: revHp.clip(0, 1),
+		freeze: revFreeze.clip(0, 1),
+		diff: 0.625,
+		mul: volume.clip(0, 2.0),
+		add: 0.0
+	);
+
+	// Send to FX buses
+	Out.ar(~cloudsBus, sig * cloudsSend);
+	Out.ar(~delayBus, sig * delaySend);
+	Out.ar(~reverbBus, sig * reverbSend);
+
+	Out.ar(out, LeakDC.ar(sig.tanh));
+}).add;
+
+SynthDef(\samplePlayer, {
+    |out=0, bufnum=0, amp=1, rate=1, startPos=0, atk=0.01, rel=0.1, gate=1|
+
+    var sig, env;
+
+    env = EnvGen.kr(Env.asr(atk, 1, rel), gate, doneAction: 2);
+
+    sig = PlayBuf.ar(
+        numChannels: 1,
+        bufnum: bufnum,
+        rate: rate * BufRateScale.kr(bufnum),
+		startPos: startPos,
+        doneAction: 0
+    );
+
+    sig = sig * env * amp;
+    Out.ar(out, sig);
 }).add;
 
 )

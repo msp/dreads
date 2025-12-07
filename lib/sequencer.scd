@@ -98,11 +98,12 @@ x = Pdef(\plaitsSequence,
 					// ~plaits.synths[i].dur = v;
 					// ~plaits.synths[i].dur;
 
-					~plaits.synths[i].dur = ~setDuration.(
+					var baseDur = ~setDuration.(
 						~plaits.synths[i].sequences.duration.next,
 						~plaits.synths[i].sequences.div.next
 					);
-					// ["dur----------------------------", ~plaits.synths[i].dur].postln;
+					var speed = ~plaits.synths[i].speed.clip(0.01, 100);
+					~plaits.synths[i].dur = baseDur / speed;
 					~plaits.synths[i].dur;
 				},
 				\decay, Pfunc { |event|
@@ -147,7 +148,9 @@ x = Pdef(\plaitsSequence,
 					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
 				},
 				\mul, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.mul.next, ~plaits.synths[i].mul); },
-				\revDrywet, Pfunc { |event| ~plaits.synths[i].revDrywet },
+				\revDrywet, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.revDrywet.next, ~plaits.synths[i].revDrywet);
+				},
 				\revTime, Pfunc { |event|
 					var out = ~modulateBipolar.(~plaits.synths[i].sequences.revTime.next, ~plaits.synths[i].revTime);
 					// ["revTime", out].postln;
@@ -166,12 +169,139 @@ x = Pdef(\plaitsSequence,
 				\cloudsSend, Pfunc { |event|
 					~modulateBipolar.(~plaits.synths[i].sequences.cloudsSend.next, ~plaits.synths[i].cloudsSend);
 				},
-				\distDrive, Pfunc { |event| ~plaits.synths[i].distDrive },
-				\distAmount, Pfunc { |event| ~plaits.synths[i].distAmount },
+				\distDrive, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.distDrive.next, ~plaits.synths[i].distDrive);
+				},
+				\distAmount, Pfunc { |event|
+					~modulateBipolar.(~plaits.synths[i].sequences.distAmount.next, ~plaits.synths[i].distAmount);
+				},
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
-				\out, if(~using6_1, Pseq([0,1,2,3,4,5], inf), 0),
+				\out, Pseq(~outputBuses, inf),
 			))
+		} ++
+		// Sample instances (use lookups for live coding)
+		~plaits.samples.collect { |instance, i|
+			Pbind(
+				\type, \oneShotSample,  // Custom event type: never sends gate=0
+				\instrument, \panningSamplePlayer,
+				\group, ~voiceGroup,
+				// Calculate variant once per event (evaluated first, then reused)
+				\sampleVariant, Pfunc {
+					var variantSeq = ~plaits.samples[i].sequences.variant.next;
+					var variantBase = ~plaits.samples[i].variant;
+					~add.(variantSeq, variantBase);
+				},
+				// Get sample duration for scaling normalized values
+				\sampleDuration, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var variant = event[\sampleVariant];
+					var metadata, duration;
+
+					if (bankName.notNil) {
+						metadata = ~sampleLibrary.metadata[bankName];
+						if (metadata.notNil && metadata[variant].notNil) {
+							duration = metadata[variant].duration;
+						};
+					};
+
+					duration ?? 1.0;  // Fallback to 1.0 second if not found
+				},
+				\bufnum, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
+					buffer ?? 0;
+				},
+				\numChannels, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
+					if (buffer.notNil) { buffer.numChannels } { 1 };
+				},
+				\dur, Pfunc {
+					var durSeq = ~plaits.samples[i].sequences.duration.next;
+					var divSeq = ~plaits.samples[i].sequences.div.next;
+					var baseDur = ~setDuration.(durSeq, divSeq);
+					var speed = ~plaits.samples[i].speed.clip(0.01, 100);
+					~plaits.samples[i].dur = baseDur / speed;
+					~plaits.samples[i].dur;
+				},
+				\legato, Pfunc { |event| ~plaits.samples[i].legato },				
+				\mul, Pfunc {
+				var baseMul = ~plaits.samples[i].mul;
+				var result = ~modulateBipolar.(~plaits.samples[i].sequences.mul.next, baseMul);
+					// if (i == 0) { ["Sample", i, "mul:", baseMul, "->", result].postln; };
+				result;
+			},
+				\rate, Pfunc {
+					var rateSeq = ~plaits.samples[i].sequences.rate.next;
+					var baseRate = ~plaits.samples[i].rate;
+					var result = ~multiply.(rateSeq, baseRate);
+					// if (i == 0) { ["Sample", i, "rateSeq:", rateSeq, "baseRate:", baseRate, "->", result].postln; };
+					result;
+				},
+				\startPos, Pfunc { |event|
+					var bankName = ~plaits.samples[i].bankName;
+					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
+					var duration = event[\sampleDuration];
+					// UI and sequence are normalized 0-1, scale to sample duration
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.startPos.next,
+						~plaits.samples[i].startPos
+					);
+					var seconds = normalized * duration;  // Scale to actual sample length
+					var frames = ~secondsToFrames.(seconds, buffer);
+					if (i == 0) { ["Sample startPos - norm:", normalized, "seconds:", seconds, "frames:", frames].postln; };
+					frames;
+				},
+				\atk, Pfunc { |event|
+					var duration = event[\sampleDuration];
+					// Normalized 0-1, scale to duration/2 (attack shouldn't exceed half the sample)
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.atk.next,
+						~plaits.samples[i].atk
+					);
+					normalized * (duration / 2);
+				},
+				\decay, Pfunc { |event|
+					var duration = event[\sampleDuration];
+					// Normalized 0-1, scale to duration*2 (allow longer decay than sample)
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.decay.next,
+						~plaits.samples[i].decay
+					);
+					normalized * (duration * 2);
+				},
+				\panDur, Pfunc { |event|
+					var duration = event[\sampleDuration];
+					// Normalized 0-1, scale to duration*2
+					var normalized = ~modulateBipolar.(
+						~plaits.samples[i].sequences.panDur.next,
+						~plaits.samples[i].panDur
+					);
+					// if (i == 0) { ["Sample panDur - norm:", normalized, "duration:", duration, "->", normalized * (duration * 2), "seconds"].postln; };
+					normalized * (duration * 2);
+				},
+				\volume, Pfunc {
+				var vol = ~plaits.samples[i].volume;
+					// if (i == 0) { ["Sample", i, "volume:", vol].postln; };
+				vol;
+			},
+				\cloudsSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.cloudsSend.next, ~plaits.samples[i].cloudsSend) },
+				\delaySend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.delaySend.next, ~plaits.samples[i].delaySend) },
+				\reverbSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.reverbSend.next, ~plaits.samples[i].reverbSend) },
+				\distDrive, Pfunc { |event| ~plaits.samples[i].distDrive },
+				\distAmount, Pfunc { |event| ~plaits.samples[i].distAmount },
+				\revDrywet, Pfunc { |event|
+					~modulateBipolar.(~plaits.samples[i].sequences.revDrywet.next, ~plaits.samples[i].revDrywet);
+				},
+				\revTime, Pfunc { |event|
+					~modulateBipolar.(~plaits.samples[i].sequences.revTime.next, ~plaits.samples[i].revTime);
+				},
+				\revDamp, Pfunc { |event| ~plaits.samples[i].revDamp },
+				\revHp, Pfunc { |event| ~plaits.samples[i].revHp },
+				\revFreeze, Pfunc { |event| ~plaits.samples[i].revFreeze },
+				\out, Pseq(~outputBuses, inf),
+			)
 		}
 	)
 );

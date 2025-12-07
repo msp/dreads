@@ -37,7 +37,39 @@ x.stop;
 ~fxGroup.freeAll;
 
 
+// SAMPLER TEST ////////////
 
+// Check sample library loaded
+~sampleLibrary.banks.postln;
+
+(
+  ~plaits.samples.postln;
+  ~plaits.samples[0].postln;
+  ~plaits.samples[0].sequences.postln;
+)
+
+~listSampleBanks.()
+
+(
+  ~plaits.samples[0].bankName.postln;
+  ~plaits.samples[0].variant.postln;
+)
+
+(
+(Document.current.dir ++ "/lib/globals.scd").load;
+  ~defaultSampleScalars.postln;  // Check if bankName is now there
+)
+
+(
+~delayBus.postln;
+~delayBus.index.postln;
+
+~reverbBus.postln;
+~reverbBus.index.postln;
+
+~cloudsBus.postln;
+~cloudsBus.index.postln;
+)
 
 ~delayFX = Synth(\filterDelay, [\out, 0], addAction: \addToTail);
 
@@ -59,6 +91,8 @@ x.stop;
 ~delayFX.set(\delayTime, 0.75);
 
 ~delayFX.set(\feedback, 0.75);
+
+~delayFX.set(\mix, 0.7);
 
 
 

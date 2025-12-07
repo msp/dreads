@@ -14,14 +14,15 @@
 // (1) SETUP
 ////////////////////////////////////////////////////////////////////////////////
 (
-// Set to true for multichannel output, false for stereo
-~using6_1 = false;
+~numSpeakers = 4;
 
 // Increase buffer size to reduce late messages
 s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
-s.options.numOutputBusChannels = if(~using6_1, 8, 2);
+s.options.numInputBusChannels = 0;
+s.options.numOutputBusChannels = ~numSpeakers;
+s.options.recChannels = ~numSpeakers;
 s.freeAll;
 
 // Capture base path for reliable preset operations
@@ -31,9 +32,15 @@ s.freeAll;
 (Document.current.dir ++ "/lib/globals.scd").load;
 (Document.current.dir ++ "/lib/utils.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
-(Document.current.dir ++ "/presets/plaits/default.scd").load;
 
 s.waitForBoot {
+	// allocate this after server boot with known indicies, away from likely synthdef/hardware outputs
+    ~delayBus = Bus(\audio, 100, 2, s);
+    ~reverbBus = Bus(\audio, 102, 2, s);
+    ~cloudsBus = Bus(\audio, 104, 2, s);
+
+	~loadSampleLibrary.();
+	(Document.current.dir ++ "/presets/plaits/default.scd").load;
 	(Document.current.dir ++ "/lib/synthdefs.scd").load;
 	(Document.current.dir ++ "/lib/osc.scd").load;
 };

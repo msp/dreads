@@ -2,12 +2,14 @@
 // Global utility functions and shared state
 //////////////////////////////////////////////////////////////////////////////
 (
+// Generate output bus rotation array
+// Note: Plaits outputs stereo, so last speaker won't be used in rotation
+// numSpeakers=4 → [0, 1, 2, 3] (but \out=3 writes to buses 3-4, which is out of range)
+// that's fine for now :)
+~outputBuses = (0..(~numSpeakers - 1));
+
 // Default tempo, will be updated by presets
 ~tempoClock = TempoClock.new(120/60);
-
-~delayBus = Bus.audio(s, 2);
-~reverbBus = Bus.audio(s, 2);
-~cloudsBus = Bus.audio(s, 2);
 ~sendToPhones = false;
 
 ~ui = {
@@ -68,6 +70,7 @@
 	revTime: 0.5,
 	reverbSend: 0.0,
 	sendToPhones: 0.0,
+	speed: 1.0,
 	stereoMode: 1.0,
 	tempo: 165.0,
 	timbMod: 0.0,
@@ -115,16 +118,71 @@
 	decay: Pseq([0.5], inf).asStream,
 	delaySend: Pseq([0.5], inf).asStream,
 	div: Pseq([1.0], inf).asStream,
+	distAmount: Pseq([0.5], inf).asStream,
+	distDrive: Pseq([0.5], inf).asStream,
 	duration: Pseq([0.25], inf).asStream,
 	engine: Pseq(["e"], inf).asStream,
 	fmMod: Pseq([0.5], inf).asStream,
 	harm: Pseq([0.5], inf).asStream,
 	lpgColour: Pseq([0.5], inf).asStream,
 	morph: Pseq([0.5], inf).asStream,
+	revDrywet: Pseq([0.5], inf).asStream,
 	revTime: Pseq([0.5], inf).asStream,
 	reverbSend: Pseq([0.5], inf).asStream,
 	timbre: Pseq([0.5], inf).asStream,
 	volume: Pseq([0.5], inf).asStream,
 	mul: Pseq([0.5], inf).asStream
+);
+
+// Sample library storage (SuperDirt-style bank/variant structure)
+~sampleLibrary = (
+	banks: Dictionary.new,      // bankName (Symbol) -> Array of Buffers
+	paths: Dictionary.new,      // bankName (Symbol) -> Array of file paths
+	metadata: Dictionary.new    // bankName (Symbol) -> Array of metadata dicts
+);
+
+// Default scalar values for sample instances
+~defaultSampleScalars = (
+	atk: 0.5,               // Normalized 0-1 (scaled to duration/2 in sequencer)
+	bankName: \default,     // Sample bank name (\default = built-in SC samples)
+	cloudsSend: 0.0,
+	decay: 0.5,             // Normalized 0-1 (scaled to duration*2 in sequencer)
+	delaySend: 0.0,
+	distAmount: 0.0,
+	distDrive: 0.0,
+	dur: 0.25,
+	legato: 0.7,
+	mul: 1.0,
+	panDur: 0.5,            // Normalized 0-1 (scaled to duration*2 in sequencer)
+	rate: 1.0,
+	reverbSend: 0.0,
+	revDamp: 0.8,
+	revDrywet: 0.25,
+	revFreeze: 0.0,
+	revHp: 0.7,
+	revTime: 0.3,
+	speed: 1.0,
+	startPos: 0,            // Normalized 0-1 (scaled to duration in sequencer)
+	tempo: 165.0,
+	variant: 0,             // Which variant of the bank to play (0-based index)
+	volume: 0.0
+);
+
+// Default sequence patterns for sample instances
+~defaultSampleSequences = (
+	atk: Pseq([0.5], inf).asStream,         // 0-1 normalized
+	cloudsSend: Pseq([0.5], inf).asStream,
+	decay: Pseq([0.5], inf).asStream,       // 0-1 normalized (neutral at midpoint)
+	delaySend: Pseq([0.5], inf).asStream,
+	div: Pseq([1.0], inf).asStream,
+	duration: Pseq([1.0], inf).asStream,
+	mul: Pseq([1.0], inf).asStream,
+	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
+	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
+	reverbSend: Pseq([0.5], inf).asStream,
+	revDrywet: Pseq([0.5], inf).asStream,
+	revTime: Pseq([0.5], inf).asStream,
+	startPos: Pseq([0.5], inf).asStream,    // 0-1 normalized (neutral at midpoint)
+	variant: Pseq([0], inf).asStream        // Variant index, additive (uses ~add)
 );
 )

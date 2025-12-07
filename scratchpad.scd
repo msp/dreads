@@ -3,6 +3,75 @@
 
 s.meter
 
+
+Quarks.gui
+
+
+Safety
+
+Platform.resourceDir
+
+ExampleFiles.sinedPink
+
+~sampleLibrary.metadata
+
+
+(
+var a, b;
+a = Pwhite(0.0, 0.9, 6);    // return 6 items
+b = a.asStream;
+7.do({ b.next.postln });
+)
+
+(
+var a, b;
+a = Pseries(0.01, 0.1, 6);    // return 6 items
+b = a.asStream;
+7.do({ b.next.postln });
+)
+
+(
+// Check delay synth exists and its state
+// ~delayFX.postln;
+~delayBus.index.postln;
+~reverbBus.index.postln;
+~cloudsBus.index.postln;
+// ~delayFX.query;  // Query its current parameter values
+
+// Check for duplicate delay synths
+s.queryAllNodes;
+)
+
+(
+  s.options.numAudioBusChannels.postln;  // Total private buses
+  s.options.numOutputBusChannels.postln;  // Hardware outputs
+  // After server boots:
+  s.audioBusAllocator.blocks.postln;  // Shows allocated ranges
+)
+
+(
+~delayBus.postln;
+~delayBus.free;
+~delayBus.postln;
+~delayBus = Bus(\audio, 100, 2, s);
+~delayBus.postln;
+~delayBus.index.postln;
+)
+
+(
+  // Check what the delay synth is actually reading from
+  ~delayFX.postln;
+  s.queryAllNodes;
+
+  // Also verify bus objects
+  ~delayBus.index.postln;  // Should be 100
+  ~reverbBus.index.postln;  // Should be 102
+  ~cloudsBus.index.postln;  // Should be 104
+)
+
+  ~delayFX.free;
+  ~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
+
 ([0.1, 0.1, 0.1] ++ (3 ! 5)).flatten
 
 (0..(s.options.numOutputBusChannels-2)).flat
@@ -12,10 +81,24 @@ s.options.blockSize // s.sampleRate
 s.options.collect{|o| o.postln;}
 
 
+[(44100 * 1)]
+
 s.options.dump
 
 s.options.memSize
 
+Env.asr(0.01, 1, 5.0).test(0.1).plot;
+
+Env.asr(0.001, 0.5, 1, -4).test(2).plot; // sharper attack
+Env.asr(0.02, 0.5, 1, 'linear').test(2).plot; // linear segments
+
+
+(Document.current.dir +/+ "test_modulate_refactor.scd").load;
+
+(
+~plaits.samples.size.postln;
+~plaits.samples.do { |s, i| [i, s.notNil].postln };
+)
 
 // controlPeriod = blockSize / sampleRate
 // controlPeriod = 128 / 48000 = 0.00267 seconds
@@ -313,5 +396,48 @@ q = p.asStream.nextN(20).postln;
 )
 
 ~filterWithRests.(~sinePattern.(8.0, 0.05, 0.5), 4).asStream
+
+/////////////////////////////////////
+// embedded pattern test
+/////////////////////////////////////
+(
+// Test 1: Pwrand embedded in Pseq
+~test1 = Pbind(
+	\instrument, \default,
+	\dur, Pseq([
+		0.25,
+		0.25,
+		0.25,
+		Pwrand([0.25, Rest(0.25)], [0.7, 0.3].normalizeSum)],
+	inf),
+	\note, Pseq([0, 2, 4, 7], inf),
+	\amp, 0.3
+).play;
+)
+
+  // Wait and listen - 4th beat should randomly rest ~30% of time
+~test1.stop;
+
+(
+	// Test: Nested Pseq
+	~test3 = Pbind(
+		\instrument, \default,
+		\dur, Pseq([
+			0.25,
+			0.25,
+			0.25,
+			Pseq([0.25, Rest(0.25)], inf)  // Should cycle values
+		], inf),
+		\note, Pseq([0, 2, 4, 7, 9], inf),
+		\amp, 0.3
+	).play;
+)
+
+~test3.stop;
+
+~outputBuses
+
+Rotate2
+
 
 

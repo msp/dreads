@@ -6,26 +6,33 @@
 
 // Bipolar modulation function for UI parameter mapping
 //
-// Gradually introduce the sequence values until they are full at uiValue of 0.5.
-// After 0.5, gradually pull them towards 1.
-// You can pass a sequence of 0.5 values to use without a sequence so the UI knob
-// acts as expected e.g. Pseq([0.5], inf).asStream
-~modulateBipolar = { |seqValue, uiValue|
-	var output = 0.5;
+// Gradually introduce the sequence values until they are full at uiValue = max/2.
+// After max/2, gradually pull them towards max.
+//
+// For normalized 0-1 parameters (default max=1.0):
+//   Neutral sequence = 0.5, you can pass Pseq([0.5], inf).asStream for "UI only mode"
+// For time parameters (e.g., max=60.0):
+//   Neutral sequence = 30.0, you can pass Pseq([30.0], inf).asStream for "UI only mode"
+~modulateBipolar = { |seqValue, uiValue, max=1.0|
+	var midpoint = max / 2;
+	var output;
 
-	uiValue = uiValue.clip(0, 1);  // Optional safety clamp
-
-	if (uiValue <= 0.5) {
-		output = seqValue * (uiValue * 2)
+	if (uiValue <= midpoint) {
+		// Gradually introduce sequence: at 0 output=0, at midpoint output=seqValue
+		output = seqValue * (uiValue / midpoint);
 	} {
-		output = seqValue + (((uiValue - 0.5) * 2) * (1 - seqValue))
+		// Pull from seqValue towards max
+		var blend = (uiValue - midpoint) / midpoint;  // 0 at midpoint, 1 at max
+		output = seqValue + (blend * (max - seqValue));
 	};
 
-	// ['modulateBipolar:', seqValue, uiValue.round(0.0001), output.round(0.0001)].postln;
+	// ['modulateBipolar:', seqValue, uiValue.round(0.0001), max, output.round(0.0001)].postln;
 
 	output;
 };
 
+// TODO: Update to support non-normalized parameters when LFOs are added to samples
+// Add max parameter and pass through: ~modulateLayered = { |seqValue, lfoValue, uiValue, lfoAmount=0.3, max=1.0|
 ~modulateLayered = { |seqValue, lfoValue, uiValue, lfoAmount=0.3|
 	// First combine sequence + LFO
 	var combinedMod = seqValue + ((lfoValue - 0.5) * lfoAmount);
@@ -59,13 +66,37 @@
 	output;
 };
 
+// Generic multiply: sequence value multiplies base value
+~multiply = { |seqValue, baseValue|
+	baseValue * seqValue;
+};
+
+// Generic add: sequence value adds to base value
+~add = { |seqValue, baseValue|
+	baseValue + seqValue;
+};
+
+// Convert seconds to frame position for sample playback
+// Usage: ~secondsToFrames.(1.5, ~sampleBuffers[\sample_0])
+~secondsToFrames = { |seconds, buffer|
+	var framePosition = 0;
+
+	if (buffer.notNil) {
+		var sampleRate = buffer.sampleRate;
+		framePosition = (seconds * sampleRate).asInteger;
+	} {
+		"Buffer is nil, returning 0".warn;
+	};
+
+	framePosition;
+};
 
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|
-	// plaits reverbs
-	s.defaultGroup.set(\revTime, 0.9);
+	// plaits insert reverbs
+	~voiceGroup.set(\revTime, 0.9);
 	// global reverb
-	s.defaultGroup.set(\time, 0.9);
+	~reverbFX.set(\time, 0.9);
 	("Stopping reverb feedback..").postln;
 };
 
@@ -102,5 +133,203 @@
 		Rest()
 	)
 };
+
+// Load sample library with SuperDirt-style bank/variant structure
+~loadSampleLibrary = {
+	var basePath, builtinPath, totalBanks = 0, totalVariants = 0;
+	var loadBankFromPath;
+
+	// Helper function to load a bank from a folder path
+	loadBankFromPath = { |folderPath, bankName|
+		var folder = PathName(folderPath);
+		var buffers = List.new;
+		var paths = List.new;
+		var metadata = List.new;
+
+		if (folder.isFolder) {
+			folder.files.do { |file|
+				var ext = (file.fullPath.splitext[1] ? "").toLower;
+				var validExts = ["wav", "aif", "aiff", "aifc"];
+				var isValid = validExts.includesEqual(ext);
+				var buf;
+
+				if (isValid) {
+					buf = Buffer.read(s, file.fullPath, action: { |buffer|
+						if (buffer.notNil) {
+							var meta = (
+								path: file.fullPath,
+								filename: file.fileName,
+								numChannels: buffer.numChannels,
+								numFrames: buffer.numFrames,
+								sampleRate: buffer.sampleRate,
+								duration: buffer.numFrames / buffer.sampleRate
+							);
+							metadata.add(meta);
+						};
+					});
+
+					buffers.add(buf);
+					paths.add(file.fullPath);
+				};
+			};
+
+			if (buffers.size > 0) {
+				~sampleLibrary.banks[bankName] = buffers;
+				~sampleLibrary.paths[bankName] = paths;
+				~sampleLibrary.metadata[bankName] = metadata;
+
+				("  " ++ bankName ++ ": " ++ buffers.size ++ " variants").postln;
+				totalBanks = totalBanks + 1;
+				totalVariants = totalVariants + buffers.size;
+			};
+		};
+	};
+
+	// Load built-in SC samples as 'default' bank
+	builtinPath = Platform.resourceDir +/+ "sounds";
+	("Loading built-in samples from: " ++ builtinPath).postln;
+	loadBankFromPath.(builtinPath, \default);
+
+	// Load user sample library
+	basePath = ~basePath +/+ "samples";
+	("Loading sample library from: " ++ basePath).postln;
+
+	if (PathName(basePath).isFolder.not) {
+		("WARNING: Sample library folder not found: " ++ basePath).warn;
+		("Please create the folder and add sample banks").postln;
+	} {
+		// Load user banks from samples/ folder
+		PathName(basePath).folders.do { |folder|
+			var bankName = folder.folderName.asSymbol;
+			loadBankFromPath.(folder.fullPath, bankName);
+		};
+	};
+
+	("Sample library loaded: " ++ totalBanks ++ " banks, " ++ totalVariants ++ " total samples").postln;
+};
+
+// Free entire sample library
+~freeSampleLibrary = {
+	~sampleLibrary.banks.keysValuesDo { |bankName, buffers|
+		buffers.do { |buf|
+			if (buf.notNil) {
+				buf.free;
+			};
+		};
+	};
+
+	~sampleLibrary.banks.clear;
+	~sampleLibrary.paths.clear;
+	~sampleLibrary.metadata.clear;
+
+	"Sample library freed".postln;
+};
+
+// List all loaded sample banks
+~listSampleBanks = {
+	if (~sampleLibrary.banks.size == 0) {
+		"No sample banks loaded".postln;
+		^nil;
+	};
+
+	"Sample Banks:".postln;
+	~sampleLibrary.banks.keysValuesDo { |bankName, buffers|
+		("  " ++ bankName ++ ": " ++ buffers.size ++ " variants").postln;
+		if (~sampleLibrary.metadata[bankName].notNil) {
+			~sampleLibrary.metadata[bankName].do { |meta, idx|
+				if (meta.notNil) {
+					("    [" ++ idx ++ "] " ++ meta.filename ++
+					 " (" ++ meta.numChannels ++ "ch, " ++
+					 meta.duration.round(0.01) ++ "s)").postln;
+				};
+			};
+		};
+	};
+};
+
+// Get buffer for a bank + variant combination
+~getSampleBuffer = { |bankName, variant = 0|
+	var bank;
+
+	if (bankName.isNil) {
+		^nil;  // Silently return nil if no bank selected
+	};
+
+	bank = ~sampleLibrary.banks[bankName];
+
+	if (bank.isNil) {
+		("WARNING: Sample bank not found: " ++ bankName).warn;
+		^nil;
+	};
+
+	// Use wrapAt for safe indexing (SuperDirt style)
+	bank.wrapAt(variant);
+};
+
+// Lookup bank and variant by file path
+~lookupSampleByPath = { |filepath|
+	var result = nil;
+
+	filepath = filepath.standardizePath;
+
+	~sampleLibrary.paths.keysValuesDo { |bankName, pathsArray|
+		pathsArray.do { |path, idx|
+			if (path.standardizePath == filepath) {
+				result = (bankName: bankName, variant: idx);
+			};
+		};
+	};
+
+	if (result.isNil) {
+		("WARNING: Sample not found in library: " ++ filepath).warn;
+	};
+
+	result;
+};
+
+// Custom event type for one-shot sample playback
+// Never sends gate=0, synth is expected to free itself via doneAction
+Event.addEventType(\oneShotSample, {
+	var server = ~server ?? { Server.default };
+
+	// ["oneShotSample event at", thisThread.beats, "dur =", ~dur, "decay =", ~decay].postln;
+
+	// Build the synth - based on standard 'note' event type
+	// but without storing the node for later gate-off
+	if (~bufnum.notNil) {
+		Synth(
+			~instrument,
+			[
+				\out, ~out,
+				\bufnum, ~bufnum,
+				\numChannels, ~numChannels,
+				\mul, ~mul,
+				\rate, ~rate,
+				\startPos, ~startPos,
+				\panDur, ~panDur,
+				\atk, ~atk,
+				\decay, ~decay,
+				\gate, 1,
+				\volume, ~volume,
+				\cloudsSend, ~cloudsSend,
+				\delaySend, ~delaySend,
+				\reverbSend, ~reverbSend,
+				\distDrive, ~distDrive,
+				\distAmount, ~distAmount,
+				\revDrywet, ~revDrywet,
+				\revTime, ~revTime,
+				\revDamp, ~revDamp,
+				\revHp, ~revHp,
+				\revFreeze, ~revFreeze
+			],
+			~group ?? { server.defaultGroup },
+			\addToHead
+		);
+	};
+
+	// Return the delta time for the pattern to wait
+	// ["oneShotSample returning delta:", ~dur].postln;
+	~dur;
+});
 
 )

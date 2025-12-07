@@ -9,31 +9,31 @@
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.62,
+			decay: 1.0,
 			delaySend: 0.1,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.59,
-			engine: 11.0,
-			fmMod: 0.85,
-			harm: 0.42,
-			legato: 0.7,
+			dur: 0.7,
+			engine: 8.0,
+			fmMod: -0.45,
+			harm: 0.6,
+			legato: 18.0,
 			lpgColour: 0.5,
-			morph: 0.53,
-			morphMod: 0.75,
+			morph: 0.74,
+			morphMod: 0.7,
 			mul: 0.7,
-			pitch: 42.0,
-			revDamp: 0.78,
+			pitch: 18.22,
+			revDamp: 0.36,
 			revDrywet: 0.28,
 			revFreeze: 0.0,
-			revHp: 0.61,
-			revTime: 0.56,
+			revHp: 0.45,
+			revTime: 1.15,
 			reverbSend: 0.0,
 			stereoMode: 1.0,
-			tempo: 165.0,
-			timbMod: 0.6,
-			timbre: 0.38,
-			volume: 0.9
+			tempo: 15.0,
+			timbMod: 0.51,
+			timbre: 0.77,
+			volume: 1.32
 		),
 		// $PRESET_SCALARS_END
 		(
@@ -42,7 +42,7 @@
 			morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,
 			harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
 			lpgColour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
-			engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
+			engine: Pseq(["e", "e", "e", "e", "e", "e-6"], inf).asStream,
 			duration: Pseq([
 				0.7,
 				Pwrand([0.7, Rest(0.7)], [0.9, 0.1].normalizeSum),
@@ -51,38 +51,38 @@
 				0.7,
 				Pwrand([1.4, 0.7], [0.6, 0.4].normalizeSum),
 			] / 2, inf).asStream,
-			div: Pseq([1, 1, 1, 1], inf).asStream
+			div: Pseq([1], inf).asStream
 		)
 	),
-	
+
 	// $PLAITS2
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
+			decay: 1.0,
 			delaySend: 0.1,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.35,
-			engine: 6.0,
-			fmMod: 0.0,
-			harm: 0.5,
-			legato: 0.7,
+			dur: 0.7,
+			engine: 8.0,
+			fmMod: -0.45,
+			harm: 0.6,
+			legato: 18.0,
 			lpgColour: 0.5,
-			morph: 0.5,
-			morphMod: 0.4,
-			mul: 0.5,
-			pitch: 49.0,
-			revDamp: 0.78,
+			morph: 0.74,
+			morphMod: 0.7,
+			mul: 0.7,
+			pitch: 18.22,
+			revDamp: 0.36,
 			revDrywet: 0.28,
 			revFreeze: 0.0,
-			revHp: 0.61,
-			revTime: 0.56,
+			revHp: 0.45,
+			revTime: 1.15,
 			reverbSend: 0.0,
 			stereoMode: 1.0,
-			tempo: 165.0,
-			timbMod: 0.6,
-			timbre: 0.5,
+			tempo: 85.0,
+			timbMod: 0.51,
+			timbre: 0.77,
 			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
@@ -96,35 +96,35 @@
 			div: Pseq([0.5], inf).asStream
 		)
 	),
-	
+
 	// $PLAITS3
 	~plaitsFactory.(
 		// $PRESET_SCALARS_START
 		(
-			decay: 0.5,
+			decay: 1.0,
 			delaySend: 0.1,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.35,
-			engine: 6.0,
-			fmMod: 0.0,
-			harm: 0.5,
-			legato: 0.7,
+			dur: 0.7,
+			engine: 8.0,
+			fmMod: -0.45,
+			harm: 0.6,
+			legato: 18.0,
 			lpgColour: 0.5,
-			morph: 0.5,
-			morphMod: 0.4,
-			mul: 0.5,
-			pitch: 49.0,
-			revDamp: 0.78,
+			morph: 0.74,
+			morphMod: 0.7,
+			mul: 0.7,
+			pitch: 18.22,
+			revDamp: 0.36,
 			revDrywet: 0.28,
 			revFreeze: 0.0,
-			revHp: 0.61,
-			revTime: 0.56,
+			revHp: 0.45,
+			revTime: 1.15,
 			reverbSend: 0.0,
 			stereoMode: 1.0,
-			tempo: 165.0,
-			timbMod: 0.6,
-			timbre: 0.5,
+			tempo: 85.0,
+			timbMod: 0.51,
+			timbre: 0.77,
 			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
@@ -138,6 +138,38 @@
 			div: Pseq([0.5], inf).asStream
 		)
 	)
+	],
+	// Samples array
+	[
+		// $SAMPLE1
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+			(
+			),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		),
+
+		// $SAMPLE2
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+			(
+			),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		),
+
+		// $SAMPLE3
+		~sampleFactory.(
+			// $PRESET_SAMPLE_SCALARS_START
+			(
+			),
+			// $PRESET_SAMPLE_SCALARS_END
+			(
+			)
+		)
 	],
 	// Global FX settings
 	// $PRESET_FX_START

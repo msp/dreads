@@ -28,7 +28,7 @@ OSCdef.new(
 	~plaits.synths.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
 
-		["binding plaits ------------------->", instanceIndex].postln;
+		// ["binding plaits ------------------->", instanceIndex].postln;
 		// Generic parameter handling - OSC keys match data structure keys
 		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
 			// ["binding key", paramKey].postln;
@@ -54,9 +54,65 @@ OSCdef.new(
 	};
 };
 
+// Sample OSC Handlers
+~setupSampleOSC = {
+	~plaits.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+
+		// ["binding sample ------------------->", instanceIndex].postln;
+
+		// Generic parameter handling - OSC keys match data structure keys
+		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) }).do { |paramKey|
+			OSCdef.new(
+				("sample" ++ instanceNum ++ paramKey).asSymbol,
+				{
+					arg msg, time, addr, port;
+					var value = msg[1];
+					msg.round(0.001).postln;
+					~plaits.samples[instanceIndex][paramKey] = value;
+				},
+				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString
+			);
+		};
+
+		// File browser handler for this instance
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "FileSelected").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var filepath = msg[1].asString;
+				var lookup, metadata, duration;
+
+				["Sample file selected (instance " ++ instanceIndex ++ "):", filepath].postln;
+
+				// Lookup bank and variant from filepath
+				lookup = ~lookupSampleByPath.(filepath);
+
+				if (lookup.notNil) {
+					["  Resolved to bank:", lookup.bankName, "variant:", lookup.variant].postln;
+
+					// Update bankName and variant for this instance
+					~plaits.samples[instanceIndex].bankName = lookup.bankName;
+					~plaits.samples[instanceIndex].variant = lookup.variant;
+
+					// Log sample metadata
+					metadata = ~sampleLibrary.metadata[lookup.bankName];
+					if (metadata.notNil && metadata[lookup.variant].notNil) {
+						duration = metadata[lookup.variant].duration;
+						["  Sample duration:", duration, "seconds"].postln;
+					};
+				} {
+					["  ERROR: Could not find sample in loaded library"].postln;
+				};
+			},
+			"/samples/" ++ instanceNum ++ "/samplePath"
+		);
+	};
+};
+
 // Delay Effect OSC Handlers
 [\time, \feedback, \filterFreq, \spread].do { |paramKey|
-	['binding fx/delay->', paramKey].postln;
+	// ['binding fx/delay->', paramKey].postln;
 	OSCdef.new(
 		("fx_delay_" ++ paramKey).asSymbol,
 		{
@@ -81,7 +137,7 @@ OSCdef.new(
 
 // Global Reverb Effect OSC Handlers
 [\time, \damp, \hp, \diffuse, \freeze].do { |paramKey|
-	['binding fx/reverb->', paramKey].postln;
+	// ['binding fx/reverb->', paramKey].postln;
 	OSCdef.new(
 		("fx_reverb_" ++ paramKey).asSymbol,
 		{
@@ -106,7 +162,7 @@ OSCdef.new(
 
 // Global Clouds Effect OSC Handlers
 [\blend, \density, \freeze, \pitch, \position, \size, \texture, \reverb, \feedback, \spread, \inGain, \mode, \lofi, \volume].do { |paramKey|
-	['binding fx/clouds->', paramKey].postln;
+	// ['binding fx/clouds->', paramKey].postln;
 	OSCdef.new(
 		("fx_clouds_" ++ paramKey).asSymbol,
 		{
@@ -218,8 +274,38 @@ OSCdef.new(
 		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
-			["Sending:", path, value].postln;
+			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
+		};
+	};
+
+	// Send sample instance parameters
+	~plaits.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+
+		// Send all parameter values to UI
+		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+			var value = instance[paramKey];
+			var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey;
+			// ["Sending:", path, value].postln;
+			ui.sendMsg(path, value);
+		};
+
+		// Resolve and send file path from bankName/variant
+		if (instance.bankName.notNil) {
+			var bankPaths = ~sampleLibrary.paths[instance.bankName];
+			if (bankPaths.notNil) {
+				var filepath = bankPaths[instance.variant.asInteger];
+				if (filepath.notNil) {
+					var path = "/samples/" ++ instanceNum ++ "/samplePath";
+					// ["Sending resolved sample path:", path, filepath].postln;
+					ui.sendMsg(path, filepath);
+				} {
+					["WARNING: Variant", instance.variant.asInteger, "not found in bank", instance.bankName].postln;
+				};
+			} {
+				["WARNING: Bank", instance.bankName, "not found in sample library"].postln;
+			};
 		};
 	};
 
@@ -227,7 +313,7 @@ OSCdef.new(
 	fxSettings.keysValuesDo { |category, categoryParams|
 		categoryParams.keysValuesDo { |param, value|
 			var path = "/fx/" ++ category ++ "/" ++ param;
-			["Sending:", path, value].postln;
+			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
 	};
@@ -235,10 +321,26 @@ OSCdef.new(
 	"Plaits state pushed to UI!".postln;
 };
 
-// Debug OSCFunc for catching missed messages
+// OSC handler for refreshing sample library
+OSCdef(\refreshSampleLibrary, {
+	arg msg, time, addr, port;
+
+	"Refreshing sample library...".postln;
+
+	// Reload library
+	~loadSampleLibrary.();
+
+	"Sample library refreshed".postln;
+}, '/refreshSampleLibrary');
+
+// Debug OSCFunc for catching all sample-related messages
 OSCFunc({ |msg, time, addr, port|
 	var path = msg[0];
-	// Only show messages that might be typos in our namespaces
+	// Show all sample-related messages for debugging
+	if (path.asString.contains("/samples")) {
+		["OSC received:", msg].postln;
+	};
+	// Show other possible typos
 	if (path.asString.contains("/plaits") ||
 	    path.asString.contains("/delay") ||
 	    path.asString.contains("/reverb") ||
@@ -250,6 +352,7 @@ OSCFunc({ |msg, time, addr, port|
 
 // Setup OSC for plaits instances (called after preset structure is loaded)
 ~setupPlaitsOSC.();
+~setupSampleOSC.();
 
 ~pushStateToUI.value;
 )
