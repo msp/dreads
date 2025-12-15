@@ -145,6 +145,22 @@ b= {
 
 b.stop;
 
+
+(
+var a;
+// a = Pgeom(1.0, 1.1, inf);
+// a = Pgeom(1.0, 1.01, 50);
+// a = Pgeom(1.628, 0.99, 50);
+
+a = Pseq([
+	Pgeom(1.0, 1.01, 50),
+	Pgeom(1.628, 0.99, 50)
+], inf);
+a.asStream.nextN(100).plot;
+
+// a.asStream.nextN(50).do {|n| n.postln; }
+)
+
 (
 {
 	var harm = 0.5;
