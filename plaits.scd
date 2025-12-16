@@ -14,7 +14,7 @@
 // (1) SETUP
 ////////////////////////////////////////////////////////////////////////////////
 (
-~numSpeakers = 4;
+~numSpeakers = 2;
 
 // Increase buffer size to reduce late messages
 s.options.blockSize = 128;
