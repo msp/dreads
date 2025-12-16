@@ -146,17 +146,281 @@
 	parts.join(",");
 };
 
+// Sequence Section Parser Functions
+// Parser: Extract parameter name and remaining content from line
+~parseSequenceParamLine = { |line|
+	var match = line.findRegexp("^(\\s*)(\\w+):\\s*(.*)$");
+	if (match.size > 0) {
+		(
+			indent: match[1][1],
+			paramName: match[2][1].asSymbol,
+			rest: match[3][1]
+		)
+	} { nil };
+};
+
+// Parser: Check if line is a simple symbol assignment
+~isSymbolLine = { |line|
+	var trimmed = line.stripWhiteSpace;
+	var colonIdx, afterColon, firstChar;
+
+	// Find the colon
+	colonIdx = trimmed.find(":");
+	if (colonIdx.isNil) { ^false };
+
+	// Get the part after the colon
+	afterColon = trimmed[(colonIdx + 1)..].stripWhiteSpace;
+
+	// Check if it starts with backslash (symbol)
+	if (afterColon.size == 0) { ^false };
+	firstChar = afterColon[0];
+
+	// Symbol line starts with \ and doesn't contain opening brackets/parens
+	(firstChar == $\\) && (afterColon.contains("(").not) && (afterColon.contains("[").not)
+};
+
+// Parser: Find end of multi-line pattern using depth tracking
+~findPatternEnd = { |lines, startIdx|
+	var depth = 0;
+	var inString = false;
+	var inComment = false;
+	var endIdx = startIdx;
+	var found = false;
+
+	(lines.size - startIdx).do { |offset|
+		var lineIdx = startIdx + offset;
+		var line, i;
+
+		if (found.not && (lineIdx < lines.size)) {
+			line = lines[lineIdx];
+			i = 0;
+			inComment = false;  // Reset per line
+
+			// Character-by-character state machine
+			line.size.do { |charIdx|
+				var char = line[charIdx];
+				var nextChar = if ((charIdx+1) < line.size) { line[charIdx+1] } { nil };
+
+				// Detect comment start
+				if (char == $/ && (nextChar == $/)) {
+					inComment = true;
+				};
+
+				if (inComment.not) {
+					// Track string literals
+					if (char == $") {
+						inString = inString.not;
+					};
+
+					if (inString.not) {
+						// Track bracket/paren depth
+						if ((char == $() || (char == $[)) { depth = depth + 1 };
+						if ((char == $)) || (char == $])) { depth = depth - 1 };
+					};
+				};
+			};
+
+			// Check if we found .asStream at depth 0
+			if ((depth == 0) && line.contains(".asStream")) {
+				endIdx = lineIdx;
+				found = true;
+			};
+		};
+	};
+
+	endIdx;
+};
+
+// Parser: Build map of all parameters in sequence section
+~parseSequenceSection = { |lines|
+	var blocks = Dictionary.new;
+	var i = 0;
+
+	("Parsing sequence section (" ++ lines.size ++ " lines)...").postln;
+
+	// Use a manual loop with early exit capability
+	block { |break|
+		loop {
+			var line, parsed;
+
+			if (i >= lines.size) { break.value };
+
+			line = lines[i];
+			parsed = ~parseSequenceParamLine.(line);
+
+			if (parsed.notNil) {
+				var paramName = parsed.paramName;
+				var startLine = i;
+				var endLine = i;
+				var isSymbol = ~isSymbolLine.(line);
+
+				if (isSymbol.not) {
+					// Multi-line pattern - find end using depth tracking
+					endLine = ~findPatternEnd.(lines, i);
+					("  Parsed " ++ paramName ++ ": pattern (lines " ++ startLine ++ "-" ++ endLine ++ ")").postln;
+				} {
+					("  Parsed " ++ paramName ++ ": symbol (line " ++ startLine ++ ")").postln;
+				};
+
+				blocks[paramName] = (
+					startLine: startLine,
+					endLine: endLine,
+					isSymbol: isSymbol,
+					indent: parsed.indent
+				);
+
+				i = endLine + 1;
+			} {
+				// Not a param line (closing paren, blank line, etc)
+				i = i + 1;
+			};
+		};
+	};
+
+	("Parsed " ++ blocks.size ++ " parameters").postln;
+	blocks;
+};
+
+// Helper: Comment out a block of lines
+~commentLines = { |lines, indent|
+	lines.collect { |line|
+		if (line.stripWhiteSpace.size > 0) {
+			indent ++ "// " ++ line.stripWhiteSpace;
+		} {
+			line;  // Preserve blank lines as-is
+		};
+	};
+};
+
+// Process sequence section: parse and update symbols while preserving patterns
+~processSequenceSection = { |lines, instanceType, instanceIdx|
+	var blocks, output, runtimeInstance, runtimeSequences, processedParams, newParams;
+	var openParenLine, closeParenLine, contentLines, processedLineIndices;
+
+	// Get runtime sequences dictionary
+	runtimeInstance = if(instanceType == \plaits) {
+		~plaits.synths[instanceIdx]
+	} { ~plaits.samples[instanceIdx] };
+
+	if (runtimeInstance.isNil) {
+		("WARNING: Instance " ++ instanceType ++ "[" ++ instanceIdx ++ "] not found in runtime").warn;
+		^lines;  // Return lines unchanged
+	};
+
+	runtimeSequences = runtimeInstance.sequences;
+
+	// Find opening and closing parens
+	openParenLine = lines.detect({ |line| line.stripWhiteSpace == "(" });
+	closeParenLine = lines.detect({ |line| line.stripWhiteSpace == ")" });
+
+	// Extract content lines (between parens)
+	contentLines = lines.select({ |line|
+		(line.stripWhiteSpace != "(") && (line.stripWhiteSpace != ")")
+	});
+
+	// Parse the content
+	blocks = ~parseSequenceSection.(contentLines);
+	output = [];
+	processedParams = Set.new;
+	processedLineIndices = Set.new;  // Track which lines we've processed
+
+	// Process lines in order, preserving structure
+	contentLines.do { |line, idx|
+		var blockInfo, paramName, runtimeValue, blockLines, commentedLines;
+		var foundParam;
+
+		// Check if this line starts a parameter block
+		foundParam = nil;
+		blocks.keysValuesDo { |key, info|
+			if (info.startLine == idx) {
+				foundParam = (key: key, info: info);
+			};
+		};
+
+		if (foundParam.notNil) {
+			// This line starts a parameter block
+			paramName = foundParam.key;
+			blockInfo = foundParam.info;
+			runtimeValue = runtimeSequences[paramName];
+
+			processedParams.add(paramName);
+
+			// Mark these line indices as processed
+			(blockInfo.startLine..blockInfo.endLine).do { |i| processedLineIndices.add(i) };
+
+			// Extract original block lines
+			blockLines = contentLines[blockInfo.startLine..blockInfo.endLine];
+
+			// Decision logic based on template type and runtime type
+			if (blockInfo.isSymbol) {
+				// Template has symbol
+				if (runtimeValue.isKindOf(Symbol)) {
+					// Case: symbol → symbol (update symbol)
+					("  Updating symbol: " ++ paramName ++ " → \\" ++ runtimeValue).postln;
+					output = output.add(blockInfo.indent ++ paramName ++ ": \\" ++ runtimeValue ++ ",");
+				} {
+					// Case: symbol → stream (preserve template symbol, runtime has custom pattern)
+					("  Preserving symbol: " ++ paramName ++ " (runtime has custom pattern)").postln;
+					output = output.addAll(blockLines);
+				};
+			} {
+				// Template has pattern
+				if (runtimeValue.isKindOf(Symbol)) {
+					// Case: pattern → symbol (replace with symbol, comment out pattern)
+					("  Replacing pattern with symbol: " ++ paramName ++ " → \\" ++ runtimeValue).postln;
+					output = output.add(blockInfo.indent ++ paramName ++ ": \\" ++ runtimeValue ++ ",");
+					output = output.add("");  // Blank line for readability
+					commentedLines = ~commentLines.(blockLines, blockInfo.indent);
+					output = output.addAll(commentedLines);
+				} {
+					// Case: pattern → stream (preserve template pattern)
+					("  Preserving pattern: " ++ paramName ++ " (runtime has custom pattern)").postln;
+					output = output.addAll(blockLines);
+				};
+			};
+		} {
+			// Not a parameter block start - check if it's an unprocessed line
+			if (processedLineIndices.includes(idx).not) {
+				// Standalone comment, blank line, etc - preserve it
+				output = output.add(line);
+			};
+		};
+	};
+
+	// Add any new symbols from runtime that aren't in template
+	runtimeSequences.keysValuesDo { |paramName, value|
+		if (processedParams.includes(paramName).not && value.isKindOf(Symbol)) {
+			("  Adding new symbol: " ++ paramName ++ " → \\" ++ value).postln;
+			output = output.add("\t\t\t" ++ paramName ++ ": \\" ++ value ++ ",");
+		};
+	};
+
+	// Wrap output with opening/closing parens
+	if (openParenLine.notNil) {
+		output = [openParenLine] ++ output;
+	};
+	if (closeParenLine.notNil) {
+		output = output ++ [closeParenLine];
+	};
+
+	output;
+};
 
 ~replaceScalarValues = { |content|
-	var lines, plaitsIndex, sampleIndex, inScalarsSection, inSampleScalarsSection, inFXSection, result, match, currentPlaits, currentSample, currentFX, paramLines, currentValue, formattedValue, categoryLines;
+	var lines, plaitsIndex, sampleIndex, inScalarsSection, inSampleScalarsSection, inSequencesSection, inSampleSequencesSection, inFXSection, result, match, currentPlaits, currentSample, currentFX, paramLines, currentValue, formattedValue, categoryLines;
+	var sequenceSectionLines, sampleSequenceSectionLines;  // For accumulating lines in sequence sections
 
 	lines = content.split($\n);
 	plaitsIndex = -1;
 	sampleIndex = -1;
 	inScalarsSection = false;
 	inSampleScalarsSection = false;
+	inSequencesSection = false;
+	inSampleSequencesSection = false;
 	inFXSection = false;
 	result = [];
+	sequenceSectionLines = [];
+	sampleSequenceSectionLines = [];
 
 	lines.do { |line|
 		// Track plaits instance markers
@@ -309,6 +573,21 @@
 			};
 		};
 
+		// Handle sequence sections - parse and update symbols while preserving patterns
+		if (line.contains("$PRESET_SEQUENCES_START")) {
+			inSequencesSection = true;
+			sequenceSectionLines = [];  // Start accumulating lines
+			result = result.add(line);
+			("Entering sequences section for synth " ++ plaitsIndex ++ " - will parse and process").postln;
+		};
+
+		if (line.contains("$PRESET_SAMPLE_SEQUENCES_START")) {
+			inSampleSequencesSection = true;
+			sampleSequenceSectionLines = [];  // Start accumulating lines
+			result = result.add(line);
+			("Entering sample sequences section for sample " ++ sampleIndex ++ " - will parse and process").postln;
+		};
+
 		if (line.contains("$PRESET_FX_END")) {
 			inFXSection = false;
 			result = result.add(line);
@@ -327,11 +606,53 @@
 			("Exiting sample scalars section").postln;
 		};
 
-		if (inScalarsSection.not && inSampleScalarsSection.not && inFXSection.not &&
+		if (line.contains("$PRESET_SEQUENCES_END")) {
+			// Process accumulated sequence section lines
+			if (sequenceSectionLines.size > 0) {
+				var processedLines = ~processSequenceSection.(sequenceSectionLines, \plaits, plaitsIndex);
+				result = result.addAll(processedLines);
+			};
+			inSequencesSection = false;
+			result = result.add(line);
+			("Exiting sequences section").postln;
+		};
+
+		if (line.contains("$PRESET_SAMPLE_SEQUENCES_END")) {
+			// Process accumulated sample sequence section lines
+			if (sampleSequenceSectionLines.size > 0) {
+				var processedLines = ~processSequenceSection.(sampleSequenceSectionLines, \samples, sampleIndex);
+				result = result.addAll(processedLines);
+			};
+			inSampleSequencesSection = false;
+			result = result.add(line);
+			("Exiting sample sequences section").postln;
+		};
+
+		// Accumulate sequence section lines (excluding markers)
+		if (inSequencesSection) {
+			if (line.contains("$PRESET_SEQUENCES_START").not &&
+			   line.contains("$PRESET_SEQUENCES_END").not) {
+				sequenceSectionLines = sequenceSectionLines.add(line);
+			};
+		};
+
+		if (inSampleSequencesSection) {
+			if (line.contains("$PRESET_SAMPLE_SEQUENCES_START").not &&
+			   line.contains("$PRESET_SAMPLE_SEQUENCES_END").not) {
+				sampleSequenceSectionLines = sampleSequenceSectionLines.add(line);
+			};
+		};
+
+		// Pass through lines outside all sections
+		if (inScalarsSection.not && inSampleScalarsSection.not && inSequencesSection.not && inSampleSequencesSection.not && inFXSection.not &&
 		   line.contains("$PRESET_SCALARS_START").not &&
 		   line.contains("$PRESET_SCALARS_END").not &&
 		   line.contains("$PRESET_SAMPLE_SCALARS_START").not &&
 		   line.contains("$PRESET_SAMPLE_SCALARS_END").not &&
+		   line.contains("$PRESET_SEQUENCES_START").not &&
+		   line.contains("$PRESET_SEQUENCES_END").not &&
+		   line.contains("$PRESET_SAMPLE_SEQUENCES_START").not &&
+		   line.contains("$PRESET_SAMPLE_SEQUENCES_END").not &&
 		   line.contains("$PRESET_FX_START").not &&
 		   line.contains("$PRESET_FX_END").not) {
 			// Outside sections, keep all lines as-is
@@ -476,6 +797,27 @@
 		~loadPreset.(randomFile);
 	} {
 		("No preset files found in: " ++ presetDir).postln;
+	};
+};
+
+// Select a predefined sequence from the library for a specific parameter
+~selectSequence = { |instanceType, instanceIdx, paramKey, seqName|
+	var instance, ui, path;
+
+	instance = if(instanceType == \plaits) {
+		~plaits.synths[instanceIdx]
+	} { ~plaits.samples[instanceIdx] };
+
+	if(~sequenceLibrary[seqName].notNil) {
+		instance.sequences[paramKey] = seqName;
+
+		ui = ~ui.();
+		path = "/" ++ instanceType ++ "/" ++ (instanceIdx + 1) ++ "/" ++ paramKey ++ "/seq";
+		ui.sendMsg(path, seqName.asString);
+
+		("Selected " ++ instanceType ++ "[" ++ instanceIdx ++ "]." ++ paramKey ++ " → " ++ seqName).postln;
+	} {
+		("Sequence '" ++ seqName ++ "' not found in library").warn;
 	};
 };
 

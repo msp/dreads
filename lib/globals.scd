@@ -141,6 +141,24 @@
 	metadata: Dictionary.new    // bankName (Symbol) -> Array of metadata dicts
 );
 
+// Predefined sequence patterns library (flat structure)
+~sequenceLibrary = (
+	random: Pwhite(0.0, 1.0, inf),
+	gauss: Pwhite(0.3, 0.7, inf),
+	sparse: Pseq([0.1, 0.5, 0.9], inf),
+	dense: Pseq([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], inf),
+	euclid: Pseq([1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0].normalize(0, 1), inf),
+	cycle5: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf),
+	ramp: Pseq([0.1, 0.2, 0.4, 1.0], inf),
+	sweep: Pseries(0.0, 0.1, inf).fold(0, 1),
+	hold: Pseq([0.5], inf),
+);
+
+// Sequence stream cache for lazy resolution
+// Stores runtime state: (symbol: \sparse, stream: <stream>)
+// Cache key format: "plaits_0_duration" or "samples_1_rate"
+~sequenceStreamCache = Dictionary.new;
+
 // Default scalar values for sample instances
 ~defaultSampleScalars = (
 	atk: 0.5,               // Normalized 0-1 (scaled to duration/2 in sequencer)

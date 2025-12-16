@@ -91,6 +91,40 @@
 	framePosition;
 };
 
+// Resolve sequence value with lazy loading and caching
+// If value is a Symbol, look it up in ~sequenceLibrary and cache the stream
+// If value is already a stream, use it directly
+~getSequenceValue = { |instance, instanceIdx, instanceType, paramKey|
+	var value = instance.sequences[paramKey];
+	var cacheKey, cached, stream, pattern;
+
+	if(value.isKindOf(Symbol)) {
+		// Build cache key: "plaits_0_duration" or "samples_1_rate"
+		cacheKey = (instanceType.asString ++ "_" ++ instanceIdx.asString ++ "_" ++ paramKey.asString).asSymbol;
+		cached = ~sequenceStreamCache[cacheKey];
+
+		// Check if we have a cached stream and the symbol hasn't changed
+		// Use .and {} for short-circuit evaluation (&& doesn't short-circuit in SC!)
+		if(cached.notNil.and { cached.symbol == value }) {
+			stream = cached.stream;
+		} {
+			// Symbol changed or first time - resolve from library
+			pattern = ~sequenceLibrary[value];
+			if(pattern.notNil) {
+				stream = pattern.asStream;
+				~sequenceStreamCache[cacheKey] = (symbol: value, stream: stream);
+			} {
+				("WARNING: Sequence '" ++ value ++ "' not found in library").warn;
+				^0.5;  // Return neutral value
+			};
+		};
+		stream.next;
+	} {
+		// Direct stream - just call .next
+		value.next;
+	};
+};
+
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|
 	// plaits insert reverbs

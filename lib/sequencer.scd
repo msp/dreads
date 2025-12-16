@@ -99,8 +99,8 @@ x = Pdef(\plaitsSequence,
 					// ~plaits.synths[i].dur;
 
 					var baseDur = ~setDuration.(
-						~plaits.synths[i].sequences.duration.next,
-						~plaits.synths[i].sequences.div.next
+						~getSequenceValue.(~plaits.synths[i], i, \plaits, \duration),
+						~getSequenceValue.(~plaits.synths[i], i, \plaits, \div)
 					);
 					var speed = ~plaits.synths[i].speed.clip(0.01, 100);
 					~plaits.synths[i].dur = baseDur / speed;
@@ -109,20 +109,20 @@ x = Pdef(\plaitsSequence,
 				\decay, Pfunc { |event|
 					// ~modulateBipolar.(~plaits.synths[i].sequences.decay.next, ~plaits.synths[i].decay)
 					~modulateLayered.(
-						~plaits.synths[i].sequences.decay.next,
+						~getSequenceValue.(~plaits.synths[i], i, \plaits, \decay),
 						~decayLFO.next,
 						~plaits.synths[i].decay,
 						0.3 // LFO Amount
 					);
 				},
 				\harm, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.harm.next, ~plaits.synths[i].harm);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \harm), ~plaits.synths[i].harm);
 				},
 				\timbre, Pfunc { |event|
 					// ~modulateBipolar.(~plaits.synths[i].sequences.timbre.next, ~plaits.synths[i].timbre)
 					// ~modulateBipolar.(~timbreLFO.next, ~plaits.synths[i].timbre)
 					~modulateLayered.(
-						~plaits.synths[i].sequences.timbre.next,
+						~getSequenceValue.(~plaits.synths[i], i, \plaits, \timbre),
 						~timbreLFO.next,
 						~plaits.synths[i].timbre,
 						~plaits.synths[i].timbMod
@@ -131,28 +131,28 @@ x = Pdef(\plaitsSequence,
 				\morph, Pfunc { |event|
 					// ~modulateBipolar.(~plaits.synths[i].sequences.morph.next, ~plaits.synths[i].morph)
 					~modulateLayered.(
-						~plaits.synths[i].sequences.morph.next,
+						~getSequenceValue.(~plaits.synths[i], i, \plaits, \morph),
 						~morphLFO.next,
 						~plaits.synths[i].morph,
 						~plaits.synths[i].morphMod
 					);
 				},
 				\fmMod, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.fmMod.next, ~plaits.synths[i].fmMod);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \fmMod), ~plaits.synths[i].fmMod);
 				},
 				\lpgColour, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.lpgColour.next, ~plaits.synths[i].lpgColour);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \lpgColour), ~plaits.synths[i].lpgColour);
 				},
 				\legato, Pfunc { |event| ~plaits.synths[i].legato },
 				\engine, Pfunc { |event|
-					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
+					~setEngine.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \engine), ~plaits.synths[i].engine);
 				},
-				\mul, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.mul.next, ~plaits.synths[i].mul); },
+				\mul, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \mul), ~plaits.synths[i].mul); },
 				\revDrywet, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.revDrywet.next, ~plaits.synths[i].revDrywet);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \revDrywet), ~plaits.synths[i].revDrywet);
 				},
 				\revTime, Pfunc { |event|
-					var out = ~modulateBipolar.(~plaits.synths[i].sequences.revTime.next, ~plaits.synths[i].revTime);
+					var out = ~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \revTime), ~plaits.synths[i].revTime);
 					// ["revTime", out].postln;
 
 					out
@@ -161,22 +161,22 @@ x = Pdef(\plaitsSequence,
 				\revHp, Pfunc { |event| ~plaits.synths[i].revHp },
 				\revFreeze, Pfunc { |event| ~plaits.synths[i].revFreeze },
 				\delaySend, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.delaySend.next, ~plaits.synths[i].delaySend);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \delaySend), ~plaits.synths[i].delaySend);
 				},
 				\reverbSend, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.reverbSend.next, ~plaits.synths[i].reverbSend);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \reverbSend), ~plaits.synths[i].reverbSend);
 				},
 				\cloudsSend, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.cloudsSend.next, ~plaits.synths[i].cloudsSend);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \cloudsSend), ~plaits.synths[i].cloudsSend);
 				},
 				\distDrive, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.distDrive.next, ~plaits.synths[i].distDrive);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \distDrive), ~plaits.synths[i].distDrive);
 				},
 				\distAmount, Pfunc { |event|
-					~modulateBipolar.(~plaits.synths[i].sequences.distAmount.next, ~plaits.synths[i].distAmount);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \distAmount), ~plaits.synths[i].distAmount);
 				},
 				\stereoMode, Pfunc { |event| ~plaits.synths[i].stereoMode },
-				\volume, Pfunc { |event| ~modulateBipolar.(~plaits.synths[i].sequences.volume.next, ~plaits.synths[i].volume); },
+				\volume, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \volume), ~plaits.synths[i].volume); },
 				// \out, Pseq(~outputBuses, inf),
 				\out, Pseq([0], inf),
 			))
@@ -189,7 +189,7 @@ x = Pdef(\plaitsSequence,
 				\group, ~voiceGroup,
 				// Calculate variant once per event (evaluated first, then reused)
 				\sampleVariant, Pfunc {
-					var variantSeq = ~plaits.samples[i].sequences.variant.next;
+					var variantSeq = ~getSequenceValue.(~plaits.samples[i], i, \samples, \variant);
 					var variantBase = ~plaits.samples[i].variant;
 					~add.(variantSeq, variantBase);
 				},
@@ -219,8 +219,8 @@ x = Pdef(\plaitsSequence,
 					if (buffer.notNil) { buffer.numChannels } { 1 };
 				},
 				\dur, Pfunc {
-					var durSeq = ~plaits.samples[i].sequences.duration.next;
-					var divSeq = ~plaits.samples[i].sequences.div.next;
+					var durSeq = ~getSequenceValue.(~plaits.samples[i], i, \samples, \duration);
+					var divSeq = ~getSequenceValue.(~plaits.samples[i], i, \samples, \div);
 					var baseDur = ~setDuration.(durSeq, divSeq);
 					var speed = ~plaits.samples[i].speed.clip(0.01, 100);
 					~plaits.samples[i].dur = baseDur / speed;
@@ -229,12 +229,12 @@ x = Pdef(\plaitsSequence,
 				\legato, Pfunc { |event| ~plaits.samples[i].legato },				
 				\mul, Pfunc {
 				var baseMul = ~plaits.samples[i].mul;
-				var result = ~modulateBipolar.(~plaits.samples[i].sequences.mul.next, baseMul);
+				var result = ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \mul), baseMul);
 					// if (i == 0) { ["Sample", i, "mul:", baseMul, "->", result].postln; };
 				result;
 			},
 				\rate, Pfunc {
-					var rateSeq = ~plaits.samples[i].sequences.rate.next;
+					var rateSeq = ~getSequenceValue.(~plaits.samples[i], i, \samples, \rate);
 					var baseRate = ~plaits.samples[i].rate;
 					var result = ~multiply.(rateSeq, baseRate);
 					// if (i == 0) { ["Sample", i, "rateSeq:", rateSeq, "baseRate:", baseRate, "->", result].postln; };
@@ -246,7 +246,7 @@ x = Pdef(\plaitsSequence,
 					var duration = event[\sampleDuration];
 					// UI and sequence are normalized 0-1, scale to sample duration
 					var normalized = ~modulateBipolar.(
-						~plaits.samples[i].sequences.startPos.next,
+						~getSequenceValue.(~plaits.samples[i], i, \samples, \startPos),
 						~plaits.samples[i].startPos
 					);
 					var seconds = normalized * duration;  // Scale to actual sample length
@@ -258,7 +258,7 @@ x = Pdef(\plaitsSequence,
 					var duration = event[\sampleDuration];
 					// Normalized 0-1, scale to duration/2 (attack shouldn't exceed half the sample)
 					var normalized = ~modulateBipolar.(
-						~plaits.samples[i].sequences.atk.next,
+						~getSequenceValue.(~plaits.samples[i], i, \samples, \atk),
 						~plaits.samples[i].atk
 					);
 					normalized * (duration / 2);
@@ -267,7 +267,7 @@ x = Pdef(\plaitsSequence,
 					var duration = event[\sampleDuration];
 					// Normalized 0-1, scale to duration*2 (allow longer decay than sample)
 					var normalized = ~modulateBipolar.(
-						~plaits.samples[i].sequences.decay.next,
+						~getSequenceValue.(~plaits.samples[i], i, \samples, \decay),
 						~plaits.samples[i].decay
 					);
 					normalized * (duration * 2);
@@ -276,7 +276,7 @@ x = Pdef(\plaitsSequence,
 					var duration = event[\sampleDuration];
 					// Normalized 0-1, scale to duration*2
 					var normalized = ~modulateBipolar.(
-						~plaits.samples[i].sequences.panDur.next,
+						~getSequenceValue.(~plaits.samples[i], i, \samples, \panDur),
 						~plaits.samples[i].panDur
 					);
 					// if (i == 0) { ["Sample panDur - norm:", normalized, "duration:", duration, "->", normalized * (duration * 2), "seconds"].postln; };
@@ -287,16 +287,16 @@ x = Pdef(\plaitsSequence,
 					// if (i == 0) { ["Sample", i, "volume:", vol].postln; };
 				vol;
 			},
-				\cloudsSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.cloudsSend.next, ~plaits.samples[i].cloudsSend) },
-				\delaySend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.delaySend.next, ~plaits.samples[i].delaySend) },
-				\reverbSend, Pfunc { ~modulateBipolar.(~plaits.samples[i].sequences.reverbSend.next, ~plaits.samples[i].reverbSend) },
+				\cloudsSend, Pfunc { ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \cloudsSend), ~plaits.samples[i].cloudsSend) },
+				\delaySend, Pfunc { ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \delaySend), ~plaits.samples[i].delaySend) },
+				\reverbSend, Pfunc { ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \reverbSend), ~plaits.samples[i].reverbSend) },
 				\distDrive, Pfunc { |event| ~plaits.samples[i].distDrive },
 				\distAmount, Pfunc { |event| ~plaits.samples[i].distAmount },
 				\revDrywet, Pfunc { |event|
-					~modulateBipolar.(~plaits.samples[i].sequences.revDrywet.next, ~plaits.samples[i].revDrywet);
+					~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \revDrywet), ~plaits.samples[i].revDrywet);
 				},
 				\revTime, Pfunc { |event|
-					~modulateBipolar.(~plaits.samples[i].sequences.revTime.next, ~plaits.samples[i].revTime);
+					~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \revTime), ~plaits.samples[i].revTime);
 				},
 				\revDamp, Pfunc { |event| ~plaits.samples[i].revDamp },
 				\revHp, Pfunc { |event| ~plaits.samples[i].revHp },

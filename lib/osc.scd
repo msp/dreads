@@ -51,6 +51,21 @@ OSCdef.new(
 				"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString
 			);
 		};
+
+		// Sequence selection OSC handlers for all sequenceable parameters
+		~defaultSequences.keys.do { |paramKey|
+
+			OSCdef.new(
+				("plaits" ++ instanceNum ++ paramKey ++ "Seq").asSymbol,
+				{
+					arg msg, time, addr, port;
+					var seqName = msg[1].asSymbol;
+					msg.postln;
+					~selectSequence.(\plaits, instanceIndex, paramKey, seqName);
+				},
+				"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString ++ "/seq"
+			);
+		};
 	};
 };
 
@@ -72,6 +87,21 @@ OSCdef.new(
 					~plaits.samples[instanceIndex][paramKey] = value;
 				},
 				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString
+			);
+		};
+
+		// Sequence selection OSC handlers for all sequenceable parameters
+		~defaultSampleSequences.keys.do { |paramKey|
+
+			OSCdef.new(
+				("sample" ++ instanceNum ++ paramKey ++ "Seq").asSymbol,
+				{
+					arg msg, time, addr, port;
+					var seqName = msg[1].asSymbol;
+					msg.postln;
+					~selectSequence.(\samples, instanceIndex, paramKey, seqName);
+				},
+				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString ++ "/seq"
 			);
 		};
 
@@ -315,6 +345,30 @@ OSCdef.new(
 			var path = "/fx/" ++ category ++ "/" ++ param;
 			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
+		};
+	};
+
+	// Send sequence symbols to UI switches for plaits instances
+	plaitsArray.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		instance.sequences.keysValuesDo { |paramKey, value|
+			if(value.isKindOf(Symbol)) {
+				var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
+				// ["\nSending sequence symbol:", path, value].postln;
+				ui.sendMsg(path, value.asString);
+			};
+		};
+	};
+
+	// Send sequence symbols to UI switches for sample instances
+	~plaits.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		instance.sequences.keysValuesDo { |paramKey, value|
+			if(value.isKindOf(Symbol)) {
+				var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
+				// ["\nSending sequence symbol:", path, value].postln;
+				ui.sendMsg(path, value.asString);
+			};
 		};
 	};
 
