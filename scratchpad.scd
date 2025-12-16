@@ -15,6 +15,10 @@ ExampleFiles.sinedPink
 
 ~sampleLibrary.metadata
 
+~plaits.synths[0].sequences.decay = \gauss;
+
+~plaits.synths[0].sequences.decay.postln;
+
 
 (
 var a, b;
@@ -25,9 +29,10 @@ b = a.asStream;
 
 (
 var a, b;
-a = Pseries(0.01, 0.1, 6);    // return 6 items
+// a = Pseries(0.01, 0.1, 6);    // return 6 items
+a = Pseries(0.0, 0.1, inf).fold(0, 1);
 b = a.asStream;
-7.do({ b.next.postln });
+30.do({ |i| [i, b.next].postln });
 )
 
 (
