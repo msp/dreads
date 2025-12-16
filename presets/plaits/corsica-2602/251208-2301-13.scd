@@ -39,6 +39,7 @@
 			volume: 1.43
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				// div: Pseq(1 ! 63 ++ (1), inf).asStream,
 				div: Pseq(1/4 ! 64, inf).asStream,
@@ -79,6 +80,7 @@
 					Pseq([0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0], 1)
 				], inf).asStream,
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS2
@@ -115,12 +117,14 @@
 			volume: 1.15
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				duration: Pseq([Rest(2), 2], inf).asStream,
 				// duration: Pseq([1/2] * 2, inf).asStream,
 				engine: Pseq(["e", "e", "e", "e", "e"], inf).asStream
 				// engine: Pseq([0], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS3
@@ -157,6 +161,7 @@
 			volume: 0.09
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				div: Pseq(1/4 ! 63 ++ (0.5), inf).asStream,
 				duration: Pseq([
@@ -171,6 +176,7 @@
 				], inf).asStream,
 				engine: Pseq(["e", "e", "e", "e", "e", "e-1"], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		)
 	],
 	// Samples array
@@ -204,6 +210,7 @@
 			volume: 1.14
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				// div: Pseq(1 ! 31 ++ (0.5), inf).asStream,
 				rate: Pseq([0.8, 1.1], inf).asStream,
@@ -218,6 +225,7 @@
 					Pwrand([0.25, Rest(0.25)], [0.2, 0.8].normalizeSum),
 				], inf).asStream,
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE2
@@ -249,6 +257,7 @@
 			volume: 0.56
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				div: Pseq([1/8], inf).asStream,
 				// duration: Pseq([8, Rest(8)]/2, inf).asStream,
@@ -263,6 +272,7 @@
 					// 0.25,
 				], inf).asStream,
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE3
@@ -294,11 +304,13 @@
 			volume: 0.43
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				div: Pseq([1], inf).asStream,
 				// duration: Pseq([1/2, 1]/2, inf).asStream,
 				rate: Pseq([0.1, 2, 1/3], inf).asStream,
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		)
 	],
 	// Global FX settings

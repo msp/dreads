@@ -37,6 +37,7 @@
 			volume: 0.0
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				div: Pseq([3], inf).asStream,
 				duration: Pseq([
@@ -53,6 +54,7 @@
 				engine: Pseq(["e", "e", "e", "e", "e", "e"], inf).asStream,
 				lpgColour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS2
@@ -87,6 +89,7 @@
 			volume: 0.0
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				decay: Pseq([0.1, 0.2, 0.1, 0.05, 0.9] ++ (0.0 ! 12), inf).asStream,
 				delaySend: Pseq([0.0, 0.0, 0.1, 0.0, 0.7] ++ (0.0 ! 12), inf).asStream,
@@ -94,6 +97,7 @@
 				duration: Pseq([0.33, Rest(0.33), 0.33, Rest(0.33), 0.33, Rest(0.33), Rest(0.33), Rest(0.33)] ++ (Rest(1) ! 4) ++ [Rest(0.33), 0.33, Rest(0.33), Rest(0.33)], inf).asStream,
 				engine: Pseq(["e", "e", "e+6", "e", "e+2", "e"], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS3
@@ -128,11 +132,13 @@
 			volume: 1.36
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				div: Pseq([3], inf).asStream,
 				duration: Pseq([0.33, Rest(0.33), 0.33, Rest(0.33), 0.33, Rest(0.33), Rest(0.33), Rest(0.33)] ++ (Rest(1) ! 8), inf).asStream,
 				engine: Pseq(["e", "e", "e", "e", "e", "e"], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		)
 	],
 	// Samples array
@@ -143,8 +149,10 @@
 			(
 			),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE2
@@ -153,8 +161,10 @@
 			(
 			),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE3
@@ -163,8 +173,10 @@
 			(
 			),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		)
 	],
 	// Global FX settings

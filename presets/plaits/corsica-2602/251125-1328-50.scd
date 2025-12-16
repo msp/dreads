@@ -38,6 +38,7 @@
 			volume: 0.7
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				div: Pseq(1/8 ! 63 ++ (1.0), inf).asStream,
 				// div: Pseq(1/8 ! 64, inf).asStream,
@@ -79,6 +80,7 @@
 					Pseq([0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0], 1)
 				], inf).asStream,
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS2
@@ -114,6 +116,7 @@
 			volume: 0.0
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				// div: Pseq(1/! 127 ++ (1/4), inf).asStream,
 				div: Pseq(1! 127, inf).asStream,
@@ -126,6 +129,7 @@
 				], inf).asStream,
 				engine: Pseq(["e", "e", "e", "e", "e", 0], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS3
@@ -161,6 +165,7 @@
 			volume: 0.25
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				div: Pseq(1/4 ! 63 ++ (0.5), inf).asStream,
 				duration: Pseq([
@@ -175,6 +180,7 @@
 				], inf).asStream,
 				engine: Pseq(["e", "e", "e", "e", "e", "e-1"], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		)
 	],
 	// Samples array
@@ -206,6 +212,7 @@
 			volume: 0.98
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				// div: Pseq([2, Rest(6)], inf).asStream,
 				div: Pseq([1], inf).asStream,
@@ -222,6 +229,7 @@
 					0.25,
 				], inf).asStream,*/
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE2
@@ -251,8 +259,10 @@
 			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE3
@@ -282,11 +292,13 @@
 			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				div: Pseq([1], inf).asStream,
 				duration: Pseq([1/2, 1]/2, inf).asStream,
 				rate: Pseq([0.1, 2, 1/3], inf).asStream,
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		)
 	],
 	// Global FX settings

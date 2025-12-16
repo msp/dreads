@@ -39,6 +39,7 @@
 			volume: 0.07
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				div: Pseq(1/8 ! 63 ++ (1.0), inf).asStream,
 				// div: Pseq(1/8 ! 64, inf).asStream,
@@ -82,6 +83,7 @@
 					Pseq([0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0], 1)
 				], inf).asStream,
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS2
@@ -118,10 +120,12 @@
 			volume: 0.63
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				duration: Pseq([Rest(1), 2], inf).asStream,
 				// duration: \sparse,
 			)
+			// $PRESET_SEQUENCES_END
 		),
 
 		// $PLAITS3
@@ -158,6 +162,7 @@
 			volume: 1.63
 		),
 			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
 			(
 				// div: Pseq(1/4 ! 63 ++ (0.5), inf).asStream,
 				duration: Pseq([
@@ -172,6 +177,7 @@
 				], inf).asStream,
 				engine: Pseq(["e", "e", "e", "e", "e"], inf).asStream
 			)
+			// $PRESET_SEQUENCES_END
 		)
 	],
 	// Samples array
@@ -205,6 +211,7 @@
 			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				// div: Pseq([2, Rest(6)], inf).asStream,
 				div: Pseq(1 ! 31 ++ (0.5), inf).asStream,
@@ -222,6 +229,7 @@
 					0.25,
 				], inf).asStream,*/
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE2
@@ -253,6 +261,7 @@
 			volume: 0.02
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				// rate: Pgeom(1.0, 1.01, inf).asStream,
 				rate: Pseq([
@@ -266,6 +275,7 @@
 					Rest(1/4),
 				], inf).asStream,
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE3
@@ -297,11 +307,13 @@
 			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				div: Pseq([2], inf).asStream,
 				// duration: Pseq([1/2, 1]/2, inf).asStream,
 				rate: Pseq([0.1, 2, 1/3], inf).asStream,
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		)
 	],
 	// Global FX settings

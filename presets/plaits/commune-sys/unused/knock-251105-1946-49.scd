@@ -38,6 +38,7 @@
 			volume: 0.73
 		),
 		// $PRESET_SCALARS_END
+		// $PRESET_SEQUENCES_START
 		(
 			timbre: Pgauss(0.0, 1.0, inf).asStream,
 			decay: Pgauss(0.0, 0.01, inf).asStream,
@@ -50,6 +51,7 @@
 			reverbSend: Pgauss(0.0, 0.2, inf).asStream,
 			// revTime: Pwhite(1.0, 1.2, inf).asStream,
 		)
+		// $PRESET_SEQUENCES_END
 	),
 
 	// $PLAITS2
@@ -85,10 +87,12 @@
 			volume: 0.0
 		),
 		// $PRESET_SCALARS_END
+		// $PRESET_SEQUENCES_START
 		(
 			duration: Pgauss(1.0, 10.0, inf).asStream,
 			div: Pseq([0.5], inf).asStream
 		)
+		// $PRESET_SEQUENCES_END
 	),
 
 	// $PLAITS3
@@ -124,11 +128,13 @@
 			volume: 0.16
 		),
 		// $PRESET_SCALARS_END
+		// $PRESET_SEQUENCES_START
 		(
 			duration: Pwhite(5.0, 10.0, inf).asStream,
 			// div: Pseq([0.5], inf).asStream,
 			revTime: Pwhite(0.4, 1.1, inf).asStream,
 		)
+		// $PRESET_SEQUENCES_END
 	)
 	],
 	// Samples array
@@ -160,10 +166,12 @@
 			volume: 1.34
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 				startPos: Pseq([0.0, 0.1, 0.2, 0.5, 0.8], inf).asStream,
 				revDrywet: Pseq([0.0, 0.2, 0.4, 0.9], inf).asStream
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE2
@@ -193,8 +201,10 @@
 			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		),
 
 		// $SAMPLE3
@@ -224,8 +234,10 @@
 			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
+			// $PRESET_SAMPLE_SEQUENCES_START
 			(
 			)
+			// $PRESET_SAMPLE_SEQUENCES_END
 		)
 	],
 	// Global FX settings

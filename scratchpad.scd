@@ -15,10 +15,16 @@ ExampleFiles.sinedPink
 
 ~sampleLibrary.metadata
 
-~plaits.synths[0].sequences.decay = \gauss;
+//////////////
+// START_TEST_PRESET_MIGRATION
 
-~plaits.synths[0].sequences.decay.postln;
+// Reload and migrate all remaining presets
+(~basePath +/+ "scripts/migrate_presets.scd").load;
 
+~migrateAllPresets.(~basePath, dryRun: false);
+
+// END_TEST_PRESET_MIGRATION
+///////////////
 
 (
 var a, b;
@@ -48,10 +54,10 @@ s.queryAllNodes;
 )
 
 (
-  s.options.numAudioBusChannels.postln;  // Total private buses
-  s.options.numOutputBusChannels.postln;  // Hardware outputs
-  // After server boots:
-  s.audioBusAllocator.blocks.postln;  // Shows allocated ranges
+s.options.numAudioBusChannels.postln;  // Total private buses
+s.options.numOutputBusChannels.postln;  // Hardware outputs
+// After server boots:
+s.audioBusAllocator.blocks.postln;  // Shows allocated ranges
 )
 
 (
@@ -64,18 +70,18 @@ s.queryAllNodes;
 )
 
 (
-  // Check what the delay synth is actually reading from
-  ~delayFX.postln;
-  s.queryAllNodes;
+// Check what the delay synth is actually reading from
+~delayFX.postln;
+s.queryAllNodes;
 
-  // Also verify bus objects
-  ~delayBus.index.postln;  // Should be 100
-  ~reverbBus.index.postln;  // Should be 102
-  ~cloudsBus.index.postln;  // Should be 104
+// Also verify bus objects
+~delayBus.index.postln;  // Should be 100
+~reverbBus.index.postln;  // Should be 102
+~cloudsBus.index.postln;  // Should be 104
 )
 
-  ~delayFX.free;
-  ~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
+~delayFX.free;
+~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
 
 ([0.1, 0.1, 0.1] ++ (3 ! 5)).flatten
 
@@ -436,22 +442,22 @@ q = p.asStream.nextN(20).postln;
 ).play;
 )
 
-  // Wait and listen - 4th beat should randomly rest ~30% of time
+// Wait and listen - 4th beat should randomly rest ~30% of time
 ~test1.stop;
 
 (
-	// Test: Nested Pseq
-	~test3 = Pbind(
-		\instrument, \default,
-		\dur, Pseq([
-			0.25,
-			0.25,
-			0.25,
-			Pseq([0.25, Rest(0.25)], inf)  // Should cycle values
-		], inf),
-		\note, Pseq([0, 2, 4, 7, 9], inf),
-		\amp, 0.3
-	).play;
+// Test: Nested Pseq
+~test3 = Pbind(
+	\instrument, \default,
+	\dur, Pseq([
+		0.25,
+		0.25,
+		0.25,
+		Pseq([0.25, Rest(0.25)], inf)  // Should cycle values
+	], inf),
+	\note, Pseq([0, 2, 4, 7, 9], inf),
+	\amp, 0.3
+).play;
 )
 
 ~test3.stop;
