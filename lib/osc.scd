@@ -283,7 +283,7 @@ OSCdef.new(
 
 // Push current state values to UI
 ~pushStateToUI = {
-	var ui, plaitsArray, fxSettings;
+	var ui, plaitsArray, fxSettings, seqNames;
 
 	ui = ~ui.();
 
@@ -371,6 +371,11 @@ OSCdef.new(
 			};
 		};
 	};
+
+	// Populate sequence modal switch with all available sequences from library
+	seqNames = ~sequenceLibrary.keys.asArray.sort.collect(_.asString);
+	ui.sendMsg('/seqModal/switch', 'values', seqNames);
+	// ["\nPopulated seqModal with sequences:", seqNames].postln;
 
 	"Plaits state pushed to UI!".postln;
 };

@@ -113,25 +113,26 @@
 );
 
 // Default sequence patterns for all plaits instances
+// Now stores symbols that reference ~sequenceLibrary entries
 ~defaultSequences = (
-	cloudsSend: Pseq([0.5], inf).asStream,
-	decay: Pseq([0.5], inf).asStream,
-	delaySend: Pseq([0.5], inf).asStream,
-	div: Pseq([1.0], inf).asStream,
-	distAmount: Pseq([0.5], inf).asStream,
-	distDrive: Pseq([0.5], inf).asStream,
-	duration: Pseq([0.25], inf).asStream,
-	engine: Pseq(["e"], inf).asStream,
-	fmMod: Pseq([0.5], inf).asStream,
-	harm: Pseq([0.5], inf).asStream,
-	lpgColour: Pseq([0.5], inf).asStream,
-	morph: Pseq([0.5], inf).asStream,
-	revDrywet: Pseq([0.5], inf).asStream,
-	revTime: Pseq([0.5], inf).asStream,
-	reverbSend: Pseq([0.5], inf).asStream,
-	timbre: Pseq([0.5], inf).asStream,
-	volume: Pseq([0.5], inf).asStream,
-	mul: Pseq([0.5], inf).asStream
+	cloudsSend: \hold,
+	decay: \hold,
+	delaySend: \hold,
+	div: \hold,
+	distAmount: \hold,
+	distDrive: \hold,
+	duration: \hold,
+	engine: \hold,
+	fmMod: \hold,
+	harm: \hold,
+	lpgColour: \hold,
+	morph: \hold,
+	revDrywet: \hold,
+	revTime: \hold,
+	reverbSend: \hold,
+	timbre: \hold,
+	volume: \hold,
+	mul: \hold
 );
 
 // Sample library storage (SuperDirt-style bank/variant structure)

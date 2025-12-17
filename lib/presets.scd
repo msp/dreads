@@ -387,9 +387,28 @@
 		};
 	};
 
-	// Add any new symbols from runtime that aren't in template
+	// Before adding new symbols, ensure last line has trailing comma
+	if (output.size > 0) {
+		var lastIdx, lastLine;
+		// Find last non-blank line
+		lastIdx = output.size - 1;
+		while { (lastIdx >= 0) && (output[lastIdx].stripWhiteSpace.size == 0) } {
+			lastIdx = lastIdx - 1;
+		};
+
+		if (lastIdx >= 0) {
+			lastLine = output[lastIdx];
+			// Add comma if line doesn't already end with one
+			if (lastLine.stripWhiteSpace.endsWith(",").not) {
+				output[lastIdx] = lastLine ++ ",";
+				("  Added trailing comma to: " ++ lastLine.stripWhiteSpace).postln;
+			};
+		};
+	};
+
+	// Add any new symbols from runtime that aren't in template (skip \hold defaults)
 	runtimeSequences.keysValuesDo { |paramName, value|
-		if (processedParams.includes(paramName).not && value.isKindOf(Symbol)) {
+		if (processedParams.includes(paramName).not && value.isKindOf(Symbol) && (value != \hold)) {
 			("  Adding new symbol: " ++ paramName ++ " → \\" ++ value).postln;
 			output = output.add("\t\t\t" ++ paramName ++ ": \\" ++ value ++ ",");
 		};
