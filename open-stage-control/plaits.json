@@ -14243,7 +14243,7 @@
         "target": "",
         "ignoreDefaults": false,
         "bypass": false,
-        "onCreate": "window.openSeqModal = function(param, instance, stateId) { var seq = get(stateId); console.log('openSeqModal called:', param, instance, stateId, 'seq:', seq); set('seqModal/context', {param: param, instance: instance, stateId: stateId}); window._initializingSeqModal = true; set('seqModal/switch', seq); window._initializingSeqModal = false; console.log('Opening modal'); set('seqModal', 1); };",
+        "onCreate": "window.updateSeqButtonStyle = function(buttonId, seqValue) { setVar(buttonId, 'seqStyle', seqValue !== 'hold' ? 'background-color: rgba(44, 53, 69, 1.00);' : ''); }; window.openSeqModal = function(param, instance, stateId) { var seq = get(stateId); console.log('openSeqModal called:', param, instance, stateId, 'seq:', seq); set('seqModal/context', {param: param, instance: instance, stateId: stateId}); window._initializingSeqModal = true; set('seqModal/switch', seq); window._initializingSeqModal = false; console.log('Opening modal'); set('seqModal', 1); };",
         "onValue": "",
         "onTouch": "",
         "widgets": [
