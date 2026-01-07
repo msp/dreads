@@ -145,7 +145,7 @@ x = Pdef(\plaitsSequence,
 				},
 				\legato, Pfunc { |event| ~plaits.synths[i].legato },
 				\engine, Pfunc { |event|
-					~setEngine.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \engine), ~plaits.synths[i].engine);
+					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
 				},
 				\mul, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \mul), ~plaits.synths[i].mul); },
 				\revDrywet, Pfunc { |event|

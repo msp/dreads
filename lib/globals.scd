@@ -122,7 +122,7 @@
 	distAmount: \hold,
 	distDrive: \hold,
 	duration: \hold,
-	engine: \hold,
+	engine: Pseq(["e"], inf).asStream,
 	fmMod: \hold,
 	harm: \hold,
 	lpgColour: \hold,
