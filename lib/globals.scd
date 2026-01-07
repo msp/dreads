@@ -156,6 +156,13 @@
 	ramp: Pseq([0.1, 0.2, 0.4, 1.0], inf),
 	sweep: Pseries(0.0, 0.1, inf).fold(0, 1),
 	hold: Pseq([0.5], inf),
+	glitch: Pseq(0.2 ! 19 ++ 0.5, inf),
+	wobble: Pseq(0.5 ! 5 ++ 0.3, inf),
+	rhythm1: Pseq([1, 2, 1, 1, 2], inf),
+	rhythm2: Pseq([1, 2, 0.5, 1, 2], inf),
+	steps: Pseq([0.25, 0.5, 0.75, 1.0], inf),
+	bounce: Pseq([1.0, 0.7, 0.4, 0.2, 0.4, 0.7], inf),
+	updown: Pseq([0.1, 0.3, 0.5, 0.7, 0.9, 0.7, 0.5, 0.3], inf),
 );
 
 // Sequence stream cache for lazy resolution
