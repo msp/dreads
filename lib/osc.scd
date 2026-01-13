@@ -281,6 +281,24 @@ OSCdef.new(
 	"/fadeOutReverb"
 );
 
+// Helper function to send sequence state to UI
+~sendSequenceStateToUI = { |instances, instanceType, ui|
+	instances.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		instance.sequences.keysValuesDo { |paramKey, value|
+			var path = "/" ++ instanceType ++ "/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
+			if(value.isKindOf(Symbol)) {
+				// Send the library sequence name
+				ui.sendMsg(path, value.asString);
+			} {
+				// Custom Stream sequence - send "hold" to clear UI indicator
+				// (custom sequences aren't in the library, so UI can't display them)
+				ui.sendMsg(path, "hold");
+			};
+		};
+	};
+};
+
 // Push current state values to UI
 ~pushStateToUI = {
 	var ui, plaitsArray, fxSettings, seqNames;
@@ -348,29 +366,9 @@ OSCdef.new(
 		};
 	};
 
-	// Send sequence symbols to UI switches for plaits instances
-	plaitsArray.do { |instance, instanceIndex|
-		var instanceNum = instanceIndex + 1;
-		instance.sequences.keysValuesDo { |paramKey, value|
-			if(value.isKindOf(Symbol)) {
-				var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
-				// ["\nSending sequence symbol:", path, value].postln;
-				ui.sendMsg(path, value.asString);
-			};
-		};
-	};
-
-	// Send sequence symbols to UI switches for sample instances
-	~plaits.samples.do { |instance, instanceIndex|
-		var instanceNum = instanceIndex + 1;
-		instance.sequences.keysValuesDo { |paramKey, value|
-			if(value.isKindOf(Symbol)) {
-				var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
-				// ["\nSending sequence symbol:", path, value].postln;
-				ui.sendMsg(path, value.asString);
-			};
-		};
-	};
+	// Send sequence state to UI for all instances
+	~sendSequenceStateToUI.(plaitsArray, "plaits", ui);
+	~sendSequenceStateToUI.(~plaits.samples, "samples", ui);
 
 	// Populate sequence modal switch with all available sequences from library
 	seqNames = ~sequenceLibrary.keys.asArray.sort.collect(_.asString);
