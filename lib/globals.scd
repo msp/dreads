@@ -203,13 +203,16 @@
 	cloudsSend: Pseq([0.5], inf).asStream,
 	decay: Pseq([0.5], inf).asStream,       // 0-1 normalized (neutral at midpoint)
 	delaySend: Pseq([0.5], inf).asStream,
+	distAmount: Pseq([0.5], inf).asStream,
 	div: Pseq([1.0], inf).asStream,
 	duration: Pseq([1.0], inf).asStream,
 	mul: Pseq([1.0], inf).asStream,
 	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
 	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
 	reverbSend: Pseq([0.5], inf).asStream,
+	revDamp: Pseq([0.5], inf).asStream,
 	revDrywet: Pseq([0.5], inf).asStream,
+	revHp: Pseq([0.5], inf).asStream,
 	revTime: Pseq([0.5], inf).asStream,
 	startPos: Pseq([0.5], inf).asStream,    // 0-1 normalized (neutral at midpoint)
 	variant: Pseq([0], inf).asStream        // Variant index, additive (uses ~add)

@@ -291,15 +291,21 @@ x = Pdef(\plaitsSequence,
 				\delaySend, Pfunc { ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \delaySend), ~plaits.samples[i].delaySend) },
 				\reverbSend, Pfunc { ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \reverbSend), ~plaits.samples[i].reverbSend) },
 				\distDrive, Pfunc { |event| ~plaits.samples[i].distDrive },
-				\distAmount, Pfunc { |event| ~plaits.samples[i].distAmount },
+				\distAmount, Pfunc { |event|
+					~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \distAmount), ~plaits.samples[i].distAmount);
+				},
 				\revDrywet, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \revDrywet), ~plaits.samples[i].revDrywet);
 				},
 				\revTime, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \revTime), ~plaits.samples[i].revTime);
 				},
-				\revDamp, Pfunc { |event| ~plaits.samples[i].revDamp },
-				\revHp, Pfunc { |event| ~plaits.samples[i].revHp },
+				\revDamp, Pfunc { |event|
+					~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \revDamp), ~plaits.samples[i].revDamp);
+				},
+				\revHp, Pfunc { |event|
+					~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \revHp), ~plaits.samples[i].revHp);
+				},
 				\revFreeze, Pfunc { |event| ~plaits.samples[i].revFreeze },
 				// \out, Pseq(~outputBuses, inf),
 				\out, Pseq([0], inf),
