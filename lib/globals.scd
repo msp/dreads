@@ -14,7 +14,7 @@
 
 ~ui = {
 	if (~uiAddr.isNil) {
-		~uiAddr = NetAddr("127.0.0.1", 8080);
+		~uiAddr = NetAddr("127.0.0.1", 9000);
 	};
 	~uiAddr;
 };
