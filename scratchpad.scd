@@ -3,15 +3,22 @@
 
 s.meter
 
+(0..10)
+
+NetAddr.langPort;
+NetAddr.localAddr
 
 Quarks.gui
 
+~tempoClock.tempo = 125/60;
 
 Safety
 
 Platform.resourceDir
 
 ExampleFiles.sinedPink
+
+'foo-bar-baz'.class
 
 ~sampleLibrary.metadata
 
@@ -37,7 +44,7 @@ ExampleFiles.sinedPink
   // Check if sample is even playing
   "Sample dur:".postln;
   ~plaits.samples[0].dur.postln;
-  
+
 )
 
 //////////////
@@ -435,6 +442,7 @@ Pseq([1,2,3,4]).asStream
 Pdrop(3, ~sinePattern.(64, 0.1, 0.2)).asStream
 
 
+(0..19)
 
 (
 p = Pstutter(4, Pdrop(3, ~sinePattern.(64.0, 0.05, 0.5)));

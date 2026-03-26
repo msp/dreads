@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 (
 ~numSpeakers = 2;
+// ~numSpeakers = 6;
 
 // Increase buffer size to reduce late messages
 s.options.blockSize = 128;

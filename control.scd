@@ -3,6 +3,8 @@ x.play(~tempoClock)
 
 x.stop;
 
+~tempoClock.tempo = 175/60;
+
 ~currentPresetTemplate.postln;
 
 ~savePreset.();

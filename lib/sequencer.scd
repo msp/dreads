@@ -104,6 +104,7 @@ x = Pdef(\plaitsSequence,
 					);
 					var speed = ~plaits.synths[i].speed.clip(0.01, 100);
 					~plaits.synths[i].dur = baseDur / speed;
+					// ["plaits", i, "event at", thisThread.beats, "dur =", ~plaits.synths[i].dur].postln;
 					~plaits.synths[i].dur;
 				},
 				\decay, Pfunc { |event|
@@ -224,9 +225,10 @@ x = Pdef(\plaitsSequence,
 					var baseDur = ~setDuration.(durSeq, divSeq);
 					var speed = ~plaits.samples[i].speed.clip(0.01, 100);
 					~plaits.samples[i].dur = baseDur / speed;
+					// ["sample", i, "event at", thisThread.beats, "dur =", ~plaits.samples[i].dur].postln;
 					~plaits.samples[i].dur;
 				},
-				\legato, Pfunc { |event| ~plaits.samples[i].legato },				
+				\legato, Pfunc { |event| ~plaits.samples[i].legato },
 				\mul, Pfunc {
 				var baseMul = ~plaits.samples[i].mul;
 				var result = ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \mul), baseMul);
