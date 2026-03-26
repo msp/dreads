@@ -14,7 +14,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.3,
-			dur: Rest(0.5),
+			dur: Rest(1.0),
 			engine: 6.0,
 			fmMod: -0.46,
 			harm: 0.34,
@@ -88,7 +88,7 @@
 			delaySend: 0.18,
 			distAmount: 0.1,
 			distDrive: 0.1,
-			dur: 1.0,
+			dur: Rest(2.0),
 			engine: 2.0,
 			fmMod: 0.0,
 			harm: 0.82,
@@ -110,7 +110,7 @@
 			tempo: 165.0,
 			timbMod: 0.16,
 			timbre: 0.28,
-			volume: 0.64
+			volume: 0.92
 		),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
@@ -145,7 +145,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.1,
-			dur: Rest(0.5),
+			dur: 1.0,
 			engine: 13.0,
 			fmMod: -0.31,
 			harm: 0.69,
@@ -172,7 +172,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
-				// div: Pseq(1/2 ! 63 ++ (1), inf).asStream,
+				// div: Pseq(1/2 ! 7 ++ (1/4), inf).asStream,
 				duration: Pseq([
 					0.25,
 					Rest(0.5),
@@ -199,7 +199,7 @@
 			delaySend: 0.26,
 			distAmount: 0.12,
 			distDrive: 0.0,
-			dur: Rest(2.4999999627471),
+			dur: Rest(2.5),
 			legato: 0.7,
 			mul: 1.0,
 			panDur: 0.21,
