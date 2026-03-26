@@ -38,6 +38,54 @@ x.stop;
 
 ~fxGroup.freeAll;
 
+(
+~currentPresetTemplate.postln;
+~loadAdjacentPreset.(-1);
+)
+
+(
+  var dir = ~currentPresetTemplate.standardizePath.dirname;
+  var files = (dir +/+ "*.scd").pathMatch.sort;
+  files.do { |f, i| [i, f.basename].postln };
+)
+
+(
+  var currentPath = ~currentPresetTemplate.standardizePath;
+  var dir = currentPath.dirname;
+  var files = (dir +/+ "*.scd").pathMatch.sort;
+  ["currentPath", currentPath].postln;
+  ["files", files].postln;
+)
+
+
+(
+  ~loadAdjacentPreset = { |direction|
+        var currentPath, dir, files, currentIdx;
+
+        if (~currentPresetTemplate.isNil) {
+                "No preset currently loaded".postln;
+        } {
+                currentPath = ~currentPresetTemplate.standardizePath;
+                dir = currentPath.dirname;
+                files = (dir +/+ "*.scd").pathMatch.sort;
+
+                ["currentPath", currentPath].postln;
+                ["files", files.collect(_.basename)].postln;
+
+                currentIdx = files.detectIndex({ |f| f == currentPath });
+                ["currentIdx", currentIdx, "direction", direction].postln;
+                ["nextIdx", (currentIdx + direction).wrap(0, files.size - 1)].postln;
+
+                if (currentIdx.isNil) {
+                        ("Current preset not found in directory listing").postln;
+                } {
+                        currentIdx = (currentIdx + direction).wrap(0, files.size - 1);
+                        ("Loading: " ++ files[currentIdx].basename).postln;
+                        ~loadPreset.(files[currentIdx]);
+                };
+        };
+  };
+)
 
 // SAMPLER TEST ////////////
 

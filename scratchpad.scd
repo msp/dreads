@@ -3,7 +3,6 @@
 
 s.meter
 
-(0..10)
 
 NetAddr.langPort;
 NetAddr.localAddr
@@ -19,6 +18,25 @@ Platform.resourceDir
 ExampleFiles.sinedPink
 
 'foo-bar-baz'.class
+
+
+////////////////////////////////////////
+// open stage control config
+//
+// send: 127.0.0.1:57120
+// port: 8080
+// load: /Users/Shared/GitHub/mutable-sc/open-stage-control/plaits.json
+// osc-port: 9000
+////////////////////////////////////////
+
+
+// PRESETS
+// /Users/Shared/GitHub/mutable-sc/presets/plaits
+
+// SAMPLES
+// /Users/Shared/GitHub/mutable-sc/samples/
+
+
 
 ~sampleLibrary.metadata
 

@@ -528,7 +528,7 @@
 								currentValue.round(0.01).asString;
 							} {
 								if (currentValue.isKindOf(Symbol)) {
-									"\\" ++ currentValue.asString;
+									"'" ++ currentValue.asString ++ "'";
 								} {
 									currentValue.asString;
 								};
@@ -571,7 +571,7 @@
 								currentValue.round(0.01).asString;
 							} {
 								if (currentValue.isKindOf(Symbol)) {
-									"\\" ++ currentValue.asString;
+									"'" ++ currentValue.asString ++ "'";
 								} {
 									currentValue.asString;
 								};
@@ -816,6 +816,31 @@
 		~loadPreset.(randomFile);
 	} {
 		("No preset files found in: " ++ presetDir).postln;
+	};
+};
+
+~loadAdjacentPreset = { |direction|
+	var currentPath, dir, files, currentIdx;
+
+	if (~currentPresetTemplate.isNil) {
+		"No preset currently loaded".postln;
+	} {
+		currentPath = ~currentPresetTemplate.standardizePath;
+		dir = currentPath.dirname;
+		files = (dir +/+ "*.scd").pathMatch.sort;
+
+		if (files.size == 0) {
+			("No preset files found in: " ++ dir).postln;
+		} {
+			currentIdx = files.detectIndex({ |f| f == currentPath });
+			if (currentIdx.isNil) {
+				("Current preset not found in directory listing").postln;
+			} {
+				currentIdx = (currentIdx + direction).wrap(0, files.size - 1);
+				("Loading " ++ if(direction > 0, "next", "previous") ++ " preset: " ++ files[currentIdx].basename).postln;
+				~loadPreset.(files[currentIdx]);
+			};
+		};
 	};
 };
 

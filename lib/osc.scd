@@ -249,6 +249,26 @@ OSCdef.new(
 );
 
 OSCdef.new(
+	\prevPreset.asSymbol,
+	{
+		arg msg, time, addr, port;
+		["prevPreset"].postln;
+		~loadAdjacentPreset.(-1);
+	},
+	"/plaits/prevPreset"
+);
+
+OSCdef.new(
+	\nextPreset.asSymbol,
+	{
+		arg msg, time, addr, port;
+		["nextPreset"].postln;
+		~loadAdjacentPreset.(1);
+	},
+	"/plaits/nextPreset"
+);
+
+OSCdef.new(
 	\reloadPreset.asSymbol,
 	{
 		arg msg, time, addr, port;

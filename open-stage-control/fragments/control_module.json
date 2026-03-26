@@ -1,5 +1,5 @@
 {
-  "version": "1.29.8",
+  "version": "1.30.2",
   "createdWith": "Open Stage Control",
   "type": "fragment",
   "content": {
@@ -94,7 +94,9 @@
         "off": 0,
         "mode": "momentary",
         "doubleTap": false,
-        "decoupled": false
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "button",
@@ -140,7 +142,9 @@
         "off": 0,
         "mode": "toggle",
         "doubleTap": false,
-        "decoupled": false
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "button",
@@ -186,7 +190,9 @@
         "off": 0,
         "mode": "momentary",
         "doubleTap": false,
-        "decoupled": false
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "button",
@@ -232,7 +238,9 @@
         "off": 0,
         "mode": "momentary",
         "doubleTap": false,
-        "decoupled": false
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "button",
@@ -278,7 +286,9 @@
         "off": 0,
         "mode": "momentary",
         "doubleTap": false,
-        "decoupled": false
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "button",
@@ -324,7 +334,9 @@
         "off": 0,
         "mode": "momentary",
         "doubleTap": false,
-        "decoupled": false
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "file",
@@ -353,7 +365,7 @@
         "align": "center",
         "hidePath": true,
         "mode": "open",
-        "directory": "/Users/Shared/GitHub/mutable-sc/presets/plaits",
+        "directory": "auto",
         "extension": "*",
         "allowDir": false,
         "value": "",
@@ -367,7 +379,104 @@
         "ignoreDefaults": false,
         "bypass": false,
         "onCreate": "",
-        "onValue": ""
+        "onValue": "",
+        "click": false
+      },
+      {
+        "type": "button",
+        "top": 49.99999999999999,
+        "left": 0,
+        "lock": false,
+        "id": "plaits/prevPreset",
+        "visible": true,
+        "interaction": true,
+        "comments": "",
+        "width": 65,
+        "height": 41,
+        "expand": false,
+        "colorText": "auto",
+        "colorWidget": "auto",
+        "colorStroke": "auto",
+        "colorFill": "auto",
+        "alphaStroke": "auto",
+        "alphaFillOff": "auto",
+        "alphaFillOn": "auto",
+        "lineWidth": "auto",
+        "borderRadius": "auto",
+        "padding": "auto",
+        "html": "",
+        "css": "font-size: 220%",
+        "label": "#{ @{this} == @{this.on} ? '&#10094' : '&#10094;' }",
+        "value": "",
+        "default": "",
+        "linkId": "",
+        "address": "auto",
+        "preArgs": "",
+        "typeTags": "",
+        "decimals": 2,
+        "target": "",
+        "ignoreDefaults": false,
+        "bypass": false,
+        "onCreate": "",
+        "onValue": "",
+        "colorTextOn": "auto",
+        "vertical": false,
+        "wrap": false,
+        "on": 1,
+        "off": 0,
+        "mode": "momentary",
+        "doubleTap": false,
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
+      },
+      {
+        "type": "button",
+        "top": 49.99999999999999,
+        "left": 76.66666666666666,
+        "lock": false,
+        "id": "plaits/nextPreset",
+        "visible": true,
+        "interaction": true,
+        "comments": "",
+        "width": 65,
+        "height": 41,
+        "expand": false,
+        "colorText": "auto",
+        "colorWidget": "auto",
+        "colorStroke": "auto",
+        "colorFill": "auto",
+        "alphaStroke": "auto",
+        "alphaFillOff": "auto",
+        "alphaFillOn": "auto",
+        "lineWidth": "auto",
+        "borderRadius": "auto",
+        "padding": "auto",
+        "html": "",
+        "css": "font-size: 220%",
+        "label": "#{ @{this} == @{this.on} ? '&#10095' : '&#10095;' }",
+        "value": "",
+        "default": "",
+        "linkId": "",
+        "address": "auto",
+        "preArgs": "",
+        "typeTags": "",
+        "decimals": 2,
+        "target": "",
+        "ignoreDefaults": false,
+        "bypass": false,
+        "onCreate": "",
+        "onValue": "",
+        "colorTextOn": "auto",
+        "vertical": false,
+        "wrap": false,
+        "on": 1,
+        "off": 0,
+        "mode": "momentary",
+        "doubleTap": false,
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       }
     ],
     "tabs": []
