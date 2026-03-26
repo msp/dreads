@@ -232,10 +232,22 @@
 		("WARNING: Sample library folder not found: " ++ basePath).warn;
 		("Please create the folder and add sample banks").postln;
 	} {
-		// Load user banks from samples/ folder
+		// Recursively load banks from samples/ folder (subfolders become bankName-subName)
+		var loadFolderRecursive = { |folderPath, prefix|
+			var folder = PathName(folderPath);
+			var bankName = if (prefix.isNil) { folder.folderName } { prefix ++ "-" ++ folder.folderName };
+
+			// Load audio files directly in this folder
+			loadBankFromPath.(folder.fullPath, bankName.asSymbol);
+
+			// Recurse into subfolders
+			folder.folders.do { |subfolder|
+				loadFolderRecursive.(subfolder.fullPath, bankName);
+			};
+		};
+
 		PathName(basePath).folders.do { |folder|
-			var bankName = folder.folderName.asSymbol;
-			loadBankFromPath.(folder.fullPath, bankName);
+			loadFolderRecursive.(folder.fullPath, nil);
 		};
 	};
 
@@ -326,39 +338,41 @@
 Event.addEventType(\oneShotSample, {
 	var server = ~server ?? { Server.default };
 
-	// ["oneShotSample event at", thisThread.beats, "dur =", ~dur, "decay =", ~decay].postln;
+	["oneShotSample event at", thisThread.beats, "dur =", ~dur].postln;
 
 	// Build the synth - based on standard 'note' event type
 	// but without storing the node for later gate-off
 	if (~bufnum.notNil) {
-		Synth(
-			~instrument,
-			[
-				\out, ~out,
-				\bufnum, ~bufnum,
-				\numChannels, ~numChannels,
-				\mul, ~mul,
-				\rate, ~rate,
-				\startPos, ~startPos,
-				\panDur, ~panDur,
-				\atk, ~atk,
-				\decay, ~decay,
-				\gate, 1,
-				\volume, ~volume,
-				\cloudsSend, ~cloudsSend,
-				\delaySend, ~delaySend,
-				\reverbSend, ~reverbSend,
-				\distDrive, ~distDrive,
-				\distAmount, ~distAmount,
-				\revDrywet, ~revDrywet,
-				\revTime, ~revTime,
-				\revDamp, ~revDamp,
-				\revHp, ~revHp,
-				\revFreeze, ~revFreeze
-			],
-			~group ?? { server.defaultGroup },
-			\addToHead
-		);
+		server.makeBundle(server.latency, {
+			Synth(
+				~instrument,
+				[
+					\out, ~out,
+					\bufnum, ~bufnum,
+					\numChannels, ~numChannels,
+					\mul, ~mul,
+					\rate, ~rate,
+					\startPos, ~startPos,
+					\panDur, ~panDur,
+					\atk, ~atk,
+					\decay, ~decay,
+					\gate, 1,
+					\volume, ~volume,
+					\cloudsSend, ~cloudsSend,
+					\delaySend, ~delaySend,
+					\reverbSend, ~reverbSend,
+					\distDrive, ~distDrive,
+					\distAmount, ~distAmount,
+					\revDrywet, ~revDrywet,
+					\revTime, ~revTime,
+					\revDamp, ~revDamp,
+					\revHp, ~revHp,
+					\revFreeze, ~revFreeze
+				],
+				~group ?? { server.defaultGroup },
+				\addToHead
+			);
+		});
 	};
 
 	// Return the delta time for the pattern to wait
