@@ -246,6 +246,20 @@ OSCdef.new(
 );
 
 OSCdef.new(
+	\globalTempo.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var bpm = msg[1].max(1);
+		["tempo", bpm].postln;
+		~tempoClock.tempo = bpm / 60;
+		// Update all instances so presets save the current tempo
+		~plaits.synths.do { |inst| inst.tempo = bpm };
+		~plaits.samples.do { |inst| inst.tempo = bpm };
+	},
+	"/tempo"
+);
+
+OSCdef.new(
 	\savePreset.asSymbol,
 	{
 		arg msg, time, addr, port;
@@ -395,6 +409,9 @@ OSCdef.new(
 			};
 		};
 	};
+
+	// Send global tempo
+	ui.sendMsg("/tempo", ~plaits.synths[0].tempo);
 
 	// Send global FX parameters (nested structure)
 	fxSettings.keysValuesDo { |category, categoryParams|
