@@ -16,14 +16,16 @@
 (
 ~numSpeakers = 2;
 // ~numSpeakers = 6;
+~recordingMode = true;
 
 // Increase buffer size to reduce late messages
 s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
 s.options.numInputBusChannels = 0;
-s.options.numOutputBusChannels = ~numSpeakers;
-s.options.recChannels = ~numSpeakers;
+s.options.numOutputBusChannels = if (~recordingMode) { 18 } { ~numSpeakers };
+s.options.recChannels = if (~recordingMode) { 18 } { ~numSpeakers };
+if (~recordingMode) { Safety.disable };
 s.freeAll;
 
 // Capture base path for reliable preset operations
@@ -54,11 +56,11 @@ s.waitForBoot {
 ~voiceGroup = Group.new(s);
 ~fxGroup = Group.new(s, \addAfter, ~voiceGroup);
 
-~cloudsFX = Synth(\globalClouds, [\out, 0], ~fxGroup, \addToTail);
+~cloudsFX = Synth(\globalClouds, [\out, if (~recordingMode) { 16 } { 0 }], ~fxGroup, \addToTail);
 
-~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
+~delayFX = Synth(\globalFilterDelay, [\out, if (~recordingMode) { 12 } { 0 }], ~fxGroup, \addToTail);
 
-~reverbFX = Synth(\globalReverb, [\out, 0], ~fxGroup, \addToTail);
+~reverbFX = Synth(\globalReverb, [\out, if (~recordingMode) { 14 } { 0 }], ~fxGroup, \addToTail);
 
 (Document.current.dir ++ "/lib/sequencer.scd").load;
 )

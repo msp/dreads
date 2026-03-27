@@ -8,6 +8,15 @@
 // that's fine for now :)
 ~outputBuses = (0..(~numSpeakers - 1));
 
+// Recording mode: route each voice to its own stereo bus
+// Plaits 0-2 → buses 0,2,4 | Samples 0-2 → buses 6,8,10
+// Delay → 12 | Reverb → 14 | Clouds → 16
+~voiceOutBus = { |type, index|
+	if (~recordingMode) {
+		if (type == \plaits) { index * 2 } { 6 + (index * 2) };
+	} { 0 };
+};
+
 // Default tempo, will be updated by presets
 ~tempoClock = TempoClock.new(120/60);
 ~sendToPhones = false;
