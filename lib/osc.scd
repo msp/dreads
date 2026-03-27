@@ -137,6 +137,25 @@ OSCdef.new(
 			},
 			"/samples/" ++ instanceNum ++ "/samplePath"
 		);
+
+		// Variant cycling handlers
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "PrevVariant").asSymbol,
+			{
+				arg msg, time, addr, port;
+				~cycleSampleVariant.(instanceIndex, -1);
+			},
+			"/samples/" ++ instanceNum ++ "/prevVariant"
+		);
+
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "NextVariant").asSymbol,
+			{
+				arg msg, time, addr, port;
+				~cycleSampleVariant.(instanceIndex, 1);
+			},
+			"/samples/" ++ instanceNum ++ "/nextVariant"
+		);
 	};
 };
 

@@ -17,6 +17,37 @@
 	} { 0 };
 };
 
+// Cycle sample variant within current bank
+~cycleSampleVariant = { |instanceIndex, direction|
+	var instance = ~plaits.samples[instanceIndex];
+	var bankName, bankBuffers, numVariants, newVariant, bankPaths, filepath, instanceNum;
+
+	if (instance.isNil) {
+		("WARNING: Sample instance " ++ instanceIndex ++ " not found").postln;
+	} {
+		bankName = instance.bankName;
+		bankBuffers = ~sampleLibrary.banks[bankName];
+
+		if (bankBuffers.isNil) {
+			("WARNING: Bank " ++ bankName ++ " not found").postln;
+		} {
+			numVariants = bankBuffers.size;
+			newVariant = (instance.variant.asInteger + direction).wrap(0, numVariants - 1);
+			instance.variant = newVariant;
+
+			// Update UI with new file path
+			instanceNum = instanceIndex + 1;
+			bankPaths = ~sampleLibrary.paths[bankName];
+			if (bankPaths.notNil && bankPaths[newVariant].notNil) {
+				filepath = bankPaths[newVariant];
+				~ui.().sendMsg("/samples/" ++ instanceNum ++ "/samplePath", filepath);
+			};
+
+			["Sample " ++ instanceIndex ++ ": variant " ++ newVariant ++ "/" ++ numVariants ++ " (" ++ bankName ++ ")"].postln;
+		};
+	};
+};
+
 // Default tempo, will be updated by presets
 ~tempoClock = TempoClock.new(120/60);
 ~sendToPhones = false;

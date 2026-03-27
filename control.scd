@@ -47,28 +47,40 @@ Safety.disable
 
 Safety.enable
 
+s.sampleRate
+
 // SAMPLER TEST ////////////
 
 // Check sample library loaded
 ~sampleLibrary.banks.postln;
 
 (
-  ~plaits.samples.postln;
-  ~plaits.samples[0].postln;
-  ~plaits.samples[0].sequences.postln;
+~plaits.samples.postln;
+~plaits.samples[0].postln;
+~plaits.samples[0].sequences.postln;
 )
 
 ~listSampleBanks.()
 
 (
-  ~plaits.samples[0].bankName.postln;
-  ~plaits.samples[0].variant.postln;
+~plaits.samples[0].bankName.postln;
+~plaits.samples[0].variant.postln;
 )
 
 (
 (Document.current.dir ++ "/lib/globals.scd").load;
-  ~defaultSampleScalars.postln;  // Check if bankName is now there
+~defaultSampleScalars.postln;  // Check if bankName is now there
 )
+
+
+// Test next variant on sample 1
+~cycleSampleVariant.(0, 1);
+
+// Test prev variant on sample 1
+~cycleSampleVariant.(0, -1);
+
+// Check current state
+["bank:", ~plaits.samples[0].bankName, "variant:", ~plaits.samples[0].variant].postln;
 
 (
 ~delayBus.postln;
