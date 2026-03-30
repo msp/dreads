@@ -66,6 +66,15 @@
 	output;
 };
 
+// Variant selection with expression evaluation (mirrors ~setEngine)
+// Uses "v" as placeholder for current variant value
+// e.g. Pseq(["v", "v", "v-5", "v+3"], inf)
+~setVariant = { |seqExpr, currentVariant=0, numVariants=1|
+	var expr = seqExpr.asString.replace("v", currentVariant.asString);
+	var output = expr.interpret.asInteger.wrap(0, numVariants - 1);
+	output;
+};
+
 // Generic multiply: sequence value multiplies base value
 ~multiply = { |seqValue, baseValue|
 	baseValue * seqValue;

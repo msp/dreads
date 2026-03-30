@@ -187,11 +187,19 @@ x = Pdef(\plaitsSequence,
 				\type, \oneShotSample,  // Custom event type: never sends gate=0
 				\instrument, \panningSamplePlayer,
 				\group, ~voiceGroup,
-				// Calculate variant once per event (evaluated first, then reused)
+				// Variant selection: two modes, both relative to base scalar, wrapped to bank size
+			// Numeric: additive offset from base — Pseq([0, 2, -3], inf) with base 6 → 6, 8, 3
+			// String:  "v" expression syntax  — Pseq(["v", "v+2", "v-3"], inf) with base 6 → 6, 8, 3
 				\sampleVariant, Pfunc {
 					var variantSeq = ~getSequenceValue.(~plaits.samples[i], i, \samples, \variant);
 					var variantBase = ~plaits.samples[i].variant;
-					~add.(variantSeq, variantBase);
+					var bankName = ~plaits.samples[i].bankName;
+					var numVariants = (~sampleLibrary.banks[bankName] ? []).size.max(1);
+					if (variantSeq.isKindOf(String) || variantSeq.isKindOf(Symbol)) {
+						~setVariant.(variantSeq, variantBase, numVariants);
+					} {
+						~add.(variantSeq, variantBase).asInteger.wrap(0, numVariants - 1);
+					};
 				},
 				// Get sample duration for scaling normalized values
 				\sampleDuration, Pfunc { |event|
