@@ -66,6 +66,32 @@ OSCdef.new(
 				"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString ++ "/seq"
 			);
 		};
+
+		// Nudge forward: /plaits/{n}/nudgeForward
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "nudgeForward").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount;
+				~plaits.synths[instanceIndex].nudgeOffset = (~plaits.synths[instanceIndex].nudgeOffset ? 0) + delta;
+				~plaits.synths[instanceIndex].phaseOffset = (~plaits.synths[instanceIndex].phaseOffset ? 0) + delta;
+				["plaits nudge fwd", instanceNum, "nudge:", ~plaits.synths[instanceIndex].nudgeOffset, "phase:", ~plaits.synths[instanceIndex].phaseOffset].postln;
+			},
+			"/plaits/" ++ instanceNum ++ "/nudgeForward"
+		);
+
+		// Nudge back: /plaits/{n}/nudgeBack
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "nudgeBack").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount.neg;
+				~plaits.synths[instanceIndex].nudgeOffset = (~plaits.synths[instanceIndex].nudgeOffset ? 0) + delta;
+				~plaits.synths[instanceIndex].phaseOffset = (~plaits.synths[instanceIndex].phaseOffset ? 0) + delta;
+				["plaits nudge back", instanceNum, "nudge:", ~plaits.synths[instanceIndex].nudgeOffset, "phase:", ~plaits.synths[instanceIndex].phaseOffset].postln;
+			},
+			"/plaits/" ++ instanceNum ++ "/nudgeBack"
+		);
 	};
 };
 
@@ -104,6 +130,32 @@ OSCdef.new(
 				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString ++ "/seq"
 			);
 		};
+
+		// Nudge forward: /samples/{n}/nudgeForward
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "nudgeForward").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount;
+				~plaits.samples[instanceIndex].nudgeOffset = (~plaits.samples[instanceIndex].nudgeOffset ? 0) + delta;
+				~plaits.samples[instanceIndex].phaseOffset = (~plaits.samples[instanceIndex].phaseOffset ? 0) + delta;
+				["sample nudge fwd", instanceNum, "nudge:", ~plaits.samples[instanceIndex].nudgeOffset, "phase:", ~plaits.samples[instanceIndex].phaseOffset].postln;
+			},
+			"/samples/" ++ instanceNum ++ "/nudgeForward"
+		);
+
+		// Nudge back: /samples/{n}/nudgeBack
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "nudgeBack").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount.neg;
+				~plaits.samples[instanceIndex].nudgeOffset = (~plaits.samples[instanceIndex].nudgeOffset ? 0) + delta;
+				~plaits.samples[instanceIndex].phaseOffset = (~plaits.samples[instanceIndex].phaseOffset ? 0) + delta;
+				["sample nudge back", instanceNum, "nudge:", ~plaits.samples[instanceIndex].nudgeOffset, "phase:", ~plaits.samples[instanceIndex].phaseOffset].postln;
+			},
+			"/samples/" ++ instanceNum ++ "/nudgeBack"
+		);
 
 		// File browser handler for this instance
 		OSCdef.new(

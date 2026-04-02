@@ -28,6 +28,8 @@
 x = Pdef(\plaitsSequence,
 	Ppar(
 		~plaits.synths.collect { |instance, i|
+			Pseq([
+			Pfuncn({ Rest(~plaits.synths[i].phaseOffset ? 0) }, 1),
 			Pcollect({ |ev|
 				var d       = ev[\dur];
 				var isRest  = d.isKindOf(Rest);
@@ -103,9 +105,13 @@ x = Pdef(\plaitsSequence,
 						~getSequenceValue.(~plaits.synths[i], i, \plaits, \div)
 					);
 					var speed = ~plaits.synths[i].speed.clip(0.01, 100);
-					~plaits.synths[i].dur = baseDur / speed;
-					// ["plaits", i, "event at", thisThread.beats, "dur =", ~plaits.synths[i].dur].postln;
-					~plaits.synths[i].dur;
+					var nudge = ~plaits.synths[i].nudgeOffset ? 0;
+					var finalDur;
+					~plaits.synths[i].nudgeOffset = 0;
+					finalDur = (baseDur / speed + nudge).max(0.001);
+					~plaits.synths[i].dur = finalDur;
+					// ["plaits", i, "event at", thisThread.beats, "dur =", finalDur].postln;
+					finalDur;
 				},
 				\decay, Pfunc { |event|
 					// ~modulateBipolar.(~plaits.synths[i].sequences.decay.next, ~plaits.synths[i].decay)
@@ -180,9 +186,12 @@ x = Pdef(\plaitsSequence,
 				\volume, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \volume), ~plaits.synths[i].volume); },
 				\out, Pfunc { ~voiceOutBus.(\plaits, i) },
 			))
+			])
 		} ++
 		// Sample instances (use lookups for live coding)
 		~plaits.samples.collect { |instance, i|
+			Pseq([
+			Pfuncn({ Rest(~plaits.samples[i].phaseOffset ? 0) }, 1),
 			Pbind(
 				\type, \oneShotSample,  // Custom event type: never sends gate=0
 				\instrument, \panningSamplePlayer,
@@ -231,9 +240,13 @@ x = Pdef(\plaitsSequence,
 					var divSeq = ~getSequenceValue.(~plaits.samples[i], i, \samples, \div);
 					var baseDur = ~setDuration.(durSeq, divSeq);
 					var speed = ~plaits.samples[i].speed.clip(0.01, 100);
-					~plaits.samples[i].dur = baseDur / speed;
-					// ["sample", i, "event at", thisThread.beats, "dur =", ~plaits.samples[i].dur].postln;
-					~plaits.samples[i].dur;
+					var nudge = ~plaits.samples[i].nudgeOffset ? 0;
+					var finalDur;
+					~plaits.samples[i].nudgeOffset = 0;
+					finalDur = (baseDur / speed + nudge).max(0.001);
+					~plaits.samples[i].dur = finalDur;
+					// ["sample", i, "event at", thisThread.beats, "dur =", finalDur].postln;
+					finalDur;
 				},
 				\legato, Pfunc { |event| ~plaits.samples[i].legato },
 				\mul, Pfunc {
@@ -318,6 +331,7 @@ x = Pdef(\plaitsSequence,
 				\revFreeze, Pfunc { |event| ~plaits.samples[i].revFreeze },
 				\out, Pfunc { ~voiceOutBus.(\samples, i) },
 			)
+			])
 		}
 	)
 );

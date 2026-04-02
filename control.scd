@@ -49,6 +49,13 @@ Safety.enable
 
 s.sampleRate
 
+// Nudge plaits 1 forward (delay next event by 0.25 beats)
+NetAddr("127.0.0.1", 57120).sendMsg("/plaits/1/nudgeForward", 1)
+
+NetAddr("127.0.0.1", 57120).sendMsg("/plaits/1/nudgeBack", -1)
+
+NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
+
 // SAMPLER TEST ////////////
 
 // Check sample library loaded

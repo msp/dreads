@@ -1,5 +1,5 @@
 {
-  "version": "1.29.8",
+  "version": "1.30.2",
   "createdWith": "Open Stage Control",
   "type": "fragment",
   "content": {
@@ -192,7 +192,8 @@
             "asYouType": false,
             "numeric": false,
             "validation": "",
-            "maxLength": ""
+            "maxLength": "",
+            "noCanvas": false
           },
           {
             "type": "text",
@@ -276,7 +277,9 @@
             "doubleTap": false,
             "decoupled": false,
             "typeTags": "",
-            "ignoreDefaults": false
+            "ignoreDefaults": false,
+            "click": false,
+            "onTouch": ""
           }
         ],
         "tabs": []
@@ -424,7 +427,8 @@
             "asYouType": false,
             "numeric": false,
             "validation": "",
-            "maxLength": ""
+            "maxLength": "",
+            "noCanvas": false
           },
           {
             "type": "text",
@@ -508,7 +512,9 @@
             "doubleTap": false,
             "decoupled": false,
             "typeTags": "",
-            "ignoreDefaults": false
+            "ignoreDefaults": false,
+            "click": false,
+            "onTouch": ""
           }
         ],
         "tabs": []
@@ -656,7 +662,8 @@
             "asYouType": false,
             "numeric": false,
             "validation": "",
-            "maxLength": ""
+            "maxLength": "",
+            "noCanvas": false
           },
           {
             "type": "text",
@@ -740,7 +747,9 @@
             "doubleTap": false,
             "decoupled": false,
             "typeTags": "",
-            "ignoreDefaults": false
+            "ignoreDefaults": false,
+            "click": false,
+            "onTouch": ""
           }
         ],
         "tabs": []
@@ -888,7 +897,8 @@
             "asYouType": false,
             "numeric": false,
             "validation": "",
-            "maxLength": ""
+            "maxLength": "",
+            "noCanvas": false
           },
           {
             "type": "text",
@@ -972,7 +982,9 @@
             "doubleTap": false,
             "decoupled": false,
             "typeTags": "",
-            "ignoreDefaults": false
+            "ignoreDefaults": false,
+            "click": false,
+            "onTouch": ""
           }
         ],
         "tabs": []
@@ -1120,7 +1132,8 @@
             "asYouType": false,
             "numeric": false,
             "validation": "",
-            "maxLength": ""
+            "maxLength": "",
+            "noCanvas": false
           },
           {
             "type": "text",
@@ -1204,7 +1217,9 @@
             "doubleTap": false,
             "decoupled": false,
             "typeTags": "",
-            "ignoreDefaults": false
+            "ignoreDefaults": false,
+            "click": false,
+            "onTouch": ""
           }
         ],
         "tabs": []
@@ -1454,7 +1469,9 @@
             "doubleTap": false,
             "decoupled": false,
             "typeTags": "",
-            "ignoreDefaults": false
+            "ignoreDefaults": false,
+            "click": false,
+            "onTouch": ""
           }
         ],
         "tabs": []
@@ -1856,7 +1873,9 @@
         "doubleTap": false,
         "decoupled": false,
         "typeTags": "",
-        "ignoreDefaults": false
+        "ignoreDefaults": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "panel",
@@ -2049,7 +2068,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -2133,7 +2153,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -2281,7 +2303,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -2365,7 +2388,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -2513,7 +2538,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -2597,7 +2623,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -2745,7 +2773,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -2829,7 +2858,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -2977,7 +3008,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -3061,7 +3093,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -3209,7 +3243,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -3293,7 +3328,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -3441,7 +3478,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -3525,7 +3563,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -3673,7 +3713,8 @@
                 "asYouType": false,
                 "numeric": false,
                 "validation": "",
-                "maxLength": ""
+                "maxLength": "",
+                "noCanvas": false
               },
               {
                 "type": "text",
@@ -3757,7 +3798,9 @@
                 "doubleTap": false,
                 "decoupled": false,
                 "typeTags": "",
-                "ignoreDefaults": false
+                "ignoreDefaults": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -3809,18 +3852,20 @@
         "off": 0,
         "mode": "toggle",
         "doubleTap": false,
-        "decoupled": false
+        "decoupled": false,
+        "click": false,
+        "onTouch": ""
       },
       {
         "type": "panel",
-        "top": 186.36363636363635,
-        "left": 125.45454545454544,
+        "top": 186.07142857142847,
+        "left": 115,
         "lock": false,
         "id": "speed",
         "visible": true,
         "interaction": true,
         "comments": "",
-        "width": 49.4,
+        "width": 81.66666666666663,
         "height": 95,
         "expand": false,
         "colorText": "auto",
@@ -3862,7 +3907,7 @@
           {
             "type": "knob",
             "top": 22.727272727272727,
-            "left": 0,
+            "left": 11,
             "lock": false,
             "id": "plaits/@{parent.variables.instance}/speed",
             "visible": true,
@@ -3929,8 +3974,8 @@
           },
           {
             "type": "input",
-            "top": 65.45454545454545,
-            "left": 0,
+            "top": 65.2173913043478,
+            "left": 11,
             "lock": false,
             "id": "plaits/@{parent.variables.instance}/speed",
             "visible": true,
@@ -3968,7 +4013,8 @@
             "asYouType": false,
             "numeric": false,
             "validation": "",
-            "maxLength": ""
+            "maxLength": "",
+            "noCanvas": false
           },
           {
             "type": "text",
@@ -4011,7 +4057,7 @@
           {
             "type": "button",
             "top": 0,
-            "left": 0.9090909090909091,
+            "left": 12,
             "lock": false,
             "id": "speedLabel_@{parent.variables.instance}",
             "visible": true,
@@ -4052,7 +4098,105 @@
             "doubleTap": false,
             "decoupled": false,
             "typeTags": "",
-            "ignoreDefaults": false
+            "ignoreDefaults": false,
+            "click": false,
+            "onTouch": ""
+          },
+          {
+            "type": "button",
+            "top": 0,
+            "left": 0,
+            "lock": false,
+            "id": "plaits/@{parent.variables.instance}/nudgeBack",
+            "visible": true,
+            "interaction": true,
+            "comments": "",
+            "width": 20,
+            "height": 20,
+            "expand": false,
+            "colorText": "auto",
+            "colorWidget": "auto",
+            "colorStroke": "auto",
+            "colorFill": "auto",
+            "alphaStroke": "auto",
+            "alphaFillOff": 0,
+            "alphaFillOn": "auto",
+            "lineWidth": 0,
+            "borderRadius": "auto",
+            "padding": "auto",
+            "html": "",
+            "css": "font-size: 150%",
+            "label": "#{ @{this} == @{this.on} ? '&#10094' : '&#10094;' }",
+            "value": "",
+            "default": "",
+            "linkId": "",
+            "address": "auto",
+            "preArgs": "",
+            "typeTags": "",
+            "decimals": 2,
+            "target": "",
+            "ignoreDefaults": false,
+            "bypass": false,
+            "onCreate": "",
+            "onValue": "",
+            "colorTextOn": "auto",
+            "vertical": false,
+            "wrap": false,
+            "on": 1,
+            "off": 0,
+            "mode": "momentary",
+            "doubleTap": false,
+            "decoupled": false,
+            "click": false,
+            "onTouch": ""
+          },
+          {
+            "type": "button",
+            "top": 0,
+            "left": 46.07142857142855,
+            "lock": false,
+            "id": "plaits/@{parent.variables.instance}/nudgeForward",
+            "visible": true,
+            "interaction": true,
+            "comments": "",
+            "width": 20,
+            "height": 20,
+            "expand": false,
+            "colorText": "auto",
+            "colorWidget": "auto",
+            "colorStroke": "auto",
+            "colorFill": "auto",
+            "alphaStroke": "auto",
+            "alphaFillOff": 0,
+            "alphaFillOn": "auto",
+            "lineWidth": 0,
+            "borderRadius": "auto",
+            "padding": "auto",
+            "html": "",
+            "css": "font-size: 150%",
+            "label": "#{ @{this} == @{this.on} ? '&#10095' : '&#10095;' }",
+            "value": "",
+            "default": "",
+            "linkId": "",
+            "address": "auto",
+            "preArgs": "",
+            "typeTags": "",
+            "decimals": 2,
+            "target": "",
+            "ignoreDefaults": false,
+            "bypass": false,
+            "onCreate": "",
+            "onValue": "",
+            "colorTextOn": "auto",
+            "vertical": false,
+            "wrap": false,
+            "on": 1,
+            "off": 0,
+            "mode": "momentary",
+            "doubleTap": false,
+            "decoupled": false,
+            "click": false,
+            "onTouch": ""
           }
         ],
         "tabs": []
