@@ -761,7 +761,7 @@
 };
 
 ~loadPreset = { |nameOrPath|
-	var filepath;
+	var filepath, wasPlaying;
 
 	// Check if it's already a full path
 	if (nameOrPath.contains("/")) {
@@ -771,6 +771,15 @@
 		filepath = ~basePath +/+ "presets/plaits" +/+ (nameOrPath ++ ".scd");
 	};
 
+	// Stop playback before reloading to ensure sequence streams start at position 0.
+	// Without this, the old pattern can advance newly-created streams between the
+	// cache clear (in sequencer.scd) and the Pdef hot-swap, causing patterns like
+	// \offbeat [Rest(1/2), 1/2] to randomly start on the hit instead of the rest.
+	// Known limitation: switching sequences live (e.g. four_floor → offbeat via UI)
+	// can still start mid-stream since that doesn't reload the sequencer.
+	wasPlaying = Pdef(\plaitsSequence).isPlaying;
+	Pdef(\plaitsSequence).stop;
+
 	this.executeFile(filepath);
 
 	// Reload sequencer to rebuild pattern with new preset structure
@@ -779,6 +788,9 @@
 	// - If new preset has 0 samples, ~plaits.samples[0] is nil → crashes
 	// Reloading sequencer rebuilds pattern to match new samples array length
 	(~basePath +/+ "lib/sequencer.scd").load;
+
+	// Resume playback if it was running — causes a brief timing gap
+	if (wasPlaying) { Pdef(\plaitsSequence).play(~tempoClock) };
 
 	Document.open(filepath);
 	~currentPresetTemplate = filepath;

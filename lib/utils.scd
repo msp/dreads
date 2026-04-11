@@ -120,7 +120,7 @@
 			// Symbol changed or first time - resolve from library
 			pattern = ~sequenceLibrary[value];
 			if(pattern.notNil) {
-				stream = pattern.asStream;
+				stream = pattern.pattern.asStream;
 				~sequenceStreamCache[cacheKey] = (symbol: value, stream: stream);
 			} {
 				("WARNING: Sequence '" ++ value ++ "' not found in library").warn;

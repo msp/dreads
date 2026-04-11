@@ -25,6 +25,8 @@
 
 
 
+// Clear stream cache so all sequence patterns start at position 0 on reload
+~sequenceStreamCache = Dictionary.new;
 x = Pdef(\plaitsSequence,
 	Ppar(
 		~plaits.synths.collect { |instance, i|
@@ -110,7 +112,7 @@ x = Pdef(\plaitsSequence,
 					~plaits.synths[i].nudgeOffset = 0;
 					finalDur = (baseDur / speed + nudge).max(0.001);
 					~plaits.synths[i].dur = finalDur;
-					// ["plaits", i, "event at", thisThread.beats, "dur =", finalDur].postln;
+						// ["plaits", i, "event at", thisThread.beats, "dur =", finalDur].postln;
 					finalDur;
 				},
 				\decay, Pfunc { |event|
@@ -335,4 +337,5 @@ x = Pdef(\plaitsSequence,
 		}
 	)
 );
+Pdef(\plaitsSequence).quant = 1;
 )

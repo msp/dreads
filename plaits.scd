@@ -35,6 +35,7 @@ s.freeAll;
 ~currentPresetTemplate = (~basePath ++ "/presets/plaits/default.scd").standardizePath;
 
 (Document.current.dir ++ "/lib/globals.scd").load;
+(Document.current.dir ++ "/lib/sequence_library.scd").load;
 (Document.current.dir ++ "/lib/utils.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
 

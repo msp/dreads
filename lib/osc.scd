@@ -16,7 +16,11 @@ OSCdef.new(
 		var value = msg[1];
 		msg.postln;
 		if (value == 1.0,
-			{ x.play(~tempoClock) },
+			{
+				// Clear stream cache so patterns like \offbeat start at position 0
+				~sequenceStreamCache = Dictionary.new;
+				x.play(~tempoClock);
+			},
 			{ x.stop }
 		);
 	},
@@ -480,7 +484,8 @@ OSCdef.new(
 
 	// Populate sequence modal switch with all available sequences from library
 	seqNames = ~sequenceLibrary.keys.asArray.sort.collect(_.asString);
-	ui.sendMsg('/seqModal/switch', 'values', seqNames);
+	["seqModal: sending", seqNames.size, "sequences"].postln;
+	ui.sendMsg(*(['/seqModal/switch', 'values'] ++ seqNames));
 	// ["\nPopulated seqModal with sequences:", seqNames].postln;
 
 	"Plaits state pushed to UI!".postln;

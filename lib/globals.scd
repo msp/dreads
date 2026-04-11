@@ -187,25 +187,8 @@
 	metadata: Dictionary.new    // bankName (Symbol) -> Array of metadata dicts
 );
 
-// Predefined sequence patterns library (flat structure)
-~sequenceLibrary = (
-	random: Pwhite(0.0, 1.0, inf),
-	gauss: Pwhite(0.3, 0.7, inf),
-	sparse: Pseq([0.1, 0.5, 0.9], inf),
-	dense: Pseq([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], inf),
-	euclid: Pseq([1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0].normalize(0, 1), inf),
-	cycle5: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf),
-	ramp: Pseq([0.1, 0.2, 0.4, 1.0], inf),
-	sweep: Pseries(0.0, 0.1, inf).fold(0, 1),
-	hold: Pseq([0.5], inf),
-	glitch: Pseq(0.2 ! 19 ++ 0.5, inf),
-	wobble: Pseq(0.5 ! 5 ++ 0.3, inf),
-	rhythm1: Pseq([1, 2, 1, 1, 2], inf),
-	rhythm2: Pseq([1, 2, 0.5, 1, 2], inf),
-	steps: Pseq([0.25, 0.5, 0.75, 1.0], inf),
-	bounce: Pseq([1.0, 0.7, 0.4, 0.2, 0.4, 0.7], inf),
-	updown: Pseq([0.1, 0.3, 0.5, 0.7, 0.9, 0.7, 0.5, 0.3], inf),
-);
+// Sequence pattern library loaded from separate file
+// See lib/sequence_library.scd for pattern definitions and tags
 
 // Sequence stream cache for lazy resolution
 // Stores runtime state: (symbol: \sparse, stream: <stream>)

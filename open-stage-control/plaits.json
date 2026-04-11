@@ -1,6 +1,6 @@
 {
   "createdWith": "Open Stage Control",
-  "version": "1.29.8",
+  "version": "1.30.2",
   "type": "session",
   "content": {
     "type": "root",
@@ -573,7 +573,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -759,7 +760,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -945,7 +947,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -1131,7 +1134,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -1317,7 +1321,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -1503,7 +1508,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -1692,7 +1698,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -1878,7 +1885,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -2064,7 +2072,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -2250,7 +2259,8 @@
                     "asYouType": false,
                     "numeric": false,
                     "validation": "",
-                    "maxLength": ""
+                    "maxLength": "",
+                    "noCanvas": false
                   },
                   {
                     "type": "text",
@@ -2334,7 +2344,8 @@
                 "ignoreDefaults": false,
                 "bypass": false,
                 "onCreate": "",
-                "onValue": ""
+                "onValue": "",
+                "click": false
               },
               {
                 "type": "button",
@@ -2380,7 +2391,9 @@
                 "off": 0,
                 "mode": "toggle",
                 "doubleTap": false,
-                "decoupled": false
+                "decoupled": false,
+                "click": false,
+                "onTouch": ""
               },
               {
                 "type": "button",
@@ -2426,7 +2439,9 @@
                 "off": 0,
                 "mode": "momentary",
                 "doubleTap": false,
-                "decoupled": false
+                "decoupled": false,
+                "click": false,
+                "onTouch": ""
               },
               {
                 "type": "button",
@@ -2472,7 +2487,9 @@
                 "off": 0,
                 "mode": "momentary",
                 "doubleTap": false,
-                "decoupled": false
+                "decoupled": false,
+                "click": false,
+                "onTouch": ""
               },
               {
                 "type": "button",
@@ -2518,7 +2535,9 @@
                 "off": 0,
                 "mode": "momentary",
                 "doubleTap": false,
-                "decoupled": false
+                "decoupled": false,
+                "click": false,
+                "onTouch": ""
               },
               {
                 "type": "button",
@@ -2564,7 +2583,9 @@
                 "off": 0,
                 "mode": "momentary",
                 "doubleTap": false,
-                "decoupled": false
+                "decoupled": false,
+                "click": false,
+                "onTouch": ""
               },
               {
                 "type": "button",
@@ -2610,7 +2631,9 @@
                 "off": 0,
                 "mode": "momentary",
                 "doubleTap": false,
-                "decoupled": false
+                "decoupled": false,
+                "click": false,
+                "onTouch": ""
               }
             ],
             "tabs": []
@@ -2620,7 +2643,7 @@
       {
         "type": "modal",
         "top": 5,
-        "left": 29.999999999999993,
+        "left": 0,
         "lock": false,
         "id": "seqModal",
         "visible": true,
@@ -2629,7 +2652,7 @@
         "width": 0,
         "height": 0,
         "expand": false,
-        "popupWidth": "20%",
+        "popupWidth": "100%",
         "popupHeight": "80%",
         "popupLeft": "auto",
         "popupTop": "auto",
@@ -2717,15 +2740,15 @@
           {
             "type": "switch",
             "top": 29.999999999999993,
-            "left": 59.999999999999986,
+            "left": 0,
             "lock": false,
             "id": "seqModal/switch",
             "visible": true,
             "interaction": true,
             "comments": "",
-            "width": 114.036850921273,
-            "height": 555.5201328352013,
-            "expand": true,
+            "width": "100%",
+            "height": 555,
+            "expand": false,
             "colorText": "auto",
             "colorWidget": "auto",
             "colorStroke": "auto",
@@ -2737,27 +2760,110 @@
             "borderRadius": "auto",
             "padding": 1,
             "html": "",
-            "css": "",
+            "css": "inner { grid-auto-flow: column !important; grid-template-rows: repeat(20, auto) !important; grid-template-columns: repeat(10, 1fr) !important; }",
             "colorTextOn": "auto",
-            "layout": "vertical",
+            "layout": "grid",
             "gridTemplate": "",
             "wrap": false,
             "values": [
+              "hold",
+              "── RHYTHM ──",
+              "backbeat",
+              "bossa_nova",
+              "dense_burst",
+              "eucl_2_5",
+              "eucl_3_4",
+              "eucl_3_7",
+              "eucl_3_8",
+              "eucl_4_7",
+              "eucl_5_8",
+              "eucl_5_12",
+              "eucl_5_16",
+              "eucl_7_12",
+              "eucl_7_16",
+              "four_floor",
+              "habanera",
+              "offbeat",
+              "prob_dense",
+              "prob_sparse",
+              "prob_varied",
+              "son_clave",
+              "sprs_dotted",
+              "sprs_half",
+              "sprs_quarter",
+              "str8_16th",
+              "str8_eighth",
+              "str8_quarter",
+              "sync_1",
+              "sync_2",
+              "tresillo",
+              "── SHAPE ──",
+              "bounce",
+              "cycle5",
+              "flutter",
+              "glitch",
+              "plateau",
+              "ramp_up",
+              "ramp_down",
               "random",
-              "gauss",
-              "sparse",
+              "rndm_narrow",
+              "rndm_walk",
+              "rndm_walk_slow",
+              "saw",
+              "sine",
+              "sine_slow",
+              "sweep",
+              "sweep_slow",
+              "triangle",
+              "updown",
+              "wobble",
+              "steps_4",
+              "steps_8",
+              "steps_down_4",
+              "── ACCENT ──",
+              "acnt_downbeat",
+              "acnt_backbeat",
+              "acnt_one",
+              "acnt_2_and_4",
+              "acnt_sparse",
+              "dyn_cresc",
+              "dyn_pp_ff",
+              "gate_alternate",
+              "gate_burst",
+              "gate_every4",
+              "gate_every8",
+              "gate_inv4",
+              "gate_inv8",
+              "gate_prob20",
+              "gate_prob50",
+              "gate_prob80",
+              "gate_stutter",
+              "gate_tail",
+              "swell_4",
+              "swell_8",
+              "swell_fade",
+              "── TIMING ──",
+              "half",
+              "double",
+              "triplet",
+              "dotted",
+              "shuffle",
+              "swing",
+              "accel",
+              "decel",
+              "alt_half_dbl",
+              "alt_trip_dot",
+              "poly_3_over_4",
+              "poly_5_over_4",
+              "── LEGACY ──",
               "dense",
               "euclid",
-              "cycle5",
+              "gauss",
               "ramp",
-              "sweep",
-              "glitch",
-              "wobble",
               "rhythm1",
               "rhythm2",
-              "steps",
-              "bounce",
-              "updown"
+              "sparse",
+              "steps"
             ],
             "mode": "tap",
             "value": "",
@@ -2769,12 +2875,13 @@
             "decimals": 2,
             "target": "",
             "ignoreDefaults": false,
-            "bypass": true,
+            "bypass": false,
             "onCreate": "",
-            "onValue": "if (window._initializingSeqModal) { console.log('Ignoring - initializing modal'); return; } var ctx = get('seqModal/context'); if (!ctx || !ctx.param || !ctx.instance || !ctx.stateId) { console.log('Invalid context:', ctx); return; } var previousValue = get(ctx.stateId); console.log('Switch clicked:', value, 'Previous:', previousValue); if (typeof value === 'string' && value.length > 0 && value === previousValue) { console.log('Same value clicked - deselecting'); var addr = '/' + (ctx.type || 'plaits') + '/' + ctx.instance + '/' + ctx.param + '/seq'; send(addr, 'hold'); set(ctx.stateId, 'hold'); set('seqModal/switch', ''); } else if (typeof value === 'string' && value.length > 0) { console.log('New value selected'); var addr = '/' + (ctx.type || 'plaits') + '/' + ctx.instance + '/' + ctx.param + '/seq'; send(addr, value); set(ctx.stateId, value); } else if (value.length === 0) { console.log('Deselected via empty value'); var addr = '/' + (ctx.type || 'plaits') + '/' + ctx.instance + '/' + ctx.param + '/seq'; send(addr, 'hold'); set(ctx.stateId, 'hold'); }"
+            "onValue": "if (window._initializingSeqModal) return; if (value === '' || value === null || value === undefined) return; var ctx = get('seqModal/context'); if (!ctx || !ctx.param || !ctx.instance || !ctx.stateId) return; var previousValue = get(ctx.stateId); var addr = '/' + (ctx.type || 'plaits') + '/' + ctx.instance + '/' + ctx.param + '/seq'; if (typeof value === 'string' && value === previousValue) { send(addr, 'hold'); set(ctx.stateId, 'hold'); set('seqModal/switch', ''); } else if (typeof value === 'string' && value.length > 0) { send(addr, value); set(ctx.stateId, value); }"
           }
         ],
-        "tabs": []
+        "tabs": [],
+        "click": false
       }
     ],
     "tabs": []
