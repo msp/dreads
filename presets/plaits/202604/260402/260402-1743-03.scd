@@ -14,7 +14,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.3,
-			dur: 4.0,
+			dur: 8.0,
 			engine: 2.0,
 			fmMod: -0.33,
 			harm: 0.17,
@@ -131,7 +131,7 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.4,
-			dur: Rest(0.5),
+			dur: Rest(1.0),
 			engine: 13.0,
 			fmMod: 0.68,
 			harm: 0.57,
@@ -202,7 +202,7 @@
 			startPos: 0.0,
 			tempo: 175.0,
 			variant: 6.0,
-			volume: 1.02
+			volume: 0.86
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
@@ -296,7 +296,7 @@
 			delaySend: 0.15,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(2.0),
+			dur: 2.0,
 			legato: 0.7,
 			mul: 1.0,
 			panDur: 0.03,
