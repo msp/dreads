@@ -51,7 +51,7 @@
 				// engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
 				// duration: \gauss,
 
-				duration: \eucl_3_7,
+				duration: Pseq([1, Rest(1), Rest(1), 1, Rest(1), 1, Rest(1)], inf).asStream,
 
 				// duration: Pseq([
 				// 0.7,

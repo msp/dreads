@@ -89,7 +89,7 @@
 			// $PRESET_SEQUENCES_START
 			(
 				// duration: \hold,
-				duration: \eucl_7_16,
+				duration: Pseq([1, Rest(1), Rest(1), 1, Rest(1), 1, Rest(1), 1, Rest(1), 1, Rest(1), Rest(1), 1, Rest(1), 1, Rest(1)], inf).asStream,
 				reverbSend: \gate_every4,
 				delaySend: \gate_tail,
 				fmMod: \triangle,
