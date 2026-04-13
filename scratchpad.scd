@@ -19,7 +19,15 @@ ExampleFiles.sinedPink
 
 'foo-bar-baz'.class
 
+~pushStateToUI.()
 
+~sequenceLibrary[\eucl_4_7].pattern
+
+(
+var seqNames = ~sequenceLibrary.keys.asArray.sort.collect(_.asString);
+seqNames.postln;
+// ui.sendMsg('/seqModal/switch', 'values', seqNames);
+)
 ////////////////////////////////////////
 // open stage control config
 //
