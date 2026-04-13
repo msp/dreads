@@ -142,6 +142,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				duration: Pseq([0.5], inf).asStream,
 				// duration: Pseq([
 				// 	(1 ! 2),
 				// 	Rest(8),

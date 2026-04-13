@@ -40,6 +40,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				timbre: Pgauss(0.0, 1.0, inf).asStream,
 				decay: Pgauss(0.0, 0.01, inf).asStream,
 				morph: Pgbrown(1.0, 1.0, 1.0, inf).asStream,
@@ -130,6 +131,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				duration: Pwhite(5.0, 10.0, inf).asStream,
 				// div: Pseq([0.5], inf).asStream,
 				revTime: Pwhite(0.4, 1.1, inf).asStream,

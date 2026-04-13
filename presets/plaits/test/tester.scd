@@ -40,6 +40,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				duration: Pseq([0.5], inf).asStream,
 				// timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
 				// decay: Pseq([0.5, 0.3, Pseq([0.6, 0.1, 0.8] / 3)] / 1, inf).asStream,
 				// morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,

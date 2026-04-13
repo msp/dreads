@@ -42,6 +42,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// duration: \hold,
 				duration: \gauss,
 				distAmount: \gate_tail,
@@ -134,6 +135,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				duration: \rndm_walk_slow,
 				delaySend: \gate_stutter,
 				decay: \sine_slow,

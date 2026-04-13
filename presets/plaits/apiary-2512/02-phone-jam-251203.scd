@@ -41,6 +41,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
 				decay: Pgeom(1.0, 0.9, inf).asStream,
 				morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,

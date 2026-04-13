@@ -119,6 +119,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				duration: Pseq([Rest(2), 2], inf).asStream,
 				// duration: Pseq([1/2] * 2, inf).asStream,
 				engine: Pseq(["e", "e", "e", "e", "e"], inf).asStream

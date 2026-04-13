@@ -97,6 +97,7 @@ if(fixed,{
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
 				decay: \euclid,
 
@@ -162,6 +163,7 @@ if(fixed,{
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				duration: Pseq([0.5], inf).asStream,
 				// duration: p2Duration,
 				div: Pseq([1/16], inf).asStream,
 				delaySend: \euclid,

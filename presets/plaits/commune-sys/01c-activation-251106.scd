@@ -142,6 +142,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				duration: Pwhite(5.0, 10.0, inf).asStream,
 				// div: Pseq([0.5], inf).asStream,
 				revTime: Pwhite(0.4, 1.1, inf).asStream,

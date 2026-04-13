@@ -122,6 +122,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				duration: Pseq([Rest(1), 2], inf).asStream,
 				// duration: \sparse,
 			)
@@ -164,6 +165,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// div: Pseq(1/4 ! 63 ++ (0.5), inf).asStream,
 				duration: Pseq([
 					0.25,
@@ -217,17 +219,6 @@
 				div: Pseq(1 ! 31 ++ (0.5), inf).asStream,
 				// duration: Pseq([2, 2, 2, 2, 2, 2, 2, Rest(1/2)], inf).asStream,
 				duration: Pseq([2, 2, 2, 2], inf).asStream,
-/*				div: Pseq(1 ! 63 ++ (0.5), inf).asStream,
-				duration: Pseq([
-					Rest(0.25),
-					Rest(0.25),
-					Rest(0.25),
-					Rest(0.25),
-					Rest(0.25),
-					Rest(0.25),
-					Rest(0.25),
-					0.25,
-				], inf).asStream,*/,
 			)
 			// $PRESET_SAMPLE_SEQUENCES_END
 		),

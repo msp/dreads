@@ -41,6 +41,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// div: Pseq([1/8], inf).asStream,
 				duration: Pseq([
 					Rest(0.25),
@@ -170,6 +171,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// div: Pseq(1/2 ! 63 ++ (1), inf).asStream,
 				duration: Pseq([
 					0.25,

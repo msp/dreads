@@ -42,6 +42,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// duration: \hold,
 			duration: \str8_16th,
 			distAmount: \gate_tail,
@@ -86,6 +87,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// duration: \hold,
 			duration: \eucl_7_16,
 			reverbSend: \gate_every4,
@@ -131,6 +133,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				duration: \str8_16th,
 			delaySend: \gate_stutter,
 			decay: \sine_slow,

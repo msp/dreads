@@ -154,30 +154,34 @@
 	)
 );
 
-// Default sequence patterns for all plaits instances
-// Now stores symbols that reference ~sequenceLibrary entries
-~defaultSequences = (
+// Shared default sequences for both plaits and sample instances
+// Symbols reference ~sequenceLibrary entries: \hold=0.5 (modulation), \unit=1.0 (timing)
+~baseSequences = (
 	cloudsSend: \hold,
 	decay: \hold,
 	delaySend: \hold,
-	div: \hold,
 	distAmount: \hold,
 	distDrive: \hold,
-	duration: \hold,
-	engine: Pseq(["e"], inf).asStream,
-	fmMod: \hold,
-	harm: \hold,
-	lpgColour: \hold,
-	morph: \hold,
-	pitch: \hold,
+	div: \unit,
+	duration: \unit,
 	revDamp: \hold,
 	revDrywet: \hold,
 	revHp: \hold,
 	revTime: \hold,
 	reverbSend: \hold,
+);
+
+// Plaits-specific sequences (merged with ~baseSequences)
+~defaultSequences = ~baseSequences ++ (
+	engine: Pseq(["e"], inf).asStream,
+	fmMod: \hold,
+	harm: \hold,
+	lpgColour: \hold,
+	morph: \hold,
+	mul: \hold,
+	pitch: \hold,
 	timbre: \hold,
 	volume: \hold,
-	mul: \hold
 );
 
 // Sample library storage (SuperDirt-style bank/variant structure)
@@ -223,24 +227,13 @@
 	volume: 0.0
 );
 
-// Default sequence patterns for sample instances
-~defaultSampleSequences = (
-	atk: Pseq([0.5], inf).asStream,         // 0-1 normalized
-	cloudsSend: Pseq([0.5], inf).asStream,
-	decay: Pseq([0.5], inf).asStream,       // 0-1 normalized (neutral at midpoint)
-	delaySend: Pseq([0.5], inf).asStream,
-	distAmount: Pseq([0.5], inf).asStream,
-	div: Pseq([1.0], inf).asStream,
-	duration: Pseq([1.0], inf).asStream,
-	mul: Pseq([1.0], inf).asStream,
-	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
-	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
-	reverbSend: Pseq([0.5], inf).asStream,
-	revDamp: Pseq([0.5], inf).asStream,
-	revDrywet: Pseq([0.5], inf).asStream,
-	revHp: Pseq([0.5], inf).asStream,
-	revTime: Pseq([0.5], inf).asStream,
-	startPos: Pseq([0.5], inf).asStream,    // 0-1 normalized (neutral at midpoint)
-	variant: Pseq([0], inf).asStream        // Variant index, additive (uses ~add)
+// Sample-specific sequences (merged with ~baseSequences)
+~defaultSampleSequences = ~baseSequences ++ (
+	atk: \hold,
+	mul: \unit,
+	panDur: \hold,
+	rate: \unit,
+	startPos: \hold,
+	variant: Pseq([0], inf).asStream,  // integer index, not a modulation param
 );
 )

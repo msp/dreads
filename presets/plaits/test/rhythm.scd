@@ -42,6 +42,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				// duration: \hold,
 				duration: \four_floor,
 				// duration: Pseq([1/2], inf).asStream,
@@ -86,6 +87,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				// div: Pseq([0.5], inf).asStream,
 				// duration: \hold,
 				duration: \offbeat,
 				// duration: Pseq([Rest(1/4), 1/4], inf).asStream,
@@ -130,6 +132,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				div: Pseq([0.5], inf).asStream,
 				duration: \backbeat,
 				delaySend: \gate_stutter,
 			)

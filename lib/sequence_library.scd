@@ -38,20 +38,15 @@
 
 // Euclidean rhythm as Pseq with Rests
 ~euclideanSeq = { |k, n|
-	Pseq(~euclidean.(k, n).collect { |v| if(v == 1) { 1 } { Rest(1) } }, inf);
+	var step = 4/n;
+	Pseq(~euclidean.(k, n).collect { |v| if(v == 1) { step } { Rest(step) } }, inf);
 };
 
-/* Three presets plus the default:
-
-  - default.scd — eucl_3_7
-  - 260406-2343-36.scd — eucl_3_7, sprs_dotted, acnt_backbeat (x2)
-  - 260406-1814-53.scd — same as above
-  - 260408-1645-37.scd — eucl_4_7
-*/
 ~sequenceLibrary = (
 
-	// ---- hold (always visible) ----
-	hold: (pattern: Pseq([0.5], inf), tag: \all),
+	// ---- constants (always visible) ----
+	hold: (pattern: Pseq([0.5], inf), tag: \all),  // neutral midpoint for modulation params
+	unit: (pattern: Pseq([1.0], inf), tag: \all),  // 1 beat = 1 quarter note
 
 	// ---- rhythm: beat fractions with Rests, for duration ----
 
@@ -68,7 +63,6 @@
 	eucl_5_12: (pattern: ~euclideanSeq.(5, 12), tag: \rhythm),
 
 	// Straight rhythms
-	str8_quarter: (pattern: Pseq([1], inf), tag: \rhythm),
 	str8_eighth:  (pattern: Pseq([1/2], inf), tag: \rhythm),
 	str8_16th:    (pattern: Pseq([1/4], inf), tag: \rhythm),
 
@@ -81,10 +75,10 @@
 	// Syncopated rhythms
 	sync_1:  (pattern: Pseq([Rest(1/2), 1/2, 1, Rest(1/2), 1/2], inf), tag: \rhythm),
 	sync_2:  (pattern: Pseq([1, Rest(1/2), 1/2, Rest(1/2), 1/2, 1], inf), tag: \rhythm),
-	offbeat:       (pattern: Pseq([Rest(1/4), 1/4], inf), tag: \rhythm),
+	offbeat:       (pattern: Pseq([Rest(1/2), 1/2], inf), tag: \rhythm),
 
 	// Classic drum-machine style
-	four_floor:    (pattern: Pseq([1/2], inf), tag: \rhythm),
+	four_floor:    (pattern: Pseq([1], inf), tag: \rhythm),
 	backbeat:      (pattern: Pseq([Rest(1), 1, Rest(1), 1], inf), tag: \rhythm),
 	tresillo:      (pattern: Pseq([3/2, 3/2, 1], inf), tag: \rhythm),           // 3+3+2 eighths, = E(3,8)
 	son_clave:     (pattern: Pseq([3/4, 3/4, 1, 1/2, 1], inf), tag: \rhythm),  // 3-2 son clave (16th grid)

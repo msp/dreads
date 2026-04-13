@@ -158,6 +158,7 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
+				duration: Pseq([0.5], inf).asStream,
 				div: Pseq([0.5], inf).asStream,
 				harm: \hold,
 			)
