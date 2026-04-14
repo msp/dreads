@@ -179,7 +179,7 @@
 	lpgColour: \hold,
 	morph: \hold,
 	mul: \hold,
-	pitch: \hold,
+	pitch: Pseq([0], inf).asStream,  // additive semitone offset
 	timbre: \hold,
 	volume: \hold,
 );

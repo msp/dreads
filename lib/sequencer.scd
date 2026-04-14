@@ -93,7 +93,7 @@ x = Pdef(\plaitsSequence,
 						};
 					};
 
-					~plaits.synths[i].pitch;
+					~add.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \pitch), ~plaits.synths[i].pitch);
 				},
 				\dur, Pfunc { |event|
 

@@ -150,6 +150,9 @@
 	gate_stutter:     (pattern: Pseq([1, 1, 0, 0], inf), tag: \accent),
 	gate_every4:      (pattern: Pseq([1, 0, 0, 0], inf), tag: \accent),
 	gate_every8:      (pattern: Pseq([1, 0, 0, 0, 0, 0, 0, 0], inf), tag: \accent),
+	gate_every16:     (pattern: Pseq([1] ++ (0 ! 15), inf), tag: \accent),
+	gate_every32:     (pattern: Pseq([1] ++ (0 ! 31), inf), tag: \accent),
+	gate_every64:     (pattern: Pseq([1] ++ (0 ! 63), inf), tag: \accent),
 	gate_burst:       (pattern: Pseq([1, 1, 0, 0, 0, 0], inf), tag: \accent),
 	gate_tail:        (pattern: Pseq([0, 0, 0, 1], inf), tag: \accent),
 	gate_inv4:        (pattern: Pseq([0, 1, 1, 1], inf), tag: \accent),
@@ -174,6 +177,32 @@
 	alt_trip_dot:  (pattern: Pseq([2/3, 3/2], inf), tag: \timing),
 	poly_3_over_4: (pattern: Pseq([4/3, 4/3, 4/3], inf), tag: \timing),
 	poly_5_over_4: (pattern: Pseq([4/5, 4/5, 4/5, 4/5, 4/5], inf), tag: \timing),
+
+	// ---- pitch: semitone offsets from base pitch (additive) ----
+
+	// Intervals
+	oct_up:        (pattern: Pseq([0, 12], inf), tag: \pitch),
+	oct_down:      (pattern: Pseq([0, -12], inf), tag: \pitch),
+	oct_updown:    (pattern: Pseq([0, 12, 0, -12], inf), tag: \pitch),
+	fifth:         (pattern: Pseq([0, 7], inf), tag: \pitch),
+	fourth:        (pattern: Pseq([0, 5], inf), tag: \pitch),
+	triad_maj:     (pattern: Pseq([0, 4, 7], inf), tag: \pitch),
+	triad_min:     (pattern: Pseq([0, 3, 7], inf), tag: \pitch),
+	triad_maj_inv: (pattern: Pseq([0, 4, 7, 12, 7, 4], inf), tag: \pitch),
+	triad_min_inv: (pattern: Pseq([0, 3, 7, 12, 7, 3], inf), tag: \pitch),
+
+	// Scales (ascending)
+	scale_maj:     (pattern: Pseq([0, 2, 4, 5, 7, 9, 11, 12], inf), tag: \pitch),
+	scale_min:     (pattern: Pseq([0, 2, 3, 5, 7, 8, 10, 12], inf), tag: \pitch),
+	scale_pent:    (pattern: Pseq([0, 2, 4, 7, 9, 12], inf), tag: \pitch),
+	scale_chrom:   (pattern: Pseq([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], inf), tag: \pitch),
+
+	// Random pitch
+	rndm_oct:      (pattern: Pwhite(-12, 12, inf), tag: \pitch),
+	rndm_fifth:    (pattern: Pwhite(-7, 7, inf), tag: \pitch),
+	rndm_semi:     (pattern: Pwhite(-2, 2, inf), tag: \pitch),
+	walk_semi:     (pattern: Pbrown(-12, 12, 1, inf), tag: \pitch),
+	walk_third:    (pattern: Pbrown(-12, 12, 4, inf), tag: \pitch),
 
 	// Legacy names (backward compat with existing presets)
 	rhythm1:       (pattern: Pseq([1, 2, 1, 1, 2], inf), tag: \timing),
