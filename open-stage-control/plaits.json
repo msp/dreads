@@ -2903,6 +2903,34 @@
         ],
         "tabs": [],
         "click": false
+      },
+      {
+        "type": "script",
+        "id": "kb_debug",
+        "visible": false,
+        "lock": false,
+        "interaction": true,
+        "comments": "Debug: log all key events",
+"keyBinding": [""],
+        "keyRepeat": false,
+        "keyType": "keydown",
+        "onKeyboard": "if (code === 'Digit1') { var current = get('plaits/1/mute'); send('/plaits/1/mute', current ? 0 : 1); set('plaits/1/mute', current ? 0 : 1); } else if (code === 'Digit2') { var current = get('plaits/2/mute'); send('/plaits/2/mute', current ? 0 : 1); set('plaits/2/mute', current ? 0 : 1); } else if (code === 'Digit3') { var current = get('plaits/3/mute'); send('/plaits/3/mute', current ? 0 : 1); set('plaits/3/mute', current ? 0 : 1); } else if (code === 'Digit4') { var current = get('samples/1/mute'); send('/samples/1/mute', current ? 0 : 1); set('samples/1/mute', current ? 0 : 1); } else if (code === 'Digit5') { var current = get('samples/2/mute'); send('/samples/2/mute', current ? 0 : 1); set('samples/2/mute', current ? 0 : 1); } else if (code === 'Digit6') { var current = get('samples/3/mute'); send('/samples/3/mute', current ? 0 : 1); set('samples/3/mute', current ? 0 : 1); } else if (code === 'ArrowLeft') { send('/plaits/prevPreset', 1); } else if (code === 'ArrowRight') { send('/plaits/nextPreset', 1); }",
+        "onCreate": "",
+        "onValue": ""
+      },
+      {
+        "type": "script",
+        "id": "kb_play_stop",
+        "visible": false,
+        "lock": false,
+        "interaction": true,
+        "comments": "Spacebar toggles play/stop",
+        "keyBinding": "space",
+        "keyRepeat": false,
+        "keyType": "keydown",
+        "onKeyboard": "if (type === 'keydown') { var current = get('plaits/start'); set('plaits/start', current ? 0 : 1); }",
+        "onCreate": "",
+        "onValue": ""
       }
     ],
     "tabs": []
