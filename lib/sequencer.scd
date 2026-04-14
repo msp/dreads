@@ -156,7 +156,11 @@ x = Pdef(\plaitsSequence,
 				\engine, Pfunc { |event|
 					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
 				},
-				\mul, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \mul), ~plaits.synths[i].mul); },
+				\mul, Pfunc { |event|
+					if (~plaits.synths[i].mute == 1) { 0 } {
+						~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \mul), ~plaits.synths[i].mul);
+					};
+				},
 				\revDrywet, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \revDrywet), ~plaits.synths[i].revDrywet);
 				},
@@ -252,10 +256,12 @@ x = Pdef(\plaitsSequence,
 				},
 				\legato, Pfunc { |event| ~plaits.samples[i].legato },
 				\mul, Pfunc {
-				var baseMul = ~plaits.samples[i].mul;
-				var result = ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \mul), baseMul);
-					// if (i == 0) { ["Sample", i, "mul:", baseMul, "->", result].postln; };
-				result;
+				var baseMul, result;
+				if (~plaits.samples[i].mute == 1) { 0 } {
+					baseMul = ~plaits.samples[i].mul;
+					result = ~modulateBipolar.(~getSequenceValue.(~plaits.samples[i], i, \samples, \mul), baseMul);
+					result;
+				};
 			},
 				\rate, Pfunc {
 					var rateSeq = ~getSequenceValue.(~plaits.samples[i], i, \samples, \rate);

@@ -103,6 +103,7 @@
 	morphMod: 0.0,
 	morph: 0.5,
 	mul: 0.5,
+	mute: 0,
 	phaseOffset: 0.0,
 	pitch: 49.0,
 	revDamp: 0.8,
@@ -211,6 +212,7 @@
 	dur: 0.25,
 	legato: 0.7,
 	mul: 1.0,
+	mute: 0,
 	phaseOffset: 0.0,
 	panDur: 0.5,            // Normalized 0-1 (scaled to duration*2 in sequencer)
 	rate: 1.0,
