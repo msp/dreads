@@ -803,6 +803,11 @@
 		};
 	};
 
+	// Apply loaded FX values to the running FX synths
+	~plaits.fx.delay.keysValuesDo { |param, value| ~delayFX.set(param, value) };
+	~plaits.fx.reverb.keysValuesDo { |param, value| ~reverbFX.set(param, value) };
+	~plaits.fx.clouds.keysValuesDo { |param, value| ~cloudsFX.set(param, value) };
+
 	// Resume playback if it was running — causes a brief timing gap
 	if (wasPlaying) { Pdef(\plaitsSequence).play(~tempoClock) };
 
