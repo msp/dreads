@@ -70,15 +70,32 @@ x = Pdef(\plaitsSequence,
 							"volume", (ev[\volume] ?? ev[\mul] ?? 0.0)
 						);
 					}
-				}{
-					// Optional: tell TD about a rest (uncomment if you want it)
-					// ~td.().sendMsg("/plaits/rest", i, "dur", durVal);
+				};
+
+				// Forward sequencer modulation to drone synth.
+				// SC's \type \set event only sends default keys (freq, amp, pan) so we
+				// forward \plaitsDrone control names explicitly via .set here instead.
+				if (~plaits.synths[i].droneMode == 1) {
+					if (~droneSynths[i].notNil) {
+						~droneSynths[i].set(
+							\pitch, ev[\pitch], \engine, ev[\engine],
+							\harm, ev[\harm], \timbre, ev[\timbre],
+							\morph, ev[\morph], \decay, ev[\decay],
+							\fmMod, ev[\fmMod], \lpgColour, ev[\lpgColour],
+							\mul, ev[\mul], \volume, ev[\volume],
+							\revDrywet, ev[\revDrywet], \revTime, ev[\revTime],
+							\cloudsSend, ev[\cloudsSend], \delaySend, ev[\delaySend],
+							\reverbSend, ev[\reverbSend],
+							\distDrive, ev[\distDrive], \distAmount, ev[\distAmount]
+						);
+					};
 				};
 
 				ev
 			},
 
 			Pbind(
+				\type, Pfunc { if (~plaits.synths[i].droneMode == 1) { \rest } { \note } },
 				\instrument, \plaits,
 				\group, ~voiceGroup,
 				\delayBus, ~delayBus,

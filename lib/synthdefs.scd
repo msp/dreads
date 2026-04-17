@@ -16,90 +16,92 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 (
-SynthDef(\plaits,
-	{
-		arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1;
+// Shared signal chain for Plaits variants
+// Applies stereo mode, distortion, reverb, and bus routing to raw MiPlaits output
+~plaitsSigChain = { |sig, env, out, stereoMode, distDrive, distAmount,
+	revTime, revDrywet, revDamp, revHp, revFreeze, volume,
+	cloudsSend, delaySend, reverbSend|
 
-		var cleanSig, distSig;
-		// , fadeTime=2.0, fadeGate=1;
-		// var fadeEnv = EnvGen.kr(Env.asr(0, 1, fadeTime), fadeGate, doneAction: 2);
+	var cleanSig, distSig;
 
-		/*
-		var trig = Select.kr(trigger, [
-		0.0,
-		Impulse.kr(speed)
-		]);
-		*/
+	// Stereo mode selection: 0=mono (left only), 1=stereo
+	sig = Select.ar(stereoMode.clip(0, 1), [
+		sig[0] ! 2,
+		sig
+	]);
 
-		// var timbMod = MouseY.kr(-1,1);
+	// Crossover distortion with wet/dry mix
+	cleanSig = sig;
+	distSig = CrossoverDistortion.ar(sig, distDrive.clip(0.1, 2.0), 0.5);
+	sig = (cleanSig * (1 - distAmount.clip(0, 1))) + (distSig * distAmount.clip(0, 1));
 
-		// doing this client side now
-		// var l_timbre = (timbre + LFTri.kr(freq: speed/10, mul: timbMod)).clip(0, 1);
-		// var l_morph = (morph + LFTri.kr(freq: speed/10, mul: morphMod)).clip(0, 1);
+	// Sanitize to kill denormals, infs, and NaNs - crucial for engine switching!
+	sig = sig.sanitize;
 
-		var sig = MiPlaits.ar(
-			pitch: pitch.clip(0, 127),
-			engine: engine.clip(0, 15),
-			harm: harm.clip(0, 1),
-			// timbre: 0.5,
-			timbre: timbre.clip(0, 1),
-			morph: morph.clip(0, 1),
-			trigger: gate,
-			// trigger: Impulse.kr(speed),
-			// level: level,
-			decay: decay.clip(0, 1),
-			fm_mod: fmMod.clip(-1, 1),
-			// Can't use these with non Scalar timbre / morph
-			// timb_mod: timbMod,
-			// morph_mod: morphMod,
-			lpg_colour: lpgColour.clip(0, 1),
-			mul: mul
-		);
+	sig = MiVerb.ar(
+		(sig * env).tanh,
+		time: revTime.clip(0, 1.25),
+		drywet: revDrywet.clip(0, 1),
+		damp: revDamp.clip(0, 1),
+		hp: revHp.clip(0, 1),
+		freeze: revFreeze.clip(0, 1),
+		diff: 0.625,
+		mul: volume.clip(0, 2.0),
+		add: 0.0
+	);
 
-		var env = Linen.kr(gate, doneAction: Done.freeSelf);
+	Out.ar(~cloudsBus, sig * cloudsSend);
+	Out.ar(~delayBus, sig * delaySend);
+	Out.ar(~reverbBus, sig * reverbSend);
 
-		// Stereo mode selection: 0=mono (left only), 1=stereo
-		sig = Select.ar(stereoMode.clip(0, 1), [
-			sig[0] ! 2,  // Mono: duplicate left channel to both sides
-			sig          // Stereo: keep original stereo signal
-		]);
+	Out.ar(out, LeakDC.ar(sig.tanh));
+};
 
-		// Tube-style asymmetric distortion with wet/dry mix
-		// var cleanSig = sig;
-		// var drive = distDrive.clip(1, 8);
-		// var distSig = sig * drive;
-		// distSig = distSig + (distSig.squared * 0.1); // Add harmonics
-		// distSig = distSig.softclip;
-		// distSig = distSig / drive; // Compensate gain
-		//
-		// // Mix clean and distorted signals
-		// sig = (cleanSig * (1 - distAmount.clip(0, 1))) + (distSig * distAmount.clip(0, 1));
-		cleanSig = sig;
-		distSig = CrossoverDistortion.ar(sig, distDrive.clip(0.1, 2.0), 0.5);
-		sig = (cleanSig * (1 - distAmount.clip(0, 1))) + (distSig * distAmount.clip(0, 1));
+SynthDef(\plaits, {
+	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1;
 
+	var sig = MiPlaits.ar(
+		pitch: pitch.clip(0, 127),
+		engine: engine.clip(0, 15),
+		harm: harm.clip(0, 1),
+		timbre: timbre.clip(0, 1),
+		morph: morph.clip(0, 1),
+		trigger: gate,
+		decay: decay.clip(0, 1),
+		fm_mod: fmMod.clip(-1, 1),
+		lpg_colour: lpgColour.clip(0, 1),
+		mul: mul
+	);
 
-		// Sanitize to kill denormals, infs, and NaNs - crucial for engine switching!
-		sig = sig.sanitize;
+	var env = Linen.kr(gate, doneAction: Done.freeSelf);
 
-		sig = MiVerb.ar(
-			(sig * env).tanh,
-			time: revTime.clip(0, 1.25),
-			drywet: revDrywet.clip(0, 1),
-			damp: revDamp.clip(0, 1),
-			hp: revHp.clip(0, 1),
-			// freeze: TRand.kr(-1, 1, Dust.kr(0.7)),
-			freeze: revFreeze.clip(0, 1),
-			diff: 0.625,
-			mul: volume.clip(0, 2.0),
-			add: 0.0
-		);
+	~plaitsSigChain.(sig, env, out, stereoMode, distDrive, distAmount,
+		revTime, revDrywet, revDamp, revHp, revFreeze, volume,
+		cloudsSend, delaySend, reverbSend);
+}).add;
 
-		Out.ar(~cloudsBus, sig * cloudsSend);
-		Out.ar(~delayBus, sig * delaySend);
-		Out.ar(~reverbBus, sig * reverbSend);
+// Drone variant: continuous trigger, ASR envelope with release on gate=0
+SynthDef(\plaitsDrone, {
+	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1;
 
-		Out.ar(out, LeakDC.ar(sig.tanh));
+	var sig = MiPlaits.ar(
+		pitch: pitch.clip(0, 127),
+		engine: engine.clip(0, 15),
+		harm: harm.clip(0, 1),
+		timbre: timbre.clip(0, 1),
+		morph: morph.clip(0, 1),
+		trigger: 1,
+		decay: decay.clip(0, 1),
+		fm_mod: fmMod.clip(-1, 1),
+		lpg_colour: lpgColour.clip(0, 1),
+		mul: mul
+	);
+
+	var env = EnvGen.kr(Env.asr(5, 1, 5), gate, doneAction: Done.freeSelf);
+
+	~plaitsSigChain.(sig, env, out, stereoMode, distDrive, distAmount,
+		revTime, revDrywet, revDamp, revHp, revFreeze, volume,
+		cloudsSend, delaySend, reverbSend);
 }).add;
 
 // Filter Delay Send Effect

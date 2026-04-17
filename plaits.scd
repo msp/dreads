@@ -57,6 +57,7 @@ s.waitForBoot {
 ////////////////////////////////////////////////////////////////////////////////
 (
 	~voiceGroup = Group.new(s);
+	~droneSynths = Array.fill(~plaits.synths.size, { nil });
 	~fxGroup = Group.new(s, \addAfter, ~voiceGroup);
 
 	~cloudsFX = Synth(\globalClouds, [\out, if (~recordingMode) { 16 } { 0 }], ~fxGroup, \addToTail);

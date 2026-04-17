@@ -342,6 +342,56 @@
 	result;
 };
 
+// Start a persistent drone synth for a plaits instance
+~startDrone = { |i|
+	var instance = ~plaits.synths[i];
+	var out;
+
+	// Stop existing drone if any
+	if (~droneSynths.notNil && ~droneSynths[i].notNil) {
+		~droneSynths[i].release;
+		~droneSynths[i] = nil;
+	};
+
+	out = ~voiceOutBus.(\plaits, i);
+
+	~droneSynths[i] = Synth(\plaitsDrone, [
+		\out, out,
+		\pitch, instance.pitch,
+		\engine, instance.engine,
+		\harm, instance.harm,
+		\timbre, instance.timbre,
+		\morph, instance.morph,
+		\decay, instance.decay,
+		\fmMod, instance.fmMod,
+		\lpgColour, instance.lpgColour,
+		\mul, if (instance.mute == 1) { 0 } { instance.mul },
+		\revDrywet, instance.revDrywet,
+		\revTime, instance.revTime,
+		\revDamp, instance.revDamp,
+		\revHp, instance.revHp,
+		\revFreeze, instance.revFreeze,
+		\volume, instance.volume,
+		\cloudsSend, instance.cloudsSend,
+		\delaySend, instance.delaySend,
+		\reverbSend, instance.reverbSend,
+		\distDrive, instance.distDrive,
+		\distAmount, instance.distAmount,
+		\stereoMode, instance.stereoMode,
+	], ~voiceGroup, \addToHead);
+
+	["Drone started for plaits", i].postln;
+};
+
+// Stop a persistent drone synth for a plaits instance
+~stopDrone = { |i|
+	if (~droneSynths.notNil && ~droneSynths[i].notNil) {
+		~droneSynths[i].release;
+		~droneSynths[i] = nil;
+		["Drone stopped for plaits", i].postln;
+	};
+};
+
 // Custom event type for one-shot sample playback
 // Never sends gate=0, synth is expected to free itself via doneAction
 Event.addEventType(\oneShotSample, {

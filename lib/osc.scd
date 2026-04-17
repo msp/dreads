@@ -19,9 +19,19 @@ OSCdef.new(
 			{
 				// Clear stream cache so patterns like \offbeat start at position 0
 				~sequenceStreamCache = Dictionary.new;
+				// Start drone synths for any instances with droneMode enabled
+				~plaits.synths.do { |instance, idx|
+					if (instance.droneMode == 1) { ~startDrone.(idx) };
+				};
 				x.play(~tempoClock);
 			},
-			{ x.stop }
+			{
+				x.stop;
+				// Stop all drone synths
+				~plaits.synths.do { |instance, idx|
+					~stopDrone.(idx);
+				};
+			}
 		);
 	},
 	"/plaits/start"
@@ -48,8 +58,33 @@ OSCdef.new(
 						~plaits.synths[instanceIndex][paramKey] = value;
 						~tempoClock.tempo = (value.max(0.1))/60;
 					} {
-						// Generic parameter update
-						~plaits.synths[instanceIndex][paramKey] = value;
+						if (paramKey == 'droneMode') {
+							~plaits.synths[instanceIndex][paramKey] = value;
+							if (value == 1) {
+								~startDrone.(instanceIndex);
+							} {
+								~stopDrone.(instanceIndex);
+							};
+						} {
+							if (paramKey == 'mute') {
+								~plaits.synths[instanceIndex][paramKey] = value;
+								// Forward mute to drone synth
+								if (~droneSynths.notNil && ~droneSynths[instanceIndex].notNil) {
+									if (value == 1) {
+										~droneSynths[instanceIndex].set(\mul, 0);
+									} {
+										~droneSynths[instanceIndex].set(\mul, ~plaits.synths[instanceIndex].mul);
+									};
+								};
+							} {
+								// Generic parameter update
+								~plaits.synths[instanceIndex][paramKey] = value;
+								// Forward to drone synth if active
+								if (~droneSynths.notNil && ~droneSynths[instanceIndex].notNil) {
+									~droneSynths[instanceIndex].set(paramKey, value);
+								};
+							};
+						};
 					};
 				},
 				"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString
@@ -375,6 +410,10 @@ OSCdef.new(
 		var value = msg[1];
 		["flushSynths", value].postln;
 		~voiceGroup.freeAll;
+		// Clear drone synth references (synths already freed by freeAll)
+		if (~droneSynths.notNil) {
+			~droneSynths.size.do { |i| ~droneSynths[i] = nil };
+		};
 	},
 	"/flushSynths"
 );

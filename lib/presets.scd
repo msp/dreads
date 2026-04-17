@@ -789,6 +789,20 @@
 	// Reloading sequencer rebuilds pattern to match new samples array length
 	(~basePath +/+ "lib/sequencer.scd").load;
 
+	// Start/stop drones based on loaded preset's droneMode values
+	// Only start if playback is active — drones will be created on play otherwise
+	~plaits.synths.do { |instance, i|
+		if (wasPlaying) {
+			if (instance.droneMode == 1) {
+				~startDrone.(i);
+			} {
+				~stopDrone.(i);
+			};
+		} {
+			~stopDrone.(i);
+		};
+	};
+
 	// Resume playback if it was running — causes a brief timing gap
 	if (wasPlaying) { Pdef(\plaitsSequence).play(~tempoClock) };
 

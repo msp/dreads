@@ -55,21 +55,21 @@ seqNames.postln;
 )
 
 (
-  // Check what sequence is stored
-  "Sequence value:".postln;
-  ~plaits.samples[0].sequences.rate.postln;
+// Check what sequence is stored
+"Sequence value:".postln;
+~plaits.samples[0].sequences.rate.postln;
 
-  // Check what ~getSequenceValue returns
-  "Get sequence value result:".postln;
-  ~getSequenceValue.(~plaits.samples[0], 0, \samples, \rate).postln;
+// Check what ~getSequenceValue returns
+"Get sequence value result:".postln;
+~getSequenceValue.(~plaits.samples[0], 0, \samples, \rate).postln;
 
-  // Check the base rate value
-  "Base rate:".postln;
-  ~plaits.samples[0].rate.postln;
+// Check the base rate value
+"Base rate:".postln;
+~plaits.samples[0].rate.postln;
 
-  // Check if sample is even playing
-  "Sample dur:".postln;
-  ~plaits.samples[0].dur.postln;
+// Check if sample is even playing
+"Sample dur:".postln;
+~plaits.samples[0].dur.postln;
 
 )
 
@@ -333,14 +333,14 @@ MiClouds
 x = {
 	var buffer = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
 	var input = PlayBuf.ar(1, buffer, 1, loop: 1)!2;
-
+	
 	var dens = LFNoise1.kr(0.3).range(0.3, 0.45);
-
+	
 	Out.ar(~cloudsBus, input);
 	// Out.ar(~delayBus, input);
 	// Out.ar(0, LeakDC.ar(input) * 0.2);
 	// MiClouds.ar(input, 0, 0, 0, dens, 0.5, drywet: 1, mode: 0);
-
+	
 }.play
 )
 )
@@ -525,5 +525,19 @@ q = p.asStream.nextN(20).postln;
 
 Rotate2
 
+~droneSynths[0].nodeID
 
 
+// Test 1: minimal \set Pbind (matches Reddit example exactly)                                                                                 
+Pdef(\droneTest, Pbind(\type, \set, \id, ~droneSynths[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play;                        
+
+// Test 2: same but with TempoClock                                                                                                            
+Pdef(\droneTest, Pbind(\type, \set, \id, ~droneSynths[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play(~tempoClock);
+
+Pdef(\p1,Pbind(\id, ~droneSynths[0].nodeID, \type, \set, \pitch, 200+Pwhite(0,50)))
+
+Pdef(\p1).play
+
+// Stop                                                   
+Pdef(\droneTest).stop; 
+Pdef(\p).stop; 

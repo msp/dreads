@@ -94,6 +94,7 @@
 	delaySend: 0.0,
 	distAmount: 0.0,
 	distDrive: 0.0,
+	droneMode: 0,
 	dur: 0.25,
 	engine: 1.0,
 	fmMod: 0.0,
