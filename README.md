@@ -28,20 +28,16 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pre
    - Download correct versions for your SC version and architecture (Intel/Apple Silicon)
    - Extract `mi-UGens/` and `sc3-plugins/` folders to Extensions directory
 
-3. **Install [Open Stage Control](https://openstagecontrol.ammd.net/docs/getting-started/introduction/#installation)**
+3. **Allow extensions through macOS Gatekeeper** (first time / after updates):
+   ```bash
+   xattr -dr com.apple.quarantine "/Library/Application Support/SuperCollider/Extensions/mi-UGens"
+   xattr -dr com.apple.quarantine "/Library/Application Support/SuperCollider/Extensions/sc3-plugins"
+   ```
+
+4. **Install [Open Stage Control](https://openstagecontrol.ammd.net/docs/getting-started/introduction/#installation)**
    - macOS: If blocked by Gatekeeper or "damaged and can't be opened" error, run: `xattr -dr com.apple.quarantine /Applications/open-stage-control.app` ([source](https://disable-gatekeeper.github.io))
 
-4. Restart SuperCollider
-
-5. **Allow MI-UGens to run** (macOS only, first time):
-   - On first boot, you'll see security warnings for each MI-UGen plugin
-
-   <img src="images/mi-ugens-security-warning.jpeg" alt="MI-UGens Security Warning" width="200px">
-
-   - Go to **System Settings → Privacy & Security**
-   - Scroll down and click **"Allow Anyway"** for each blocked plugin
-   - Restart SuperCollider after allowing all plugins
-   - More info: [Tidal Cycles forum thread](https://club.tidalcycles.org/t/mutable-instruments-ugens/2730/106)
+5. Restart SuperCollider
 
 6. **Verify installation**:
    - Open `diagnostics.scd` in SuperCollider
@@ -103,6 +99,13 @@ Open `diagnostics.scd` in SuperCollider and execute the block to check your syst
 - Check architecture (Intel vs Apple Silicon builds)
 - Restart SC after installing extensions
 - Run `diagnostics.scd` to verify installation
+
+**macOS security warnings for MI-UGens:**
+- Re-run the `xattr` commands from step 3 (required after each extension update)
+- Alternatively, go to **System Settings → Privacy & Security**, scroll down and click **"Allow Anyway"** for each blocked plugin, then restart SuperCollider
+- More info: [Tidal Cycles forum thread](https://club.tidalcycles.org/t/mutable-instruments-ugens/2730/106)
+
+<img src="images/mi-ugens-security-warning.jpeg" alt="MI-UGens Security Warning" width="200px">
 
 ## Project Structure
 
