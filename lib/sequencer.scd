@@ -95,7 +95,11 @@ x = Pdef(\plaitsSequence,
 			},
 
 			Pbind(
-				\type, Pfunc { if (~plaits.synths[i].droneMode == 1) { \rest } { \note } },
+				\type, Pfunc {
+					if (~plaits.synths[i].droneMode == 1) { \rest } {
+						if (~plaits.synths[i].mute == 1) { \rest } { \note };
+					};
+				},
 				\instrument, \plaits,
 				\group, ~voiceGroup,
 				\delayBus, ~delayBus,
@@ -216,7 +220,7 @@ x = Pdef(\plaitsSequence,
 			Pseq([
 			Pfuncn({ Rest(~plaits.samples[i].phaseOffset ? 0) }, 1),
 			Pbind(
-				\type, \oneShotSample,  // Custom event type: never sends gate=0
+				\type, Pfunc { if (~plaits.samples[i].mute == 1) { \rest } { \oneShotSample } },
 				\instrument, \panningSamplePlayer,
 				\group, ~voiceGroup,
 				// Variant selection: two modes, both relative to base scalar, wrapped to bank size
