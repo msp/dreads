@@ -298,7 +298,7 @@ x = Pdef(\plaitsSequence,
 					);
 					var seconds = normalized * duration;  // Scale to actual sample length
 					var frames = ~secondsToFrames.(seconds, buffer);
-					if (i == 0) { ["Sample startPos - norm:", normalized, "seconds:", seconds, "frames:", frames].postln; };
+					// if (i == 0) { ["Sample startPos - norm:", normalized, "seconds:", seconds, "frames:", frames].postln; };
 					frames;
 				},
 				\atk, Pfunc { |event|
