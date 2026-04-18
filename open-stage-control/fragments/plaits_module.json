@@ -1279,7 +1279,15 @@
           "Modal": 12,
           "BD": 13,
           "SD": 14,
-          "HH": 15
+          "HH": 15,
+          "VA+VCF": 16,
+          "Phase Dist": 17,
+          "6op Bass/Syn": 18,
+          "6op Keys/Perc": 19,
+          "6op Pad/Str": 20,
+          "Wave Terrain": 21,
+          "Str Machine": 22,
+          "Chiptune": 23
         }
       },
       {

@@ -62,7 +62,7 @@ SynthDef(\plaits, {
 
 	var sig = MiPlaits.ar(
 		pitch: pitch.clip(0, 127),
-		engine: engine.clip(0, 15),
+		engine: engine.clip(0, 23),
 		harm: harm.clip(0, 1),
 		timbre: timbre.clip(0, 1),
 		morph: morph.clip(0, 1),
@@ -86,7 +86,7 @@ SynthDef(\plaitsDrone, {
 
 	var sig = MiPlaits.ar(
 		pitch: pitch.clip(0, 127),
-		engine: engine.clip(0, 15),
+		engine: engine.clip(0, 23),
 		harm: harm.clip(0, 1),
 		timbre: timbre.clip(0, 1),
 		morph: morph.clip(0, 1),
