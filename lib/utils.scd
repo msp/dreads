@@ -397,7 +397,7 @@
 Event.addEventType(\oneShotSample, {
 	var server = ~server ?? { Server.default };
 
-	["oneShotSample event at", thisThread.beats, "dur =", ~dur].postln;
+	// ["oneShotSample event at", thisThread.beats, "dur =", ~dur].postln;
 
 	// Build the synth - based on standard 'note' event type
 	// but without storing the node for later gate-off
