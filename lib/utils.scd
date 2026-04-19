@@ -57,7 +57,7 @@
 // Engine selection with expression evaluation
 ~setEngine = { |seqExpr, currentEngine=0|
 	// Replace "e" placeholder with current engine value in the expression
-	var engines = (0..15);
+	var engines = (0..23);
 	var expr = seqExpr.asString.replace("e", currentEngine.asString);
 	var output = engines.wrapAt(expr.interpret);
 

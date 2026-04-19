@@ -173,7 +173,16 @@ x = Pdef(\plaitsSequence,
 				\lpgColour, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \lpgColour), ~plaits.synths[i].lpgColour);
 				},
-				\legato, Pfunc { |event| ~plaits.synths[i].legato },
+				\legato, Pfunc { |event|
+					var eng = ~plaits.synths[i].engine.asInteger;
+					if (eng >= 18 and: { eng <= 20 }) {
+						// FM engines bypass LPG/decay, so remap decay knob to legato
+						// decay 0-1 → legato 0.01-15
+						~plaits.synths[i].decay.linlin(0, 1, 0.01, 15);
+					} {
+						~plaits.synths[i].legato;
+					};
+				},
 				\engine, Pfunc { |event|
 					~setEngine.(~plaits.synths[i].sequences.engine.next, ~plaits.synths[i].engine);
 				},
