@@ -54,7 +54,7 @@
 
 				// harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
 				lpgColour: Pseq([0.1, 0.2, 0.4, 1], inf).asStream,
-				engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
+				engine: Pseq(["e", "e", "e-13", "e", "e", "e-14"], inf).asStream,
 				// duration: \gauss,
 
 				duration: Pseq([2], inf).asStream,
