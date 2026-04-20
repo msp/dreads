@@ -700,7 +700,11 @@
 	// First save any editor changes
 	~saveAllModified.();
 
-	presetDir = ~basePath +/+ "presets/plaits";
+	presetDir = if (~currentPresetTemplate.notNil) {
+		~currentPresetTemplate.dirname
+	} {
+		~basePath +/+ "presets/plaits"
+	};
 
 	("~savePresetAs with name: " ++ name).postln;
 
