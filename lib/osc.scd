@@ -449,7 +449,7 @@ OSCdef.new(
 
 // Push current state values to UI
 ~pushStateToUI = {
-	var ui, plaitsArray, fxSettings, seqNames;
+	var ui, plaitsArray, fxSettings, seqNames, knownTags, uncategorized;
 
 	ui = ~ui.();
 
@@ -521,11 +521,38 @@ OSCdef.new(
 	~sendSequenceStateToUI.(plaitsArray, "plaits", ui);
 	~sendSequenceStateToUI.(~plaits.samples, "samples", ui);
 
-	// Populate sequence modal switch with all available sequences from library
-	seqNames = ~sequenceLibrary.keys.asArray.sort.collect(_.asString);
-	["seqModal: sending", seqNames.size, "sequences"].postln;
-	ui.sendMsg(*(['/seqModal/switch', 'values'] ++ seqNames));
-	// ["\nPopulated seqModal with sequences:", seqNames].postln;
+	// Populate sequence modal switch with categorized sequences from library
+	seqNames = List[];
+	[
+		[\rhythm, "RHYTHM"],
+		[\shape, "SHAPE"],
+		[\accent, "ACCENT"],
+		[\pitch, "PITCH"],
+		[\timing, "TIMING"],
+	].do { |pair|
+		var tag, label, entries;
+		tag = pair[0]; label = pair[1];
+		entries = ~sequenceLibrary.keys.asArray.select { |k|
+			~sequenceLibrary[k].tag == tag
+		}.sort.collect(_.asString);
+		if (entries.size > 0) {
+			seqNames.add("── " ++ label ++ " ──");
+			seqNames.addAll(entries);
+		};
+	};
+	// Collect any entries with unrecognized tags (e.g. user sequences with custom tags)
+	knownTags = [\all, \rhythm, \shape, \accent, \pitch, \timing];
+	uncategorized = ~sequenceLibrary.keys.asArray.select { |k|
+		knownTags.includes(~sequenceLibrary[k].tag).not
+	}.sort.collect(_.asString);
+	if (uncategorized.size > 0) {
+		seqNames.add("── OTHER ──");
+		seqNames.addAll(uncategorized);
+	};
+	["seqModal:", seqNames.size, "items"].postln;
+	ui.sendMsg('/EDIT', 'seqModal/switch',
+		"{\"values\":[" ++ seqNames.collect { |s| "\"" ++ s ++ "\"" }.join(",") ++ "]}"
+	);
 
 	"Plaits state pushed to UI!".postln;
 };

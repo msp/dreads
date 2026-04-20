@@ -36,6 +36,9 @@ s.freeAll;
 
 (Document.current.dir ++ "/lib/globals.scd").load;
 (Document.current.dir ++ "/lib/sequence_library.scd").load;
+if (File.exists((Document.current.dir ++ "/lib/user_sequence_library.scd").standardizePath)) {
+	(Document.current.dir ++ "/lib/user_sequence_library.scd").load;
+};
 (Document.current.dir ++ "/lib/utils.scd").load;
 (Document.current.dir ++ "/lib/presets.scd").load;
 

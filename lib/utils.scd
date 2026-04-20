@@ -42,6 +42,24 @@
 	~modulateBipolar.(combinedMod, uiValue);
 };
 
+// Merge user sequences into ~sequenceLibrary, warn on clashes, refresh UI
+~mergeUserSequences = { |userPatterns|
+	// Remove previous user entries so renames/deletions are clean
+	if (~userSequenceKeys.notNil) {
+		~userSequenceKeys.do { |key| ~sequenceLibrary.removeAt(key) };
+	};
+	// Warn on clashes with built-in sequences
+	userPatterns.keysValuesDo { |key, val|
+		if (~sequenceLibrary[key].notNil) {
+			("WARNING: user sequence '" ++ key ++ "' overrides built-in sequence").postln;
+		};
+	};
+	~userSequenceKeys = userPatterns.keys.asArray;
+	~sequenceLibrary.putAll(userPatterns);
+	["Merged", userPatterns.size, "user sequences"].postln;
+	~pushStateToUI.();
+};
+
 // Duration calculation with safety bounds
 ~setDuration = { |seqValue, divSeqValue|
 	var output = 1;
