@@ -14,13 +14,13 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.25,
+			dur: Rest(0.5),
 			engine: 13.0,
 			fmMod: 0.47,
-			harm: 0.62,
+			harm: 0.52,
 			legato: 0.05,
 			lpgColour: 0.5,
-			morph: 0.51,
+			morph: 0.76,
 			morphMod: 0.16,
 			mul: 0.5,
 			phaseOffset: 0.0,
@@ -37,13 +37,13 @@
 			tempo: 120.0,
 			timbMod: 0.0,
 			timbre: 0.76,
-			volume: 1.26
+			volume: 1.3
 		),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
 				// duration: \hold,
-				duration: \eucl_7_16,
+				duration: \eucl_5_8,
 				// duration: Pseq([1/2], inf).asStream,
 			div: \unit,
 			)
@@ -56,10 +56,10 @@
 		(
 			cloudsSend: 0.1,
 			decay: 0.48,
-			delaySend: 0.0,
+			delaySend: 0.14,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: Rest(0.5),
+			dur: 0.5,
 			engine: 15.0,
 			fmMod: 0.0,
 			harm: 0.66,
@@ -82,7 +82,7 @@
 			tempo: 120.0,
 			timbMod: 0.67,
 			timbre: 0.72,
-			volume: 0.49
+			volume: 0.0
 		),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
@@ -102,13 +102,13 @@
 			cloudsSend: 0.0,
 			decay: 0.29,
 			delaySend: 0.41,
-			distAmount: 0.0,
+			distAmount: 0.21,
 			distDrive: 0.0,
-			dur: 0.25,
+			dur: Rest(0.5),
 			engine: 2.0,
-			fmMod: 0.0,
-			harm: 0.86,
-			legato: 9.0,
+			fmMod: 0.69,
+			harm: 0.83,
+			legato: 4.0,
 			lpgColour: 0.5,
 			morph: 0.64,
 			morphMod: 0.2,
@@ -126,13 +126,13 @@
 			stereoMode: 1.0,
 			tempo: 120.0,
 			timbMod: 0.46,
-			timbre: 0.48,
-			volume: 1.05
+			timbre: 0.67,
+			volume: 1.07
 		),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
-				duration: \eucl_7_16,
+				duration: \eucl_3_8,
 				delaySend: \gate_every8,
 			div: \unit,
 			distAmount: \gate_every8,
@@ -155,7 +155,7 @@
 			delaySend: 0.43,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 1.5,
+			dur: Rest(2.0),
 			legato: 0.7,
 			mul: 1.0,
 			panDur: 0.5,
@@ -171,7 +171,7 @@
 			startPos: 0.0,
 			tempo: 120.0,
 			variant: 2.0,
-			volume: 1.22
+			volume: 0.0
 		),
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
@@ -192,10 +192,10 @@
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
 		(
-			atk: 0.21,
+			atk: 0.45,
 			bankName: 'default',
 			cloudsSend: 0.0,
-			decay: 0.06,
+			decay: 0.67,
 			delaySend: 0.16,
 			distAmount: 0.0,
 			distDrive: 0.0,

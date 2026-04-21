@@ -154,8 +154,10 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 ~fm.(1, 2)
 ~fm.(2, 4)
 ~fm.(3, 5)
-~fmFwd.(3)
-~fmBack.(3)
+
+~fmFwd.(1)
+~fmBack.(1)
+
 ~fmBank.(1, 2)
 ~fmList.(1)
 ~fmList.(1, 2)
