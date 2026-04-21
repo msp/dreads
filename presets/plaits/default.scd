@@ -14,17 +14,19 @@
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 1.0,
+			droneMode: 0.0,
+			dur: Rest(1.0),
 			engine: 13.0,
 			fmMod: 0.47,
-			harm: 0.63,
+			harm: 0.67,
 			legato: 9.0,
 			lpgColour: 0.5,
-			morph: 0.5,
+			morph: 0.59,
 			morphMod: 0.4,
 			mul: 0.5,
+			mute: 0.0,
 			phaseOffset: 0.0,
-			pitch: 48.75,
+			pitch: 60.0,
 			revDamp: 0.8,
 			revDrywet: 0.0,
 			revFreeze: 0.0,
@@ -37,13 +39,21 @@
 			tempo: 165.0,
 			timbMod: 0.3,
 			timbre: 0.76,
-			volume: 1.28
+			volume: 1.82
 		),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
 				timbre: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf).asStream,
-				decay: Pseq([0.5, 0.3, Pseq([0.6, 0.1, 0.8] / 3)] / 1, inf).asStream,
+				decay: Pseq([0.64, 0.69, 0.73, 0.09, 0.9, 0.56, 0.19, 0.2], inf).asStream,
+
+				// decay: Pseq([0.64, 0.69, 0.73, 0.09, 0.9, 0.56, 0.19, 0.2], inf).asStream,
+
+				// decay: Pseq([0.47, 0.75, 0.73, 0.47, 0.2, 0.91, 0.1, 0.36, 0.68, 0.31, 0.08, 0.43, 0.54, 0.16, 0.78, 0.02], inf).asStream,
+
+				// decay: Pseq([0.47, 0.75, 0.73, 0.47, 0.2, 0.91, 0.1, 0.36, 0.68, 0.31, 0.08, 0.43, 0.54, 0.16, 0.78, 0.02], inf).asStream,
+
+				// decay: Pseq([0.5, 0.3, Pseq([0.6, 0.1, 0.8] / 3)] / 1, inf).asStream,
 				// decay: \gauss,
 				morph: Pseq(0.2 ! 19 ++ 0.5, inf).asStream,
 				harm: Pseq(0.5 ! 5 ++ 0.3, inf).asStream,
@@ -51,7 +61,15 @@
 				// engine: Pseq(["e", "e", "e-5", "e", "e", "e-6"], inf).asStream,
 				// duration: \gauss,
 
-				duration: Pseq([1, Rest(1), Rest(1), 1, Rest(1), 1, Rest(1)], inf).asStream,
+				duration: \sprs_quarter,
+
+				// duration: Pseq([1.0, 0.75, 1.0, 0.25, 0.5, Rest(0.75), 0.5, Rest(0.75), Rest(0.25), 0.75], inf).asStream,
+
+				// duration: Pseq([0.5, 0.75, 0.25, Rest(0.5), Rest(0.5), Rest(0.75), Rest(1.0), 0.5, Rest(1.0), Rest(0.75), 0.25, Rest(0.25), Rest(0.25), 1.0, 1.0], inf).asStream,
+
+				// duration: Pseq([Rest(0.5), 1.0, 1.0, 0.25, 0.75, Rest(0.25), Rest(1.0), Rest(1.0), Rest(1.0), 0.75, Rest(0.5)], inf).asStream,
+
+				// duration: Pseq([1, Rest(1), Rest(1), 1, Rest(1), 1, Rest(1)], inf).asStream,
 
 				// duration: Pseq([
 				// 0.7,
@@ -61,7 +79,9 @@
 				// 0.7,
 				// Pwrand([1.4, 0.7], [0.6, 0.4].normalizeSum),
 				// ], inf).asStream,
-				div: Pseq([1, 2, 1, 1, 2], inf).asStream,
+				div: \unit,
+
+				// div: Pseq([1, 2, 1, 1, 2], inf).asStream,
 			)
 			// $PRESET_SEQUENCES_END
 		),
@@ -75,7 +95,8 @@
 			delaySend: 0.06,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 0.5,
+			droneMode: 0.0,
+			dur: 1.0,
 			engine: 15.0,
 			fmMod: 0.0,
 			harm: 0.48,
@@ -84,6 +105,7 @@
 			morph: 0.07,
 			morphMod: 0.2,
 			mul: 0.5,
+			mute: 0.0,
 			phaseOffset: -0.5,
 			pitch: 49.0,
 			revDamp: 0.8,
@@ -121,21 +143,23 @@
 			// $PRESET_SCALARS_START
 		(
 			cloudsSend: 0.0,
-			decay: 0.18,
+			decay: 0.54,
 			delaySend: 0.0,
 			distAmount: 0.0,
 			distDrive: 0.0,
-			dur: 2.0,
-			engine: 2.0,
-			fmMod: 0.0,
-			harm: 0.86,
+			droneMode: 0.0,
+			dur: Rest(1.4),
+			engine: 18.0,
+			fmMod: 0.06,
+			harm: 0.94,
 			legato: 9.0,
-			lpgColour: 0.5,
-			morph: 0.21,
+			lpgColour: 0.6,
+			morph: 0.73,
 			morphMod: 0.4,
 			mul: 0.5,
+			mute: 0.0,
 			phaseOffset: 0.0,
-			pitch: 24.08,
+			pitch: 40.0,
 			revDamp: 0.4,
 			revDrywet: 0.19,
 			revFreeze: 0.0,
@@ -147,13 +171,15 @@
 			stereoMode: 1.0,
 			tempo: 165.0,
 			timbMod: 0.7,
-			timbre: 0.43,
-			volume: 0.95
+			timbre: 0.27,
+			volume: 0.85
 		),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
-				duration: \backbeat,
+				duration: Pseq([1.0, Rest(0.25), 0.75, Rest(0.5), 1.0, Rest(0.75), 0.5, 1.0], inf).asStream,
+
+				// duration: Pseq([1.0, Rest(0.25), 0.75, Rest(0.5), 1.0, Rest(0.75), 0.5, 1.0], inf).asStream,
 
 				// duration: Pseq([
 				// 0.7,
@@ -182,6 +208,7 @@
 			dur: 1.0,
 			legato: 0.7,
 			mul: 1.0,
+			mute: 1.0,
 			panDur: 0.5,
 			phaseOffset: 0.0,
 			rate: 1.0,
@@ -200,6 +227,10 @@
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
+			div: \unit,
+			rate: \unit,
+			mul: \unit,
+			duration: \unit,
 			)
 			// $PRESET_SAMPLE_SEQUENCES_END
 		),
@@ -218,6 +249,7 @@
 			dur: 1.0,
 			legato: 0.7,
 			mul: 1.0,
+			mute: 1.0,
 			panDur: 0.5,
 			phaseOffset: 0.0,
 			rate: 1.0,
@@ -236,6 +268,10 @@
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
+			div: \unit,
+			rate: \unit,
+			mul: \unit,
+			duration: \unit,
 			)
 			// $PRESET_SAMPLE_SEQUENCES_END
 		),
@@ -254,6 +290,7 @@
 			dur: 1.0,
 			legato: 0.7,
 			mul: 1.0,
+			mute: 1.0,
 			panDur: 0.5,
 			phaseOffset: 0.0,
 			rate: 1.0,
@@ -272,6 +309,10 @@
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
+			div: \unit,
+			rate: \unit,
+			mul: \unit,
+			duration: \unit,
 			)
 			// $PRESET_SAMPLE_SEQUENCES_END
 		)

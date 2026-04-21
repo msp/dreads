@@ -294,7 +294,7 @@
 
 // Process sequence section: parse and update symbols while preserving patterns
 ~processSequenceSection = { |lines, instanceType, instanceIdx|
-	var blocks, output, runtimeInstance, runtimeSequences, processedParams, newParams;
+	var blocks, output, runtimeInstance, runtimeSequences, processedParams, newParamIndent;
 	var openParenLine, closeParenLine, contentLines, processedLineIndices;
 
 	// Get runtime sequences dictionary
@@ -407,15 +407,19 @@
 	};
 
 	// Add any new params from runtime that aren't in template (skip \hold defaults)
+	// Derive indent from existing parsed blocks, fallback to 3 tabs
+	newParamIndent = if (blocks.size > 0) {
+		blocks.values.first.indent;
+	} { "\t\t\t" };
 	runtimeSequences.keysValuesDo { |paramName, value|
 		if (processedParams.includes(paramName).not) {
 			if (value.isKindOf(Symbol) && (value != \hold)) {
 				("  Adding new symbol: " ++ paramName ++ " → \\" ++ value).postln;
-				output = output.add("\t\t\t" ++ paramName ++ ": \\" ++ value ++ ",");
+				output = output.add(newParamIndent ++ paramName ++ ": \\" ++ value ++ ",");
 			};
 			if (value.isKindOf(Dictionary) and: { value[\source].notNil }) {
 				("  Adding new inline sequence: " ++ paramName).postln;
-				output = output.add("\t\t\t" ++ paramName ++ ": " ++ value[\source] ++ ",");
+				output = output.add(newParamIndent ++ paramName ++ ": " ++ value[\source] ++ ",");
 			};
 		};
 	};
@@ -543,7 +547,7 @@
 					};
 				};
 
-				result = result.add("\t\t(" ++ paramLines.join(", ") ++ "),");
+				result = result.add("\t\t\t(" ++ paramLines.join(", ") ++ "),");
 			};
 		};
 
@@ -578,7 +582,7 @@
 					};
 				};
 
-				result = result.add("\t\t(" ++ paramLines.join(", ") ++ "),");
+				result = result.add("\t\t\t(" ++ paramLines.join(", ") ++ "),");
 			};
 		};
 
