@@ -2695,7 +2695,7 @@
         "target": "",
         "ignoreDefaults": false,
         "bypass": false,
-        "onCreate": "window.updateSeqButtonStyle = function(buttonId, seqValue) { setVar(buttonId, 'seqStyle', seqValue !== 'hold' ? 'background-color: rgba(44, 53, 69, 1.00);' : ''); }; window.openSeqModal = function(param, instance, stateId, type) { type = type || 'plaits'; var seq = get(stateId); console.log('openSeqModal called:', param, instance, stateId, type, 'seq:', seq); set('seqModal/context', {param: param, instance: instance, stateId: stateId, type: type}); window._initializingSeqModal = true; set('seqModal/switch', seq); window._initializingSeqModal = false; console.log('Opening modal'); set('seqModal', 1); };",
+        "onCreate": "window.updateSeqButtonStyle = function(buttonId, seqValue) { var style = ''; if (seqValue === 'custom') { style = 'background-color: rgba(44, 53, 69, 1.00);'; } else if (seqValue && seqValue !== 'hold' && seqValue !== '') { style = 'background-color: rgba(44, 53, 69, 1.00); border: 1px solid rgba(120, 130, 150, 0.6);'; } setVar(buttonId, 'seqStyle', style); }; window.openSeqModal = function(param, instance, stateId, type) { type = type || 'plaits'; var seq = get(stateId); console.log('openSeqModal called:', param, instance, stateId, type, 'seq:', seq); set('seqModal/context', {param: param, instance: instance, stateId: stateId, type: type}); window._initializingSeqModal = true; set('seqModal/switch', seq); window._initializingSeqModal = false; console.log('Opening modal'); set('seqModal', 1); };",
         "onValue": "",
         "onTouch": "",
         "widgets": [

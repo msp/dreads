@@ -352,29 +352,29 @@
 			blockLines = contentLines[blockInfo.startLine..blockInfo.endLine];
 
 			// Decision logic based on template type and runtime type
-			if (blockInfo.isSymbol) {
-				// Template has symbol
-				if (runtimeValue.isKindOf(Symbol)) {
-					// Case: symbol → symbol (update symbol)
-					("  Updating symbol: " ++ paramName ++ " → \\" ++ runtimeValue).postln;
-					output = output.add(blockInfo.indent ++ paramName ++ ": \\" ++ runtimeValue ++ ",");
-				} {
-					// Case: symbol → stream (preserve template symbol, runtime has custom pattern)
-					("  Preserving symbol: " ++ paramName ++ " (runtime has custom pattern)").postln;
-					output = output.addAll(blockLines);
-				};
-			} {
-				// Template has pattern
-				if (runtimeValue.isKindOf(Symbol)) {
-					// Case: pattern → symbol (replace with symbol, comment out pattern)
-					("  Replacing pattern with symbol: " ++ paramName ++ " → \\" ++ runtimeValue).postln;
-					output = output.add(blockInfo.indent ++ paramName ++ ": \\" ++ runtimeValue ++ ",");
-					output = output.add("");  // Blank line for readability
+			if (runtimeValue.isKindOf(Symbol)) {
+				// Runtime is symbol — write it
+				("  Writing symbol: " ++ paramName ++ " → \\" ++ runtimeValue).postln;
+				output = output.add(blockInfo.indent ++ paramName ++ ": \\" ++ runtimeValue ++ ",");
+				if (blockInfo.isSymbol.not) {
+					// Comment out old pattern from template
+					output = output.add("");
 					commentedLines = ~commentLines.(blockLines, blockInfo.indent);
 					output = output.addAll(commentedLines);
+				};
+			} {
+				if (runtimeValue.isKindOf(Dictionary) and: { runtimeValue[\source].notNil }) {
+					// Runtime is inline sequence with source — serialize it
+					("  Writing inline sequence: " ++ paramName).postln;
+					output = output.add(blockInfo.indent ++ paramName ++ ": " ++ runtimeValue[\source] ++ ",");
+					if (blockInfo.isSymbol.not) {
+						output = output.add("");
+						commentedLines = ~commentLines.(blockLines, blockInfo.indent);
+						output = output.addAll(commentedLines);
+					};
 				} {
-					// Case: pattern → stream (preserve template pattern)
-					("  Preserving pattern: " ++ paramName ++ " (runtime has custom pattern)").postln;
+					// Runtime is plain stream — preserve template code
+					("  Preserving template: " ++ paramName).postln;
 					output = output.addAll(blockLines);
 				};
 			};
@@ -406,11 +406,17 @@
 		};
 	};
 
-	// Add any new symbols from runtime that aren't in template (skip \hold defaults)
+	// Add any new params from runtime that aren't in template (skip \hold defaults)
 	runtimeSequences.keysValuesDo { |paramName, value|
-		if (processedParams.includes(paramName).not && value.isKindOf(Symbol) && (value != \hold)) {
-			("  Adding new symbol: " ++ paramName ++ " → \\" ++ value).postln;
-			output = output.add("\t\t\t" ++ paramName ++ ": \\" ++ value ++ ",");
+		if (processedParams.includes(paramName).not) {
+			if (value.isKindOf(Symbol) && (value != \hold)) {
+				("  Adding new symbol: " ++ paramName ++ " → \\" ++ value).postln;
+				output = output.add("\t\t\t" ++ paramName ++ ": \\" ++ value ++ ",");
+			};
+			if (value.isKindOf(Dictionary) and: { value[\source].notNil }) {
+				("  Adding new inline sequence: " ++ paramName).postln;
+				output = output.add("\t\t\t" ++ paramName ++ ": " ++ value[\source] ++ ",");
+			};
 		};
 	};
 

@@ -60,6 +60,143 @@
 	~pushStateToUI.();
 };
 
+// Randomization ranges per tier
+// Tier 1 (\tonal): sound character
+// Tier 2 (\mod): modulation/dynamics
+// Tier 3 (\fx): effects sends
+~randomizeRanges = (
+	tonal: (
+		engine:    [0, 23, \int],
+		harm:      [0.0, 1.0],
+		timbre:    [0.0, 1.0],
+		morph:     [0.0, 1.0],
+		decay:     [0.1, 0.9],
+		lpgColour: [0.0, 1.0],
+		fmMod:     [-0.3, 0.3],
+		pitch:     [36, 72, \int],
+	),
+	colour: (
+		harm:      [0.0, 1.0],
+		timbre:    [0.0, 1.0],
+		morph:     [0.0, 1.0],
+		decay:     [0.1, 0.9],
+		lpgColour: [0.0, 1.0],
+		fmMod:     [-0.3, 0.3],
+	),
+	mod: (
+		timbMod:   [0.0, 0.5],
+		morphMod:  [0.0, 0.5],
+		legato:    [0.5, 9.0],
+	),
+	fx: (
+		revDrywet:  [0.0, 0.4],
+		revTime:    [0.1, 0.6],
+		delaySend:  [0.0, 0.2],
+		reverbSend: [0.0, 0.3],
+		cloudsSend: [0.0, 0.3],
+		distDrive:  [0.0, 0.3],
+		distAmount: [0.0, 0.3],
+	),
+);
+
+// Randomize a plaits instance (1-based)
+// mode: \tonal (tier 1), \default (tiers 1+2), \full (tiers 1+2+3)
+~randomize = { |inst=1, mode=\default|
+	var idx, tiers;
+	idx = inst - 1;
+	tiers = switch(mode,
+		\tonal,  { [\tonal] },
+		\colour, { [\colour] },
+		\full,   { [\tonal, \mod, \fx] },
+		         { [\tonal, \mod] }
+	);
+	tiers.do { |tier|
+		~randomizeRanges[tier].keysValuesDo { |param, range|
+			var val;
+			val = rrand(range[0], range[1]);
+			if (range[2] == \int) { val = val.round.asInteger };
+			~plaits.synths[idx][param] = val;
+			// Reset any active sequence on this param so the scalar takes effect
+			if (~plaits.synths[idx].sequences[param].notNil) {
+				~plaits.synths[idx].sequences[param] = \hold;
+			};
+		};
+	};
+	("Randomized plaits " ++ inst ++ " (" ++ mode ++ ")").postln;
+	~pushStateToUI.();
+};
+
+// Randomize all unmuted plaits instances
+~randomizeAll = { |mode=\default|
+	~plaits.synths.do { |inst, idx|
+		if (inst.mute != 1) {
+			~randomize.(idx + 1, mode);
+		};
+	};
+};
+
+// Param-to-type mapping for dice randomization
+~diceParamTypes = (
+	duration: \rhythm, div: \timing,
+	pitch: \pitch, harm: \shape, timbre: \shape, morph: \shape,
+	decay: \shape, fmMod: \shape, lpgColour: \shape,
+	mul: \accent, cloudsSend: \accent, delaySend: \accent,
+	reverbSend: \accent, distDrive: \accent, distAmount: \accent,
+	rate: \timing, variant: \shape,
+);
+
+// Generate a random concrete sequence and assign directly to an instance
+// inst: 1-based plaits number, param: symbol, len: steps (optional)
+~diceSeq = { |inst=1, param=\duration, len|
+	var idx, type, values, source, valStrings;
+	idx = inst - 1;
+	len = len ? rrand(4, 16);
+	type = ~diceParamTypes[param] ? \shape;
+
+	values = switch(type,
+		\rhythm, {
+			Array.fill(len, {
+				var dur;
+				dur = [0.25, 0.5, 0.75, 1.0].choose;
+				if (0.3.coin) { Rest(dur) } { dur };
+			});
+		},
+		\pitch, {
+			Array.fill(len, { [-12, -7, -5, -3, 0, 3, 5, 7, 12].choose });
+		},
+		\accent, {
+			Array.fill(len, { rrand(0.2, 1.0).round(0.1) });
+		},
+		\timing, {
+			Array.fill(len, { [0.5, 2/3, 1, 3/2, 2].choose });
+		},
+		{ // \shape
+			Array.fill(len, { rrand(0.0, 1.0).round(0.01) });
+		}
+	);
+
+	// Build source string for preset serialization
+	valStrings = values.collect { |v|
+		if (v.isKindOf(Rest)) {
+			"Rest(" ++ v.value ++ ")"
+		} {
+			v.asString
+		};
+	};
+	source = "Pseq([" ++ valStrings.join(", ") ++ "], inf).asStream";
+
+	// Store as Event with stream + source on the instance
+	~plaits.synths[idx].sequences[param] = (
+		stream: Pseq(values, inf).asStream,
+		source: source
+	);
+
+	// Update seqModal UI to show custom indicator
+	~ui.().sendMsg("/plaits/" ++ inst ++ "/" ++ param ++ "/seq", "custom");
+
+	("Dice " ++ param ++ " on plaits " ++ inst ++ ": " ++ values).postln;
+};
+
 // Duration calculation with safety bounds
 ~setDuration = { |seqValue, divSeqValue|
 	var output = 1;
@@ -147,8 +284,13 @@
 		};
 		stream.next;
 	} {
-		// Direct stream - just call .next
-		value.next;
+		// Inline sequence with source (from dice/randomization)
+		if (value.isKindOf(Dictionary) and: { value[\stream].notNil }) {
+			value[\stream].next;
+		} {
+			// Direct stream - just call .next
+			value.next;
+		};
 	};
 };
 

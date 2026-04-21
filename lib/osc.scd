@@ -106,6 +106,18 @@ OSCdef.new(
 			);
 		};
 
+		// Dice: generate random sequence for a param
+		// OSC: /plaits/{n}/dice  paramName
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "dice").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var paramKey = msg[1].asSymbol;
+				~diceSeq.(instanceIndex + 1, paramKey);
+			},
+			"/plaits/" ++ instanceNum ++ "/dice"
+		);
+
 		// Nudge forward: /plaits/{n}/nudgeForward
 		OSCdef.new(
 			("plaits" ++ instanceNum ++ "nudgeForward").asSymbol,
@@ -473,6 +485,21 @@ OSCdef.new(
 			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
+
+		// Send sequence state to UI
+		if (instance.sequences.notNil) {
+			instance.sequences.keysValuesDo { |paramKey, value|
+				var seqState, path;
+				path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
+				seqState = if (value.isKindOf(Symbol)) {
+					value.asString
+				} {
+					// Bare stream or Event with source — both are custom sequences
+					"custom"
+				};
+				ui.sendMsg(path, seqState);
+			};
+		};
 	};
 
 	// Send sample instance parameters
@@ -485,6 +512,20 @@ OSCdef.new(
 			var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey;
 			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
+		};
+
+		// Send sequence state to UI
+		if (instance.sequences.notNil) {
+			instance.sequences.keysValuesDo { |paramKey, value|
+				var seqState, path;
+				path = "/samples/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
+				seqState = if (value.isKindOf(Symbol)) {
+					value.asString
+				} {
+					"custom"
+				};
+				ui.sendMsg(path, seqState);
+			};
 		};
 
 		// Resolve and send file path from bankName/variant
@@ -516,10 +557,6 @@ OSCdef.new(
 			ui.sendMsg(path, value);
 		};
 	};
-
-	// Send sequence state to UI for all instances
-	~sendSequenceStateToUI.(plaitsArray, "plaits", ui);
-	~sendSequenceStateToUI.(~plaits.samples, "samples", ui);
 
 	// Populate sequence modal switch with categorized sequences from library
 	seqNames = List[];

@@ -149,8 +149,8 @@ FM Patch Browser ready!
 
 ~fm.(3, 5)
 
-~fmFwd.(2)
+~fmFwd.(3)
 
-~fmBack.(2)
+~fmBack.(3)
 
 ~fmBank.(1, 2)
