@@ -599,4 +599,7 @@ Event.addEventType(\oneShotSample, {
 	~dur;
 });
 
+// Load sub-modules
+(Document.current.dir ++ "/lib/fm.scd").load;
+
 )

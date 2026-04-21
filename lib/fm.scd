@@ -2,7 +2,6 @@
 // 6-Op FM Patch Browser
 //
 // Preview all 96 built-in DX7 patches across engines 18, 19, 20.
-// Assumes presets/plaits/test/fm.scd is loaded and sequencer running.
 // All state is read from/written to the plaits instance — no local state.
 //
 // Note: decay knob has no effect on 6-op FM engines — they have their own
@@ -10,13 +9,14 @@
 // (Decay is remapped to legato for FM engines in the sequencer.)
 //
 // Usage:
-//   1. Load presets/plaits/test/fm.scd and start the sequencer
-//   2. Run the setup block below
-//   3. Use ~fm, ~fmFwd, ~fmBack, ~fmBank, ~fmList to browse
+//   ~fm.(1, 7)     — set plaits 1 to patch 7
+//   ~fmFwd.(1)     — next patch on plaits 1
+//   ~fmBack.(1)    — previous patch on plaits 1
+//   ~fmBank.(1, 2) — switch plaits 1 to bank 2 (1=Bass/Synth, 2=Keys/Perc, 3=Organ/Pad/Str/Brass)
+//   ~fmList.(1)    — list patches in plaits 1's current bank
+//   ~fmList.(1, 2) — list patches in bank 2
 ////////////////////////////////////////////////////////////////////////////////
 
-// Setup
-(
 // harm value for patch index (center of quantization band)
 // C++ does: patch_index = floor(harmonics * 1.02 * 32)
 ~fmHarm = { |patchIndex| (patchIndex + 0.5) / (1.02 * 32) };
@@ -131,26 +131,4 @@
 	};
 };
 
-"
-FM Patch Browser ready!
-
-~fm.(1, 7)     — set plaits 1 to patch 7
-~fmFwd.(1)     — next patch on plaits 1
-~fmBack.(1)    — previous patch on plaits 1
-~fmBank.(1, 2) — switch plaits 1 to bank 2 (1=Bass/Synth, 2=Keys/Perc, 3=Organ/Pad/Str/Brass)
-~fmList.(1)    — list patches in plaits 1's current bank
-~fmList.(1, 2) — list patches in bank 2
-".postln;
-)
-
-~fm.(1, 2)
-
-~fm.(2, 4)
-
-~fm.(3, 5)
-
-~fmFwd.(3)
-
-~fmBack.(3)
-
-~fmBank.(1, 2)
+"FM Patch Browser loaded.".postln;
