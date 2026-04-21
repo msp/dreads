@@ -520,12 +520,11 @@
 			result = result.add(line);
 			("Entering scalars section for synth " ++ plaitsIndex).postln;
 
-			// Generate new scalar section with ALL parameters in alphabetical order
+			// Generate compact scalar section
 			if ((plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~plaits.synths.size)) {
 				currentPlaits = ~plaits.synths[plaitsIndex];
 				paramLines = [];
 
-				// Get all scalar keys in alphabetical order
 				~defaultScalars.keys.asArray.sort.do { |key|
 					if (key != \sequences) {
 						currentValue = currentPlaits[key];
@@ -539,19 +538,12 @@
 									currentValue.asString;
 								};
 							};
-							paramLines = paramLines.add("\t\t\t" ++ key ++ ": " ++ formattedValue ++ ",");
+							paramLines = paramLines.add(key ++ ": " ++ formattedValue);
 						};
 					};
 				};
 
-				// Template format: add opening paren
-				result = result.add("\t\t(");
-				if (paramLines.size > 0) {
-					// Remove trailing comma from last parameter
-					paramLines[paramLines.size - 1] = paramLines[paramLines.size - 1][0..paramLines[paramLines.size - 1].size - 2];
-					result = result.addAll(paramLines);
-				};
-				result = result.add("\t\t),");
+				result = result.add("\t\t(" ++ paramLines.join(", ") ++ "),");
 			};
 		};
 
@@ -561,12 +553,11 @@
 			result = result.add(line);
 			("Entering sample scalars section for sample " ++ sampleIndex).postln;
 
-			// Generate new sample scalar section with ALL parameters in alphabetical order
+			// Generate compact sample scalar section
 			if ((sampleIndex.isInteger) && (sampleIndex >= 0) && (sampleIndex < ~plaits.samples.size)) {
 				currentSample = ~plaits.samples[sampleIndex];
 				paramLines = [];
 
-				// Get all scalar keys in alphabetical order
 				~defaultSampleScalars.keys.asArray.sort.do { |key|
 					if (key != \sequences) {
 						currentValue = currentSample[key];
@@ -583,18 +574,11 @@
 								};
 							};
 						};
-						paramLines = paramLines.add("\t\t\t" ++ key ++ ": " ++ formattedValue ++ ",");
+						paramLines = paramLines.add(key ++ ": " ++ formattedValue);
 					};
 				};
 
-				// Template format: add opening paren
-				result = result.add("\t\t(");
-				if (paramLines.size > 0) {
-					// Remove trailing comma from last parameter
-					paramLines[paramLines.size - 1] = paramLines[paramLines.size - 1][0..paramLines[paramLines.size - 1].size - 2];
-					result = result.addAll(paramLines);
-				};
-				result = result.add("\t\t),");
+				result = result.add("\t\t(" ++ paramLines.join(", ") ++ "),");
 			};
 		};
 
