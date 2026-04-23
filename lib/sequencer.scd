@@ -56,6 +56,19 @@ x = Pdef(\plaitsSequence,
 						"volume", (ev[\volume] ?? ev[\mul] ?? 0.0)
 					);
 
+					~vis.().sendBundle(nil,
+						["/plaits/" ++ i ++ "/note",    ~noteCounter[i]],
+						["/plaits/" ++ i ++ "/tempo",   ~plaits.synths[0].tempo],
+						["/plaits/" ++ i ++ "/pitch",   ev[\pitch] / 127.0],
+						["/plaits/" ++ i ++ "/engine",  ev[\engine] / 23.0],
+						["/plaits/" ++ i ++ "/harm",    ev[\harm]],
+						["/plaits/" ++ i ++ "/timbre",  ev[\timbre]],
+						["/plaits/" ++ i ++ "/decay",   ev[\decay]],
+						["/plaits/" ++ i ++ "/morph",   ev[\morph]],
+						["/plaits/" ++ i ++ "/dur",     durVal],
+						["/plaits/" ++ i ++ "/volume",  (ev[\volume] ?? ev[\mul] ?? 0.0)]
+					);
+
 					if (~plaits.synths[i].sendToPhones == 1.0) {
 						~ws.().sendMsg("/plaits/state", i,
 							"note",   ~noteCounter[i],
