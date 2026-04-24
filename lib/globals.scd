@@ -98,6 +98,7 @@
 ~defaultScalars = (
 	cloudsSend: 1.0,
 	decay: 0.5,
+	decayMod: 0.3,  // legacy default — was hardcoded in sequencer before bus-based LFOs
 	delaySend: 0.0,
 	distAmount: 0.0,
 	distDrive: 0.0,
@@ -114,6 +115,7 @@
 	mute: 0,
 	phaseOffset: 0.0,
 	pitch: 49.0,
+	pitchMod: 0.0,
 	revDamp: 0.8,
 	revDrywet: 0.0,
 	revFreeze: 0.0,
@@ -127,6 +129,7 @@
 	timbMod: 0.0,
 	timbre: 0.5,
 	volume: 1.0,
+	volumeMod: 0.0,
 );
 
 // Default global FX settings for all presets
@@ -224,6 +227,7 @@
 	phaseOffset: 0.0,
 	panDur: 0.5,            // Normalized 0-1 (scaled to duration*2 in sequencer)
 	rate: 1.0,
+	rateMod: 0.0,
 	reverbSend: 0.0,
 	revDamp: 0.8,
 	revDrywet: 0.25,
@@ -234,7 +238,8 @@
 	startPos: 0,            // Normalized 0-1 (scaled to duration in sequencer)
 	tempo: 165.0,
 	variant: 0,             // Which variant of the bank to play (0-based index)
-	volume: 0.0
+	volume: 0.0,
+	volumeMod: 0.0,
 );
 
 // Sample-specific sequences (merged with ~baseSequences)

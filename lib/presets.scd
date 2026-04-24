@@ -476,45 +476,29 @@
 			result = result.add(line);
 			("Entering FX section").postln;
 
-			// Generate new FX section with nested structure
+			// Generate compact FX section — one line per category
 			currentFX = ~plaits.fx ?? ~defaultFX.deepCopy;
 			("Current FX values for save: " ++ currentFX).postln;
-			paramLines = [];
+			categoryLines = [];
 
-			// Get all FX categories in alphabetical order
 			~defaultFX.keys.asArray.sort.do { |category|
-				paramLines = paramLines.add("\t" ++ category ++ ": (");
-				
-				// Get all parameters within category in alphabetical order
-				categoryLines = [];
+				paramLines = [];
 				currentFX[category].keys.asArray.sort.do { |param|
 					currentValue = currentFX[category][param];
-				if (currentValue.notNil) {
-					formattedValue = if (currentValue.isNumber) {
-						currentValue.round(0.01).asString;
-					} {
-						currentValue.asString;
-					};
-						categoryLines = categoryLines.add("\t\t" ++ param ++ ": " ++ formattedValue ++ ",");
+					if (currentValue.notNil) {
+						formattedValue = if (currentValue.isNumber) {
+							currentValue.round(0.01).asString;
+						} {
+							currentValue.asString;
+						};
+						paramLines = paramLines.add(param ++ ": " ++ formattedValue);
 					};
 				};
-				
-				// Remove trailing comma from last parameter in category
-				if (categoryLines.size > 0) {
-					categoryLines[categoryLines.size - 1] = categoryLines[categoryLines.size - 1][0..categoryLines[categoryLines.size - 1].size - 2];
-					paramLines = paramLines.addAll(categoryLines);
-				};
-				
-				paramLines = paramLines.add("\t),");
+				categoryLines = categoryLines.add("\t" ++ category ++ ": (" ++ paramLines.join(", ") ++ ")");
 			};
 
-			// Template format: add opening paren
 			result = result.add("(");
-			if (paramLines.size > 0) {
-				// Remove trailing comma from last parameter
-				paramLines[paramLines.size - 1] = paramLines[paramLines.size - 1][0..paramLines[paramLines.size - 1].size - 2];
-				result = result.addAll(paramLines);
-			};
+			result = result.add(categoryLines.join(",\n"));
 			result = result.add("),");
 		};
 

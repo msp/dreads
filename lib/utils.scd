@@ -538,6 +538,16 @@
 		\distDrive, instance.distDrive,
 		\distAmount, instance.distAmount,
 		\stereoMode, instance.stereoMode,
+		\timbreBus, ~lfoBuses[i].timbre,
+		\morphBus, ~lfoBuses[i].morph,
+		\decayBus, ~lfoBuses[i].decay,
+		\pitchBus, ~lfoBuses[i].pitch,
+		\volumeBus, ~lfoBuses[i].volume,
+		\timbMod, instance.timbMod,
+		\morphMod, instance.morphMod,
+		\decayMod, instance.decayMod,
+		\pitchMod, instance.pitchMod,
+		\volumeMod, instance.volumeMod,
 	], ~voiceGroup, \addToHead);
 
 	["Drone started for plaits", i].postln;
@@ -586,7 +596,11 @@ Event.addEventType(\oneShotSample, {
 					\revTime, ~revTime,
 					\revDamp, ~revDamp,
 					\revHp, ~revHp,
-					\revFreeze, ~revFreeze
+					\revFreeze, ~revFreeze,
+					\rateBus, ~rateBus,
+					\rateMod, ~rateMod,
+					\volumeBus, ~volumeBus,
+					\volumeMod, ~volumeMod
 				],
 				~group ?? { server.defaultGroup },
 				\addToHead

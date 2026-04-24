@@ -58,16 +58,24 @@
 };
 
 SynthDef(\plaits, {
-	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1;
+	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
+	timbreBus=(-1), morphBus=(-1), decayBus=(-1), pitchBus=(-1), volumeBus=(-1),
+	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0;
+
+	var timbreLFO  = Select.kr(timbreBus > -1,  [0, In.kr(timbreBus, 1)]);
+	var morphLFO   = Select.kr(morphBus > -1,   [0, In.kr(morphBus, 1)]);
+	var decayLFO   = Select.kr(decayBus > -1,   [0, In.kr(decayBus, 1)]);
+	var pitchLFO   = Select.kr(pitchBus > -1,   [0, In.kr(pitchBus, 1)]);
+	var volumeLFO  = Select.kr(volumeBus > -1,  [0, In.kr(volumeBus, 1)]);
 
 	var sig = MiPlaits.ar(
-		pitch: pitch.clip(0, 127),
+		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
 		engine: engine.clip(0, 23),
 		harm: harm.clip(0, 1),
-		timbre: timbre.clip(0, 1),
-		morph: morph.clip(0, 1),
+		timbre: (timbre + (timbreLFO * timbMod)).clip(0, 1),
+		morph: (morph + (morphLFO * morphMod)).clip(0, 1),
 		trigger: gate,
-		decay: decay.clip(0, 1),
+		decay: (decay + (decayLFO * decayMod)).clip(0, 1),
 		fm_mod: fmMod.clip(-1, 1),
 		lpg_colour: lpgColour.clip(0, 1),
 		mul: mul
@@ -76,22 +84,31 @@ SynthDef(\plaits, {
 	var env = Linen.kr(gate, doneAction: Done.freeSelf);
 
 	~plaitsSigChain.(sig, env, out, stereoMode, distDrive, distAmount,
-		revTime, revDrywet, revDamp, revHp, revFreeze, volume,
+		revTime, revDrywet, revDamp, revHp, revFreeze,
+		(volume + (volumeLFO * volumeMod)).clip(0, 2),
 		cloudsSend, delaySend, reverbSend);
 }).add;
 
 // Drone variant: continuous trigger, ASR envelope with release on gate=0
 SynthDef(\plaitsDrone, {
-	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1;
+	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
+	timbreBus=(-1), morphBus=(-1), decayBus=(-1), pitchBus=(-1), volumeBus=(-1),
+	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0;
+
+	var timbreLFO  = Select.kr(timbreBus > -1,  [0, In.kr(timbreBus, 1)]);
+	var morphLFO   = Select.kr(morphBus > -1,   [0, In.kr(morphBus, 1)]);
+	var decayLFO   = Select.kr(decayBus > -1,   [0, In.kr(decayBus, 1)]);
+	var pitchLFO   = Select.kr(pitchBus > -1,   [0, In.kr(pitchBus, 1)]);
+	var volumeLFO  = Select.kr(volumeBus > -1,  [0, In.kr(volumeBus, 1)]);
 
 	var sig = MiPlaits.ar(
-		pitch: pitch.clip(0, 127),
+		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
 		engine: engine.clip(0, 23),
 		harm: harm.clip(0, 1),
-		timbre: timbre.clip(0, 1),
-		morph: morph.clip(0, 1),
+		timbre: (timbre + (timbreLFO * timbMod)).clip(0, 1),
+		morph: (morph + (morphLFO * morphMod)).clip(0, 1),
 		trigger: 1,
-		decay: decay.clip(0, 1),
+		decay: (decay + (decayLFO * decayMod)).clip(0, 1),
 		fm_mod: fmMod.clip(-1, 1),
 		lpg_colour: lpgColour.clip(0, 1),
 		mul: mul
@@ -100,8 +117,49 @@ SynthDef(\plaitsDrone, {
 	var env = EnvGen.kr(Env.asr(5, 1, 5), gate, doneAction: Done.freeSelf);
 
 	~plaitsSigChain.(sig, env, out, stereoMode, distDrive, distAmount,
-		revTime, revDrywet, revDamp, revHp, revFreeze, volume,
+		revTime, revDrywet, revDamp, revHp, revFreeze,
+		(volume + (volumeLFO * volumeMod)).clip(0, 2),
 		cloudsSend, delaySend, reverbSend);
+}).add;
+
+// Server-side LFO — writes bipolar (-0.5 to +0.5) to a control bus
+// shape: 0=sine, 1=tri, 2=saw, 3=square, 4=noise (smoothed random)
+SynthDef(\lfo, {
+	arg out=0, freq=0.125, shape=0, width=0.3;
+	var sig = Select.kr(shape, [
+		SinOsc.kr(freq),           // 0: sine
+		LFTri.kr(freq),            // 1: triangle
+		LFSaw.kr(freq),            // 2: saw
+		LFPulse.kr(freq, 0, 0.5) - 0.5, // 3: square
+		LFNoise1.kr(freq),         // 4: noise
+		LFGauss.kr(freq.reciprocal, width, loop: 1) * 2 - 1 // 5: gaussian (width: 0.01-1)
+	]);
+	Out.kr(out, sig * 0.5);
+}).add;
+
+// Reporter — reads per-instance LFO buses and sends values to sclang at ~30Hz for VDMX relay
+// Plaits: timbre/morph/decay/pitch/volume × 3 instances = 15
+// Samples: rate/volume × 3 instances = 6
+// Total: 21 floats in SendReply
+SynthDef(\lfoReporter, {
+	arg timbreBus0=0, morphBus0=0, decayBus0=0, pitchBus0=0, volumeBus0=0,
+	    timbreBus1=0, morphBus1=0, decayBus1=0, pitchBus1=0, volumeBus1=0,
+	    timbreBus2=0, morphBus2=0, decayBus2=0, pitchBus2=0, volumeBus2=0,
+	    sRateBus0=0, sVolumeBus0=0,
+	    sRateBus1=0, sVolumeBus1=0,
+	    sRateBus2=0, sVolumeBus2=0;
+	SendReply.kr(
+		Impulse.kr(30),
+		'/lfoValues',
+		[
+			In.kr(timbreBus0, 1), In.kr(morphBus0, 1), In.kr(decayBus0, 1), In.kr(pitchBus0, 1), In.kr(volumeBus0, 1),
+			In.kr(timbreBus1, 1), In.kr(morphBus1, 1), In.kr(decayBus1, 1), In.kr(pitchBus1, 1), In.kr(volumeBus1, 1),
+			In.kr(timbreBus2, 1), In.kr(morphBus2, 1), In.kr(decayBus2, 1), In.kr(pitchBus2, 1), In.kr(volumeBus2, 1),
+			In.kr(sRateBus0, 1), In.kr(sVolumeBus0, 1),
+			In.kr(sRateBus1, 1), In.kr(sVolumeBus1, 1),
+			In.kr(sRateBus2, 1), In.kr(sVolumeBus2, 1)
+		]
+	);
 }).add;
 
 // Filter Delay Send Effect
@@ -220,9 +278,15 @@ SynthDef(\panningSamplePlayer, {
 	atk=0.01, decay=0.1, gate=1, volume=0.7,
 	cloudsSend=0.0, delaySend=0.0, reverbSend=0.0,
 	distDrive=0.0, distAmount=0.0,
-	revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0|
+	revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0,
+	rateBus=(-1), rateMod=0.0,
+	volumeBus=(-1), volumeMod=0.0|
 
 	var sig, env, pan, monoPlay, cleanSig, distSig;
+	var rateLFO    = Select.kr(rateBus > -1,    [0, In.kr(rateBus, 1)]);
+	var volumeLFO  = Select.kr(volumeBus > -1,  [0, In.kr(volumeBus, 1)]);
+	var finalRate = rate + (rateLFO * rateMod);
+	var finalVolume = (volume + (volumeLFO * volumeMod)).clip(0, 2);
 
 	// Pan from -1 to 1 over panDur
 	pan = Line.kr(-1, 1, panDur);
@@ -232,7 +296,7 @@ SynthDef(\panningSamplePlayer, {
 	monoPlay = PlayBuf.ar(
 		numChannels: 1,
 		bufnum: bufnum,
-		rate: rate * BufRateScale.kr(bufnum),
+		rate: finalRate * BufRateScale.kr(bufnum),
 		startPos: startPos,
 		doneAction: 0
 	);
@@ -259,7 +323,7 @@ SynthDef(\panningSamplePlayer, {
 		hp: revHp.clip(0, 1),
 		freeze: revFreeze.clip(0, 1),
 		diff: 0.625,
-		mul: volume.clip(0, 2.0),
+		mul: finalVolume,
 		add: 0.0
 	);
 

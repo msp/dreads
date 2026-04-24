@@ -24,9 +24,11 @@ OSCdef.new(
 					if (instance.droneMode == 1) { ~startDrone.(idx) };
 				};
 				x.play(~tempoClock);
+				~lfoReporter.run(true);
 			},
 			{
 				x.stop;
+				~lfoReporter.run(false);
 				// Stop all drone synths
 				~plaits.synths.do { |instance, idx|
 					~stopDrone.(idx);

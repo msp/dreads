@@ -117,6 +117,16 @@ x = Pdef(\plaitsSequence,
 				\group, ~voiceGroup,
 				\delayBus, ~delayBus,
 				\reverbBus, ~reverbBus,
+				\timbreBus, ~lfoBuses[i].timbre,
+				\morphBus, ~lfoBuses[i].morph,
+				\decayBus, ~lfoBuses[i].decay,
+				\pitchBus, ~lfoBuses[i].pitch,
+				\volumeBus, ~lfoBuses[i].volume,
+				\timbMod, Pfunc { ~plaits.synths[i].timbMod },
+				\morphMod, Pfunc { ~plaits.synths[i].morphMod },
+				\decayMod, Pfunc { ~plaits.synths[i].decayMod },
+				\pitchMod, Pfunc { ~plaits.synths[i].pitchMod },
+				\volumeMod, Pfunc { ~plaits.synths[i].volumeMod },
 				\pitch, Pfunc { |event|
 					// ["--->", ~state, ~plaits.synths[i].engine, ~playCount].postln;
 					if (i == 0) {
@@ -150,35 +160,16 @@ x = Pdef(\plaitsSequence,
 					finalDur;
 				},
 				\decay, Pfunc { |event|
-					// ~modulateBipolar.(~plaits.synths[i].sequences.decay.next, ~plaits.synths[i].decay)
-					~modulateLayered.(
-						~getSequenceValue.(~plaits.synths[i], i, \plaits, \decay),
-						~decayLFO.next,
-						~plaits.synths[i].decay,
-						0.3 // LFO Amount
-					);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \decay), ~plaits.synths[i].decay);
 				},
 				\harm, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \harm), ~plaits.synths[i].harm);
 				},
 				\timbre, Pfunc { |event|
-					// ~modulateBipolar.(~plaits.synths[i].sequences.timbre.next, ~plaits.synths[i].timbre)
-					// ~modulateBipolar.(~timbreLFO.next, ~plaits.synths[i].timbre)
-					~modulateLayered.(
-						~getSequenceValue.(~plaits.synths[i], i, \plaits, \timbre),
-						~timbreLFO.next,
-						~plaits.synths[i].timbre,
-						~plaits.synths[i].timbMod
-					);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \timbre), ~plaits.synths[i].timbre);
 				},
 				\morph, Pfunc { |event|
-					// ~modulateBipolar.(~plaits.synths[i].sequences.morph.next, ~plaits.synths[i].morph)
-					~modulateLayered.(
-						~getSequenceValue.(~plaits.synths[i], i, \plaits, \morph),
-						~morphLFO.next,
-						~plaits.synths[i].morph,
-						~plaits.synths[i].morphMod
-					);
+					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \morph), ~plaits.synths[i].morph);
 				},
 				\fmMod, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~plaits.synths[i], i, \plaits, \fmMod), ~plaits.synths[i].fmMod);
@@ -245,6 +236,10 @@ x = Pdef(\plaitsSequence,
 				\type, Pfunc { if (~plaits.samples[i].mute == 1) { \rest } { \oneShotSample } },
 				\instrument, \panningSamplePlayer,
 				\group, ~voiceGroup,
+				\rateBus, ~sampleLfoBuses[i].rate,
+				\rateMod, Pfunc { ~plaits.samples[i].rateMod },
+				\volumeBus, ~sampleLfoBuses[i].volume,
+				\volumeMod, Pfunc { ~plaits.samples[i].volumeMod },
 				// Variant selection: two modes, both relative to base scalar, wrapped to bank size
 			// Numeric: additive offset from base — Pseq([0, 2, -3], inf) with base 6 → 6, 8, 3
 			// String:  "v" expression syntax  — Pseq(["v", "v+2", "v-3"], inf) with base 6 → 6, 8, 3
