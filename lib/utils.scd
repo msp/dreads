@@ -299,7 +299,7 @@
 	// plaits insert reverbs
 	~voiceGroup.set(\revTime, 0.9);
 	// global reverb
-	~reverbFX.set(\time, 0.9);
+	~fx.reverb.set(\time, 0.9);
 	("Stopping reverb feedback..").postln;
 };
 
@@ -508,14 +508,14 @@
 	var out;
 
 	// Stop existing drone if any
-	if (~droneSynths.notNil && ~droneSynths[i].notNil) {
-		~droneSynths[i].release;
-		~droneSynths[i] = nil;
+	if (~drones.notNil && ~drones[i].notNil) {
+		~drones[i].release;
+		~drones[i] = nil;
 	};
 
 	out = ~voiceOutBus.(\plaits, i);
 
-	~droneSynths[i] = Synth(\plaitsDrone, [
+	~drones[i] = Synth(\plaitsDrone, [
 		\out, out,
 		\pitch, instance.pitch,
 		\engine, instance.engine,
@@ -538,11 +538,11 @@
 		\distDrive, instance.distDrive,
 		\distAmount, instance.distAmount,
 		\stereoMode, instance.stereoMode,
-		\timbreBus, ~lfoBuses[i].timbre,
-		\morphBus, ~lfoBuses[i].morph,
-		\decayBus, ~lfoBuses[i].decay,
-		\pitchBus, ~lfoBuses[i].pitch,
-		\volumeBus, ~lfoBuses[i].volume,
+		\timbreBus, ~lfo.buses.synths[i].timbre,
+		\morphBus, ~lfo.buses.synths[i].morph,
+		\decayBus, ~lfo.buses.synths[i].decay,
+		\pitchBus, ~lfo.buses.synths[i].pitch,
+		\volumeBus, ~lfo.buses.synths[i].volume,
 		\timbMod, instance.timbMod,
 		\morphMod, instance.morphMod,
 		\decayMod, instance.decayMod,
@@ -555,9 +555,9 @@
 
 // Stop a persistent drone synth for a plaits instance
 ~stopDrone = { |i|
-	if (~droneSynths.notNil && ~droneSynths[i].notNil) {
-		~droneSynths[i].release;
-		~droneSynths[i] = nil;
+	if (~drones.notNil && ~drones[i].notNil) {
+		~drones[i].release;
+		~drones[i] = nil;
 		["Drone stopped for plaits", i].postln;
 	};
 };

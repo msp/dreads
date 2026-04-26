@@ -24,11 +24,11 @@ OSCdef.new(
 					if (instance.droneMode == 1) { ~startDrone.(idx) };
 				};
 				x.play(~tempoClock);
-				~lfoReporter.run(true);
+				~lfo.reporter.run(true);
 			},
 			{
 				x.stop;
-				~lfoReporter.run(false);
+				~lfo.reporter.run(false);
 				// Stop all drone synths
 				~dreads.synths.do { |instance, idx|
 					~stopDrone.(idx);
@@ -71,19 +71,19 @@ OSCdef.new(
 							if (paramKey == 'mute') {
 								~dreads.synths[instanceIndex][paramKey] = value;
 								// Forward mute to drone synth
-								if (~droneSynths.notNil && ~droneSynths[instanceIndex].notNil) {
+								if (~drones.notNil && ~drones[instanceIndex].notNil) {
 									if (value == 1) {
-										~droneSynths[instanceIndex].set(\mul, 0);
+										~drones[instanceIndex].set(\mul, 0);
 									} {
-										~droneSynths[instanceIndex].set(\mul, ~dreads.synths[instanceIndex].mul);
+										~drones[instanceIndex].set(\mul, ~dreads.synths[instanceIndex].mul);
 									};
 								};
 							} {
 								// Generic parameter update
 								~dreads.synths[instanceIndex][paramKey] = value;
 								// Forward to drone synth if active
-								if (~droneSynths.notNil && ~droneSynths[instanceIndex].notNil) {
-									~droneSynths[instanceIndex].set(paramKey, value);
+								if (~drones.notNil && ~drones[instanceIndex].notNil) {
+									~drones[instanceIndex].set(paramKey, value);
 								};
 							};
 						};
@@ -279,10 +279,10 @@ OSCdef.new(
 			~dreads.fx.delay[paramKey] = value;
 
 			// Send to synth using clean parameter names
-			if (~delayFX.notNil) {
-				~delayFX.set(paramKey, value);
+			if (~fx.delay.notNil) {
+				~fx.delay.set(paramKey, value);
 			} {
-				"ERROR: ~delayFX is nil!".postln;
+				"ERROR: ~fx.delay is nil!".postln;
 			};
 		},
 		"/fx/delay/" ++ paramKey.asString
@@ -304,10 +304,10 @@ OSCdef.new(
 			~dreads.fx.reverb[paramKey] = value;
 
 			// Send to synth using clean parameter names
-			if (~reverbFX.notNil) {
-				~reverbFX.set(paramKey, value);
+			if (~fx.reverb.notNil) {
+				~fx.reverb.set(paramKey, value);
 			} {
-				"ERROR: ~reverbFX is nil!".postln;
+				"ERROR: ~fx.reverb is nil!".postln;
 			};
 		},
 		"/fx/reverb/" ++ paramKey.asString
@@ -329,10 +329,10 @@ OSCdef.new(
 			~dreads.fx.clouds[paramKey] = value;
 
 			// Send to synth using clean parameter names
-			if (~cloudsFX.notNil) {
-				~cloudsFX.set(paramKey, value);
+			if (~fx.clouds.notNil) {
+				~fx.clouds.set(paramKey, value);
 			} {
-				"ERROR: ~cloudsFX is nil!".postln;
+				"ERROR: ~fx.clouds is nil!".postln;
 			};
 		},
 		"/fx/clouds/" ++ paramKey.asString
@@ -425,8 +425,8 @@ OSCdef.new(
 		["flushSynths", value].postln;
 		~voiceGroup.freeAll;
 		// Clear drone synth references (synths already freed by freeAll)
-		if (~droneSynths.notNil) {
-			~droneSynths.size.do { |i| ~droneSynths[i] = nil };
+		if (~drones.notNil) {
+			~drones.size.do { |i| ~drones[i] = nil };
 		};
 	},
 	"/flushSynths"

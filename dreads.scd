@@ -63,7 +63,7 @@ s.waitForBoot {
 	// (LFOs write buses before voices read them; voices write FX sends before FX read them)
 	~lfoGroup   = Group.new(s);
 	~voiceGroup = Group.new(~lfoGroup, \addAfter);
-	~droneSynths = Array.fill(~dreads.synths.size, { nil });
+	~drones = Array.fill(~dreads.synths.size, { nil });
 	~fxGroup = Group.new(~voiceGroup, \addAfter);
 
 	(Document.current.dir ++ "/lib/lfo.scd").load;

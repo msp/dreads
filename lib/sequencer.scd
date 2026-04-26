@@ -89,8 +89,8 @@ x = Pdef(\plaitsSequence,
 				// SC's \type \set event only sends default keys (freq, amp, pan) so we
 				// forward \plaitsDrone control names explicitly via .set here instead.
 				if (~dreads.synths[i].droneMode == 1) {
-					if (~droneSynths[i].notNil) {
-						~droneSynths[i].set(
+					if (~drones[i].notNil) {
+						~drones[i].set(
 							\pitch, ev[\pitch], \engine, ev[\engine],
 							\harm, ev[\harm], \timbre, ev[\timbre],
 							\morph, ev[\morph], \decay, ev[\decay],
@@ -117,11 +117,11 @@ x = Pdef(\plaitsSequence,
 				\group, ~voiceGroup,
 				\delayBus, ~delayBus,
 				\reverbBus, ~reverbBus,
-				\timbreBus, ~lfoBuses[i].timbre,
-				\morphBus, ~lfoBuses[i].morph,
-				\decayBus, ~lfoBuses[i].decay,
-				\pitchBus, ~lfoBuses[i].pitch,
-				\volumeBus, ~lfoBuses[i].volume,
+				\timbreBus, ~lfo.buses.synths[i].timbre,
+				\morphBus, ~lfo.buses.synths[i].morph,
+				\decayBus, ~lfo.buses.synths[i].decay,
+				\pitchBus, ~lfo.buses.synths[i].pitch,
+				\volumeBus, ~lfo.buses.synths[i].volume,
 				\timbMod, Pfunc { ~dreads.synths[i].timbMod },
 				\morphMod, Pfunc { ~dreads.synths[i].morphMod },
 				\decayMod, Pfunc { ~dreads.synths[i].decayMod },
@@ -236,9 +236,9 @@ x = Pdef(\plaitsSequence,
 				\type, Pfunc { if (~dreads.samples[i].mute == 1) { \rest } { \oneShotSample } },
 				\instrument, \panningSamplePlayer,
 				\group, ~voiceGroup,
-				\rateBus, ~sampleLfoBuses[i].rate,
+				\rateBus, ~lfo.buses.samples[i].rate,
 				\rateMod, Pfunc { ~dreads.samples[i].rateMod },
-				\volumeBus, ~sampleLfoBuses[i].volume,
+				\volumeBus, ~lfo.buses.samples[i].volume,
 				\volumeMod, Pfunc { ~dreads.samples[i].volumeMod },
 				// Variant selection: two modes, both relative to base scalar, wrapped to bank size
 			// Numeric: additive offset from base — Pseq([0, 2, -3], inf) with base 6 → 6, 8, 3

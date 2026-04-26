@@ -786,9 +786,9 @@
 	};
 
 	// Apply loaded FX values to the running FX synths
-	~dreads.fx.delay.keysValuesDo { |param, value| ~delayFX.set(param, value) };
-	~dreads.fx.reverb.keysValuesDo { |param, value| ~reverbFX.set(param, value) };
-	~dreads.fx.clouds.keysValuesDo { |param, value| ~cloudsFX.set(param, value) };
+	~dreads.fx.delay.keysValuesDo { |param, value| ~fx.delay.set(param, value) };
+	~dreads.fx.reverb.keysValuesDo { |param, value| ~fx.reverb.set(param, value) };
+	~dreads.fx.clouds.keysValuesDo { |param, value| ~fx.clouds.set(param, value) };
 
 	// Resume playback if it was running — causes a brief timing gap
 	if (wasPlaying) { Pdef(\plaitsSequence).play(~tempoClock) };

@@ -101,11 +101,11 @@ b = a.asStream;
 
 (
 // Check delay synth exists and its state
-// ~delayFX.postln;
+// ~fx.delay.postln;
 ~delayBus.index.postln;
 ~reverbBus.index.postln;
 ~cloudsBus.index.postln;
-// ~delayFX.query;  // Query its current parameter values
+// ~fx.delay.query;  // Query its current parameter values
 
 // Check for duplicate delay synths
 s.queryAllNodes;
@@ -129,7 +129,7 @@ s.audioBusAllocator.blocks.postln;  // Shows allocated ranges
 
 (
 // Check what the delay synth is actually reading from
-~delayFX.postln;
+~fx.delay.postln;
 s.queryAllNodes;
 
 // Also verify bus objects
@@ -138,8 +138,8 @@ s.queryAllNodes;
 ~cloudsBus.index.postln;  // Should be 104
 )
 
-~delayFX.free;
-~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
+~fx.delay.free;
+~fx.delay = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
 
 ([0.1, 0.1, 0.1] ++ (3 ! 5)).flatten
 
@@ -324,10 +324,10 @@ MiClouds
 // ~cloudsBus = Bus.audio(s, 2);
 // ~delayBus = Bus.audio(s, 2);
 
-// ~cloudsFX = Synth(\globalClouds, [\out, 0], addAction: \addToTail);
+// ~fx.clouds = Synth(\globalClouds, [\out, 0], addAction: \addToTail);
 // b = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
 //
-// ~delayFX = Synth(\globalFilterDelay, [\out, 0], addAction: \addToTail);
+// ~fx.delay = Synth(\globalFilterDelay, [\out, 0], addAction: \addToTail);
 
 (  // basic granulation
 x = {
@@ -354,34 +354,34 @@ x = {
 ].postln;
 )
 
-~cloudsFX.set(\freeze, 1)   // freeze internal buffer
-~cloudsFX.set(\freeze, 0)
-~cloudsFX.set(\mode, 0)
-~cloudsFX.set(\mode, 1)
-~cloudsFX.set(\mode, 2)
-~cloudsFX.set(\mode, 3)
-~cloudsFX.set(\density, 1.0.rand)
-~cloudsFX.set(\position, 1.0.rand)
-~cloudsFX.set(\size, 1.0.rand)
-~cloudsFX.set(\blend, 1.0.rand)
-~cloudsFX.set(\spread, 1.0.rand)
+~fx.clouds.set(\freeze, 1)   // freeze internal buffer
+~fx.clouds.set(\freeze, 0)
+~fx.clouds.set(\mode, 0)
+~fx.clouds.set(\mode, 1)
+~fx.clouds.set(\mode, 2)
+~fx.clouds.set(\mode, 3)
+~fx.clouds.set(\density, 1.0.rand)
+~fx.clouds.set(\position, 1.0.rand)
+~fx.clouds.set(\size, 1.0.rand)
+~fx.clouds.set(\blend, 1.0.rand)
+~fx.clouds.set(\spread, 1.0.rand)
 
-~cloudsFX.set(\pitch, rrand(-48, 48))
+~fx.clouds.set(\pitch, rrand(-48, 48))
 
-~cloudsFX.set(\reverb, 1.0.rand)
-~cloudsFX.set(\feedback, 0.5.rand)
+~fx.clouds.set(\reverb, 1.0.rand)
+~fx.clouds.set(\feedback, 0.5.rand)
 
 1.0.rand
 
 x.free;
 
 // Test if the synth is actually running
-~cloudsFX.isPlaying  // should return true
+~fx.clouds.isPlaying  // should return true
 
 // Test with more obvious parameters
-~cloudsFX.set(\density, 0.8, \position, 0.8, \size, 0.8, \blend, 1.0);
+~fx.clouds.set(\density, 0.8, \position, 0.8, \size, 0.8, \blend, 1.0);
 
-~cloudsFX
+~fx.clouds
 
 ~cloudsBus
 
@@ -525,16 +525,16 @@ q = p.asStream.nextN(20).postln;
 
 Rotate2
 
-~droneSynths[0].nodeID
+~drones[0].nodeID
 
 
 // Test 1: minimal \set Pbind (matches Reddit example exactly)                                                                                 
-Pdef(\droneTest, Pbind(\type, \set, \id, ~droneSynths[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play;                        
+Pdef(\droneTest, Pbind(\type, \set, \id, ~drones[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play;                        
 
 // Test 2: same but with TempoClock                                                                                                            
-Pdef(\droneTest, Pbind(\type, \set, \id, ~droneSynths[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play(~tempoClock);
+Pdef(\droneTest, Pbind(\type, \set, \id, ~drones[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play(~tempoClock);
 
-Pdef(\p1,Pbind(\id, ~droneSynths[0].nodeID, \type, \set, \pitch, 200+Pwhite(0,50)))
+Pdef(\p1,Pbind(\id, ~drones[0].nodeID, \type, \set, \pitch, 200+Pwhite(0,50)))
 
 Pdef(\p1).play
 

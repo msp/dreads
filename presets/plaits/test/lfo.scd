@@ -113,21 +113,21 @@
 
 // Server-side LFO speeds for this preset (per instance)
 3.do { |i|
-	~lfoSynths[i].timbre.set(\freq, 1/5);
-	~lfoSynths[i].morph.set(\freq, 1/8);
-	~lfoSynths[i].decay.set(\freq, 1/6);
-	~lfoSynths[i].pitch.set(\freq, 1);
-	~lfoSynths[i].volume.set(\freq, 6);
-	~sampleLfoSynths[i].rate.set(\freq, 1/8);
-	~sampleLfoSynths[i].volume.set(\freq, 1/12);
+	~lfo.synths[i].timbre.set(\freq, 1/5);
+	~lfo.synths[i].morph.set(\freq, 1/8);
+	~lfo.synths[i].decay.set(\freq, 1/6);
+	~lfo.synths[i].pitch.set(\freq, 1);
+	~lfo.synths[i].volume.set(\freq, 6);
+	~lfo.samples[i].rate.set(\freq, 1/8);
+	~lfo.samples[i].volume.set(\freq, 1/12);
 };
 
-~droneSynths[0].set(\volumeMod, 0.0);
-~droneSynths[0].set(\pitchMod, 0.6);
+~drones[0].set(\volumeMod, 0.0);
+~drones[0].set(\pitchMod, 0.6);
 
-~lfoSynths[0].volume.set(\freq, 1/26);
-~lfoSynths[0].pitch.set(\freq, 1/2);
-~lfoSynths[0].pitch.set(\shape, 5);
+~lfo.synths[0].volume.set(\freq, 1/26);
+~lfo.synths[0].pitch.set(\freq, 1/2);
+~lfo.synths[0].pitch.set(\shape, 5);
 
 
 ~dreads.samples[0].volume = 0.9;
@@ -137,8 +137,8 @@
 ~dreads.synths[0][\volume] = 0.8;
 ~dreads.synths[0].volume = 0.3;
 
-~sampleLfoSynths[0].rate.set(\freq, 5, \shape, 4, \width, 0.9);
-~sampleLfoSynths[0].volume.set(\freq, 1);
+~lfo.samples[0].rate.set(\freq, 5, \shape, 4, \width, 0.9);
+~lfo.samples[0].volume.set(\freq, 1);
 
 ~pushStateToUI.();
 )

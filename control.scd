@@ -127,10 +127,10 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 ~cloudsBus.index.postln;
 )
 
-~delayFX = Synth(\filterDelay, [\out, 0], addAction: \addToTail);
+~fx.delay = Synth(\filterDelay, [\out, 0], addAction: \addToTail);
 
 
-// ~delayFX.set(\pan, 1.0);
+// ~fx.delay.set(\pan, 1.0);
 
 // The spread parameter controls the timing difference:
 // - spread = 1.0: Both sides same timing (less ping-pong)
@@ -138,17 +138,17 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 // - spread = 1.5: Right side 50% longer (wider ping-pong)
 //
 // After reloading the synthdef, you can control it with:
-~delayFX.set(\spread, 1.5);  // Wider ping-pong
-~delayFX.set(\spread, 1.0);  // Subtle ping-pong
+~fx.delay.set(\spread, 1.5);  // Wider ping-pong
+~fx.delay.set(\spread, 1.0);  // Subtle ping-pong
 
-~delayFX.set(\filterFreq, 2000);
+~fx.delay.set(\filterFreq, 2000);
 
-~delayFX.set(\delayTime, 0.25);
-~delayFX.set(\delayTime, 0.75);
+~fx.delay.set(\delayTime, 0.25);
+~fx.delay.set(\delayTime, 0.75);
 
-~delayFX.set(\feedback, 0.75);
+~fx.delay.set(\feedback, 0.75);
 
-~delayFX.set(\mix, 0.7);
+~fx.delay.set(\mix, 0.7);
 
 //////////////// FM BROWSER //////////////
 ~fm.(1, 2)
@@ -184,15 +184,15 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 ~stopDrone.(2);
 
 // 2. Tweak params on live drone
-~droneSynths[0].set(\pitch, 55);
-~droneSynths[0].set(\timbre, 0.3);
-~droneSynths[0].set(\morph, 0.7);
-~droneSynths[0].set(\engine, 8);
-~droneSynths[0].set(\harm, 0.2);
+~drones[0].set(\pitch, 55);
+~drones[0].set(\timbre, 0.3);
+~drones[0].set(\morph, 0.7);
+~drones[0].set(\engine, 8);
+~drones[0].set(\harm, 0.2);
 
 // 3. Mute/unmute drone
-~droneSynths[0].set(\mul, 0);
-~droneSynths[0].set(\mul, ~dreads.synths[0].mul);
+~drones[0].set(\mul, 0);
+~drones[0].set(\mul, ~dreads.synths[0].mul);
 
 // 4. Stop drone, resume sequencer
 ~dreads.synths[0].droneMode = 0; ~stopDrone.(0);
@@ -209,7 +209,7 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/1/mute", 0);
 NetAddr("127.0.0.1", 57120).sendMsg("/plaits/1/droneMode", 0);
 
 // 6. Check drone state
-~droneSynths.postln;
+~drones.postln;
 ~dreads.synths.collect(_.droneMode).postln;
 
 

@@ -4,28 +4,35 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 // Clean up previous if re-running
-if (~lfoBuses.notNil) {
-	~lfoBuses.do { |b| b.timbre.free; b.morph.free; b.decay.free; b.pitch.free; b.volume.free };
+if (~lfo.notNil) {
+	if (~lfo.buses.notNil) {
+		if (~lfo.buses.synths.notNil) {
+			~lfo.buses.synths.do { |b| b.timbre.free; b.morph.free; b.decay.free; b.pitch.free; b.volume.free };
+		};
+		if (~lfo.buses.samples.notNil) {
+			~lfo.buses.samples.do { |b| b.rate.free; b.volume.free };
+		};
+	};
+	if (~lfo.reporter.notNil) { ~lfo.reporter.free };
+	if (~lfo.reporterFunc.notNil) { ~lfo.reporterFunc.free };
 };
-if (~sampleLfoBuses.notNil) {
-	~sampleLfoBuses.do { |b| b.rate.free; b.volume.free };
-};
-if (~lfoReporter.notNil) { ~lfoReporter.free };
-~lfoReporterFunc.free;
+
+// Initialize ~lfo namespace
+~lfo = (buses: (synths: nil, samples: nil));
 
 // Per-instance LFO buses
 // Plaits: timbre, morph, decay, pitch, volume × 3 instances
-~lfoBuses = Array.fill(3, {
+~lfo.buses.synths = Array.fill(3, {
 	(timbre: Bus.control(s, 1), morph: Bus.control(s, 1), decay: Bus.control(s, 1),
 	 pitch: Bus.control(s, 1), volume: Bus.control(s, 1))
 });
 // Samples: rate, volume × 3 instances
-~sampleLfoBuses = Array.fill(3, {
+~lfo.buses.samples = Array.fill(3, {
 	(rate: Bus.control(s, 1), volume: Bus.control(s, 1))
 });
 
 // Per-instance LFO synths (frequencies overridden per preset)
-~lfoSynths = ~lfoBuses.collect { |buses|
+~lfo.synths = ~lfo.buses.synths.collect { |buses|
 	(
 		timbre: Synth(\lfo, [\out, buses.timbre, \freq, 0.125], ~lfoGroup),
 		morph:  Synth(\lfo, [\out, buses.morph,  \freq, 0.125], ~lfoGroup),
@@ -34,7 +41,7 @@ if (~lfoReporter.notNil) { ~lfoReporter.free };
 		volume: Synth(\lfo, [\out, buses.volume, \freq, 0.125], ~lfoGroup)
 	)
 };
-~sampleLfoSynths = ~sampleLfoBuses.collect { |buses|
+~lfo.samples = ~lfo.buses.samples.collect { |buses|
 	(
 		rate:   Synth(\lfo, [\out, buses.rate,   \freq, 0.125], ~lfoGroup),
 		volume: Synth(\lfo, [\out, buses.volume, \freq, 0.125], ~lfoGroup)
@@ -42,20 +49,20 @@ if (~lfoReporter.notNil) { ~lfoReporter.free };
 };
 
 // Reporter relays all bus values to sclang for VDMX forwarding
-~lfoReporter = Synth(\lfoReporter, [
-	\timbreBus0, ~lfoBuses[0].timbre, \morphBus0, ~lfoBuses[0].morph,
-	\decayBus0, ~lfoBuses[0].decay, \pitchBus0, ~lfoBuses[0].pitch, \volumeBus0, ~lfoBuses[0].volume,
-	\timbreBus1, ~lfoBuses[1].timbre, \morphBus1, ~lfoBuses[1].morph,
-	\decayBus1, ~lfoBuses[1].decay, \pitchBus1, ~lfoBuses[1].pitch, \volumeBus1, ~lfoBuses[1].volume,
-	\timbreBus2, ~lfoBuses[2].timbre, \morphBus2, ~lfoBuses[2].morph,
-	\decayBus2, ~lfoBuses[2].decay, \pitchBus2, ~lfoBuses[2].pitch, \volumeBus2, ~lfoBuses[2].volume,
-	\sRateBus0, ~sampleLfoBuses[0].rate, \sVolumeBus0, ~sampleLfoBuses[0].volume,
-	\sRateBus1, ~sampleLfoBuses[1].rate, \sVolumeBus1, ~sampleLfoBuses[1].volume,
-	\sRateBus2, ~sampleLfoBuses[2].rate, \sVolumeBus2, ~sampleLfoBuses[2].volume,
+~lfo.reporter = Synth(\lfoReporter, [
+	\timbreBus0, ~lfo.buses.synths[0].timbre, \morphBus0, ~lfo.buses.synths[0].morph,
+	\decayBus0, ~lfo.buses.synths[0].decay, \pitchBus0, ~lfo.buses.synths[0].pitch, \volumeBus0, ~lfo.buses.synths[0].volume,
+	\timbreBus1, ~lfo.buses.synths[1].timbre, \morphBus1, ~lfo.buses.synths[1].morph,
+	\decayBus1, ~lfo.buses.synths[1].decay, \pitchBus1, ~lfo.buses.synths[1].pitch, \volumeBus1, ~lfo.buses.synths[1].volume,
+	\timbreBus2, ~lfo.buses.synths[2].timbre, \morphBus2, ~lfo.buses.synths[2].morph,
+	\decayBus2, ~lfo.buses.synths[2].decay, \pitchBus2, ~lfo.buses.synths[2].pitch, \volumeBus2, ~lfo.buses.synths[2].volume,
+	\sRateBus0, ~lfo.buses.samples[0].rate, \sVolumeBus0, ~lfo.buses.samples[0].volume,
+	\sRateBus1, ~lfo.buses.samples[1].rate, \sVolumeBus1, ~lfo.buses.samples[1].volume,
+	\sRateBus2, ~lfo.buses.samples[2].rate, \sVolumeBus2, ~lfo.buses.samples[2].volume,
 ], ~lfoGroup);
 
 // Relay LFO values from server to VDMX via OSC, scaled by per-instance mod depth
-~lfoReporterFunc = OSCFunc({ |msg|
+~lfo.reporterFunc = OSCFunc({ |msg|
 	var bundle = Array.new(21);
 	3.do { |i|
 		var inst = ~dreads.synths[i];
