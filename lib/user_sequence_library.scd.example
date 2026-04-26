@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // User Sequence Library
 // Add your own reusable patterns here — they merge into ~sequenceLibrary
-// and can be referenced by symbol name in presets, e.g. \my_pattern
+// and can be referenced by symbol name in patches, e.g. \my_pattern
 //
 // Format:  name: (pattern: Pseq([...], inf), tag: \rhythm)
 // Tags:    \rhythm, \shape, \accent, \pitch, \timing

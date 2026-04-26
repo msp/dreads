@@ -5,7 +5,7 @@ x.stop;
 
 ~tempoClock.tempo = 175/60;
 
-~currentPresetTemplate.postln;
+~currentPatchTemplate.postln;
 
 ~pushStateToUI.()
 
@@ -32,32 +32,32 @@ x.stop;
 
 ~diceSeq.(1, \delaySend)
 
-//////////////// PRESETS //////////////
+//////////////// PATCHES //////////////
 
-~savePreset.();
+~savePatch.();
 
-~savePresetAs.();
+~savePatchAs.();
 
-~loadPreset.("default")
+~loadPatch.("default")
 
-~loadPreset.("/Users/Shared/GitHub/mutable-sc/presets/plaits/250731-2001-54.scd".asSymbol)
+~loadPatch.("/Users/Shared/GitHub/mutable-sc/patches/dreads/250731-2001-54.scd".asSymbol)
 
-~loadPreset.("250725-2240-08")
+~loadPatch.("250725-2240-08")
 
 // jazzy beat
-~loadPreset.("250731-2219-54")
+~loadPatch.("250731-2219-54")
 
-~loadPreset.("250731-2001-54")
+~loadPatch.("250731-2001-54")
 
-~loadPreset.("250730-1243-01")
+~loadPatch.("250730-1243-01")
 
-~loadPreset.("250725-2240-04")
+~loadPatch.("250725-2240-04")
 
-~loadPreset.("250725-2240-10")
+~loadPatch.("250725-2240-10")
 
-~loadPreset.(~currentPresetTemplate)
+~loadPatch.(~currentPatchTemplate)
 
-~loadRandomPreset.()
+~loadRandomPatch.()
 
 ~fadeOutReverb.();
 
@@ -66,8 +66,8 @@ x.stop;
 ~fxGroup.freeAll;
 
 (
-~currentPresetTemplate.postln;
-~loadAdjacentPreset.(-1);
+~currentPatchTemplate.postln;
+~loadAdjacentPatch.(-1);
 )
 
 Safety.disable

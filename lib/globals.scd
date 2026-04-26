@@ -48,7 +48,7 @@
 	};
 };
 
-// Default tempo, will be updated by presets
+// Default tempo, will be updated by patches
 ~tempoClock = TempoClock.new(120/60);
 ~sendToPhones = false;
 ~nudgeAmount = 0.25; // Per-module nudge step size in beats
@@ -132,7 +132,7 @@
 	volumeMod: 0.0,
 );
 
-// Default global FX settings for all presets
+// Default global FX settings for all patches
 ~defaultFX = (
 	clouds: (
 		blend: 0.5,

@@ -39,7 +39,7 @@ seqNames.postln;
 
 
 // PRESETS
-// /Users/Shared/GitHub/mutable-sc/presets/plaits
+// /Users/Shared/GitHub/mutable-sc/patches/dreads
 
 // SAMPLES
 // /Users/Shared/GitHub/mutable-sc/samples/
@@ -74,14 +74,14 @@ seqNames.postln;
 )
 
 //////////////
-// START_TEST_PRESET_MIGRATION
+// START_TEST_PATCH_MIGRATION
 
-// Reload and migrate all remaining presets
-(~basePath +/+ "scripts/migrate_presets.scd").load;
+// Reload and migrate all remaining patches
+(~basePath +/+ "scripts/migrate_patches.scd").load;
 
-~migrateAllPresets.(~basePath, dryRun: false);
+~migrateAllPatches.(~basePath, dryRun: false);
 
-// END_TEST_PRESET_MIGRATION
+// END_TEST_PATCH_MIGRATION
 ///////////////
 
 (

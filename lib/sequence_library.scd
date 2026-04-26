@@ -129,7 +129,7 @@
 	flutter:       (pattern: Pseq([0.4, 0.6, 0.45, 0.55, 0.42, 0.58], inf), tag: \shape),
 	cycle5:        (pattern: Pseq([0.0, 0.5, 0.2, 0.6, 1.0], inf), tag: \shape),
 
-	// Legacy names (backward compat with existing presets)
+	// Legacy names (backward compat with existing patches)
 	gauss:         (pattern: Pwhite(0.3, 0.7, inf), tag: \shape),    // → rndm_narrow
 	sparse:        (pattern: Pseq([0.1, 0.5, 0.9], inf), tag: \shape),
 	dense:         (pattern: Pseq([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], inf), tag: \shape),
@@ -204,7 +204,7 @@
 	walk_semi:     (pattern: Pbrown(-12, 12, 1, inf), tag: \pitch),
 	walk_third:    (pattern: Pbrown(-12, 12, 4, inf), tag: \pitch),
 
-	// Legacy names (backward compat with existing presets)
+	// Legacy names (backward compat with existing patches)
 	rhythm1:       (pattern: Pseq([1, 2, 1, 1, 2], inf), tag: \timing),
 	rhythm2:       (pattern: Pseq([1, 2, 0.5, 1, 2], inf), tag: \timing),
 	steps:         (pattern: Pseq([0.25, 0.5, 0.75, 1.0], inf), tag: \shape),  // → steps_4

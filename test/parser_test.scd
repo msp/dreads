@@ -10,7 +10,7 @@ if (~basePath.isNil) {
 (~basePath +/+ "lib/globals.scd").load;
 
 // Load the parser functions
-(~basePath +/+ "lib/presets.scd").load;
+(~basePath +/+ "lib/patches.scd").load;
 
 "".postln;
 "=== Testing Sequence Section Parser ===".postln;

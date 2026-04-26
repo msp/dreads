@@ -2,7 +2,7 @@
 
 *Many twisted Plaits.*
 
-Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with presets, pattern sequencing, Open Stage Control user interface, live coding and OSC device targets.
+Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with patches, pattern sequencing, Open Stage Control user interface, live coding and OSC device targets.
 
 <img src="images/dreads-2025-10-19.png" alt="Dreads" Xwidth="400px">
 
@@ -117,8 +117,8 @@ lib/
   synthdefs.scd         # Audio engine definitions
   sequencer.scd         # Pattern sequencer
   osc.scd              # OSC handlers and UI sync
-  presets.scd          # Preset management
+  patches.scd          # Patch management
   utils.scd            # Helper functions
-presets/plaits/        # Preset library
+patches/dreads/        # Patch library
 open-stage-control/    # UI definition
 ```

@@ -32,7 +32,7 @@ s.freeAll;
 
 // Capture base path for reliable preset operations
 ~basePath = Document.current.dir;
-~currentPresetTemplate = (~basePath ++ "/presets/plaits/default.scd").standardizePath;
+~currentPatchTemplate = (~basePath ++ "/patches/dreads/default.scd").standardizePath;
 
 (Document.current.dir ++ "/lib/globals.scd").load;
 (Document.current.dir ++ "/lib/sequence_library.scd").load;
@@ -40,7 +40,7 @@ s.freeAll;
 if (File.exists((Document.current.dir ++ "/lib/user_sequence_library.scd").standardizePath)) {
 	(Document.current.dir ++ "/lib/user_sequence_library.scd").load;
 };
-(Document.current.dir ++ "/lib/presets.scd").load;
+(Document.current.dir ++ "/lib/patches.scd").load;
 
 s.waitForBoot {
 	// allocate this after server boot with known indicies, away from likely synthdef/hardware outputs
@@ -49,7 +49,7 @@ s.waitForBoot {
 	~cloudsBus = Bus(\audio, 104, 2, s);
 
 	~loadSampleLibrary.();
-	(Document.current.dir ++ "/presets/plaits/default.scd").load;
+	(Document.current.dir ++ "/patches/dreads/default.scd").load;
 	(Document.current.dir ++ "/lib/synthdefs.scd").load;
 	(Document.current.dir ++ "/lib/osc.scd").load;
 };

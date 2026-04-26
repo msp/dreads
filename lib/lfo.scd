@@ -31,7 +31,7 @@ if (~lfo.notNil) {
 	(rate: Bus.control(s, 1), volume: Bus.control(s, 1))
 });
 
-// Per-instance LFO synths (frequencies overridden per preset)
+// Per-instance LFO synths (frequencies overridden per patch)
 ~lfo.synths = ~lfo.buses.synths.collect { |buses|
 	(
 		timbre: Synth(\lfo, [\out, buses.timbre, \freq, 0.125], ~lfoGroup),

@@ -175,7 +175,7 @@
 		}
 	);
 
-	// Build source string for preset serialization
+	// Build source string for patch serialization
 	valStrings = values.collect { |v|
 		if (v.isKindOf(Rest)) {
 			"Rest(" ++ v.value ++ ")"

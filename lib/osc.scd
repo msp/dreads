@@ -36,7 +36,7 @@ OSCdef.new(
 			}
 		);
 	},
-	"/plaits/start"
+	"/dreads/start"
 );
 
 // Create OSC listeners for all instances and parameters
@@ -275,7 +275,7 @@ OSCdef.new(
 			var synthParam = ("fx_delay_" ++ paramKey).asSymbol;
 			["fx/delay", paramKey, value].postln;
 
-			// Update preset FX settings (nested structure)
+			// Update patch FX settings (nested structure)
 			~dreads.fx.delay[paramKey] = value;
 
 			// Send to synth using clean parameter names
@@ -300,7 +300,7 @@ OSCdef.new(
 			var synthParam = ("fx_reverb_" ++ paramKey).asSymbol;
 			["fx/reverb", paramKey, value].postln;
 
-			// Update preset FX settings (nested structure)
+			// Update patch FX settings (nested structure)
 			~dreads.fx.reverb[paramKey] = value;
 
 			// Send to synth using clean parameter names
@@ -325,7 +325,7 @@ OSCdef.new(
 			var synthParam = ("fx_clouds_" ++ paramKey).asSymbol;
 			["fx/clouds", paramKey, value].postln;
 
-			// Update preset FX settings (nested structure)
+			// Update patch FX settings (nested structure)
 			~dreads.fx.clouds[paramKey] = value;
 
 			// Send to synth using clean parameter names
@@ -340,14 +340,14 @@ OSCdef.new(
 };
 
 OSCdef.new(
-	\loadPreset.asSymbol,
+	\loadPatch.asSymbol,
 	{
 		arg msg, time, addr, port;
 		var value = msg[1];
-		["loadPreset", value].postln;
-		~loadPreset.(value.asString)
+		["loadPatch", value].postln;
+		~loadPatch.(value.asString)
 	},
-	"/loadPreset"
+	"/dreads/loadPatch"
 );
 
 OSCdef.new(
@@ -357,64 +357,64 @@ OSCdef.new(
 		var bpm = msg[1].max(1);
 		["tempo", bpm].postln;
 		~tempoClock.tempo = bpm / 60;
-		// Update all instances so presets save the current tempo
+		// Update all instances so patches save the current tempo
 		~dreads.synths.do { |inst| inst.tempo = bpm };
 		~dreads.samples.do { |inst| inst.tempo = bpm };
 	},
-	"/tempo"
+	"/dreads/tempo"
 );
 
 OSCdef.new(
-	\savePreset.asSymbol,
+	\savePatch.asSymbol,
 	{
 		arg msg, time, addr, port;
 		var value = msg[1];
-		["savePreset", value].postln;
-		~savePreset.()
+		["savePatch", value].postln;
+		~savePatch.()
 	},
-	"/savePreset"
+	"/dreads/savePatch"
 );
 
 OSCdef.new(
-	\savePresetAs.asSymbol,
+	\savePatchAs.asSymbol,
 	{
 		arg msg, time, addr, port;
 		var value = msg[1];
-		["savePresetAs", value].postln;
-		~savePresetAs.()
+		["savePatchAs", value].postln;
+		~savePatchAs.()
 	},
-	"/savePresetAs"
+	"/dreads/savePatchAs"
 );
 
 OSCdef.new(
-	\prevPreset.asSymbol,
+	\prevPatch.asSymbol,
 	{
 		arg msg, time, addr, port;
-		["prevPreset"].postln;
-		~loadAdjacentPreset.(-1);
+		["prevPatch"].postln;
+		~loadAdjacentPatch.(-1);
 	},
-	"/plaits/prevPreset"
+	"/dreads/prevPatch"
 );
 
 OSCdef.new(
-	\nextPreset.asSymbol,
+	\nextPatch.asSymbol,
 	{
 		arg msg, time, addr, port;
-		["nextPreset"].postln;
-		~loadAdjacentPreset.(1);
+		["nextPatch"].postln;
+		~loadAdjacentPatch.(1);
 	},
-	"/plaits/nextPreset"
+	"/dreads/nextPatch"
 );
 
 OSCdef.new(
-	\reloadPreset.asSymbol,
+	\reloadPatch.asSymbol,
 	{
 		arg msg, time, addr, port;
-		var value = ~currentPresetTemplate;
-		["reloadPreset", value].postln;
-		~loadPreset.(value);
+		var value = ~currentPatchTemplate;
+		["reloadPatch", value].postln;
+		~loadPatch.(value);
 	},
-	"/reloadPreset"
+	"/dreads/reloadPatch"
 );
 
 OSCdef.new(
@@ -429,7 +429,7 @@ OSCdef.new(
 			~drones.size.do { |i| ~drones[i] = nil };
 		};
 	},
-	"/flushSynths"
+	"/dreads/flushSynths"
 );
 
 OSCdef.new(
@@ -440,7 +440,7 @@ OSCdef.new(
 		"fadeOutReverb".postln;
 		~fadeOutReverb.()
 	},
-	"/fadeOutReverb"
+	"/dreads/fadeOutReverb"
 );
 
 // Helper function to send sequence state to UI
@@ -549,7 +549,7 @@ OSCdef.new(
 	};
 
 	// Send global tempo
-	ui.sendMsg("/tempo", ~dreads.synths[0].tempo);
+	ui.sendMsg("/dreads/tempo", ~dreads.synths[0].tempo);
 
 	// Send global FX parameters (nested structure)
 	fxSettings.keysValuesDo { |category, categoryParams|
@@ -606,7 +606,7 @@ OSCdef(\refreshSampleLibrary, {
 	~loadSampleLibrary.();
 
 	"Sample library refreshed".postln;
-}, '/refreshSampleLibrary');
+}, '/dreads/refreshSampleLibrary');
 
 // Debug OSCFunc for catching all sample-related messages
 OSCFunc({ |msg, time, addr, port|
@@ -620,12 +620,12 @@ OSCFunc({ |msg, time, addr, port|
 	    path.asString.contains("/delay") ||
 	    path.asString.contains("/reverb") ||
 	    path.asString.contains("/clouds") ||
-	    path.asString.contains("/preset")) {
+	    path.asString.contains("/patch")) {
 		["POSSIBLE TYPO:", msg].postln;
 	};
 });
 
-// Setup OSC for plaits instances (called after preset structure is loaded)
+// Setup OSC for plaits instances (called after patch structure is loaded)
 ~setupPlaitsOSC.();
 ~setupSampleOSC.();
 

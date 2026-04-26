@@ -2,7 +2,7 @@
 
 ## Overview
 
-A parser system that enables UI-selected library sequences to persist when saving presets, while preserving hand-written custom patterns in preset files. This eliminates the workflow trap where non-coder collaborators would lose their sequence selections.
+A parser system that enables UI-selected library sequences to persist when saving patches, while preserving hand-written custom patterns in patch files. This eliminates the workflow trap where non-coder collaborators would lose their sequence selections.
 
 ## Problem Statement
 
@@ -17,7 +17,7 @@ SuperCollider patterns (like `Pseq`, `Pfunc`, etc.) cannot be serialized once co
 **Before this implementation:**
 1. Non-coder collaborator selects sequence from UI (e.g., `\dense`)
 2. Runtime state updates: `~dreads.synths[0].sequences.duration = \dense`
-3. Save preset → sequence section preserved as-is from template
+3. Save patch → sequence section preserved as-is from template
 4. **UI selection lost!** File still shows old value
 
 ## Design Decisions
@@ -26,11 +26,11 @@ SuperCollider patterns (like `Pseq`, `Pfunc`, etc.) cannot be serialized once co
 
 **Tier 1: Library Symbols** (Auto-save)
 - Predefined patterns stored in `~sequenceLibrary`
-- Referenced by symbol in preset files: `duration: \euclid`
+- Referenced by symbol in patch files: `duration: \euclid`
 - **Auto-save from UI** ✅
 
 **Tier 2: Custom Patterns** (Manual)
-- Full SuperCollider expressiveness in preset files
+- Full SuperCollider expressiveness in patch files
 - Any valid pattern code: `Pseq`, `Pfunc`, `Pwrand`, closures, etc.
 - Preserved when runtime has streams
 - **Manual editing required** (but that's the user's workflow anyway)
@@ -72,21 +72,21 @@ duration: \dense,
 
 ```
 lib/
-  presets.scd          # Parser functions and save/load logic
+  patches.scd          # Parser functions and save/load logic
   utils.scd            # ~getSequenceValue resolver
   globals.scd          # ~sequenceLibrary definitions
   sequencer.scd        # Pattern player (uses resolver)
   osc.scd              # UI communication
-presets/
-  plaits/
-    default.scd        # Template preset with section markers
+patches/
+  dreads/
+    default.scd        # Template patch with section markers
 test/
   parser_test.scd      # Automated test suite (6 tests)
 ```
 
 ### Key Components
 
-#### 1. Parser Functions (`lib/presets.scd`)
+#### 1. Parser Functions (`lib/patches.scd`)
 
 ```supercollider
 ~parseSequenceParamLine  // Extract parameter name and indent
@@ -130,7 +130,7 @@ test/
 - Cache invalidation (detects symbol changes)
 - Short-circuit evaluation fix (`.and { }` not `&&`)
 
-#### 3. Preset File Markers
+#### 3. Patch File Markers
 
 ```supercollider
 // $PRESET_SEQUENCES_START
@@ -251,12 +251,12 @@ String-based detection avoids regex issues with special characters:
 
 1. Select sequence from UI (e.g., duration → dense)
 2. Console shows: `Selected plaits[0].duration → dense`
-3. Save: `~savePreset.()`
+3. Save: `~savePatch.()`
 4. Selection persists to file ✅
 
 ### For Coders (File Editing)
 
-1. Edit preset file with custom pattern:
+1. Edit patch file with custom pattern:
    ```supercollider
    duration: Pfunc { |event|
        var state = ~someGlobalVariable;
@@ -264,9 +264,9 @@ String-based detection avoids regex issues with special characters:
    }.asStream,
    ```
 
-2. Reload: `~loadPreset.("default")`
+2. Reload: `~loadPatch.("default")`
 3. Pattern active in runtime ✅
-4. Save: `~savePreset.()`
+4. Save: `~savePatch.()`
 5. Pattern preserved in file ✅
 
 ### Hybrid Workflow
@@ -308,7 +308,7 @@ Failed: 0/6
 
 Covered in manual testing session:
 - ✅ Real UI interaction (iPad)
-- ✅ Preset save/load cycle
+- ✅ Patch save/load cycle
 - ✅ Comment preservation
 - ✅ Multi-instance handling
 - ✅ Empty sections
@@ -408,14 +408,14 @@ Possible improvements if needed:
 
 1. **Backup system**: Auto-create `.backup` files before saving
 2. **Diff view**: Show what changed in save operation
-3. **Pattern library**: Expand `~sequenceLibrary` with more presets
+3. **Pattern library**: Expand `~sequenceLibrary` with more patterns
 4. **UI feedback**: Show which parameters have patterns vs symbols
 5. **Parameter ordering**: Option to alphabetize on save
 6. **Inline comment preservation**: More sophisticated comment handling
 
 ## Summary
 
-**Problem solved:** UI sequence selections now persist when saving presets ✅
+**Problem solved:** UI sequence selections now persist when saving patches ✅
 
 **Design philosophy:**
 - Coders: Full expressiveness (any valid SC pattern)
