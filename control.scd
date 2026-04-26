@@ -89,16 +89,16 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 ~sampleLibrary.banks.postln;
 
 (
-~plaits.samples.postln;
-~plaits.samples[0].postln;
-~plaits.samples[0].sequences.postln;
+~dreads.samples.postln;
+~dreads.samples[0].postln;
+~dreads.samples[0].sequences.postln;
 )
 
 ~listSampleBanks.()
 
 (
-~plaits.samples[0].bankName.postln;
-~plaits.samples[0].variant.postln;
+~dreads.samples[0].bankName.postln;
+~dreads.samples[0].variant.postln;
 )
 
 (
@@ -114,7 +114,7 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 ~cycleSampleVariant.(0, -1);
 
 // Check current state
-["bank:", ~plaits.samples[0].bankName, "variant:", ~plaits.samples[0].variant].postln;
+["bank:", ~dreads.samples[0].bankName, "variant:", ~dreads.samples[0].variant].postln;
 
 (
 ~delayBus.postln;
@@ -165,20 +165,20 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 // DRONE MODE TEST ////////////
 
 // 1. Enable drone on plaits 1 — should hear continuous tone
-~plaits.synths[0].droneMode = 1;
-~plaits.synths[0].droneMode = 0;
+~dreads.synths[0].droneMode = 1;
+~dreads.synths[0].droneMode = 0;
 
 ~startDrone.(0);
 ~stopDrone.(0);
 
-~plaits.synths[1].droneMode = 1;
-~plaits.synths[1].droneMode = 0;
+~dreads.synths[1].droneMode = 1;
+~dreads.synths[1].droneMode = 0;
 
 ~startDrone.(1);
 ~stopDrone.(1);
 
-~plaits.synths[2].droneMode = 1;
-~plaits.synths[2].droneMode = 0;
+~dreads.synths[2].droneMode = 1;
+~dreads.synths[2].droneMode = 0;
 
 ~startDrone.(2);
 ~stopDrone.(2);
@@ -192,12 +192,12 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/2/nudge", 1)
 
 // 3. Mute/unmute drone
 ~droneSynths[0].set(\mul, 0);
-~droneSynths[0].set(\mul, ~plaits.synths[0].mul);
+~droneSynths[0].set(\mul, ~dreads.synths[0].mul);
 
 // 4. Stop drone, resume sequencer
-~plaits.synths[0].droneMode = 0; ~stopDrone.(0);
+~dreads.synths[0].droneMode = 0; ~stopDrone.(0);
 
-~plaits.synths[1].droneMode = 0;
+~dreads.synths[1].droneMode = 0;
 ~stopDrone.(1);
 
 // 5. Test via OSC (same as UI would send)
@@ -210,7 +210,7 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/1/droneMode", 0);
 
 // 6. Check drone state
 ~droneSynths.postln;
-~plaits.synths.collect(_.droneMode).postln;
+~dreads.synths.collect(_.droneMode).postln;
 
 
 

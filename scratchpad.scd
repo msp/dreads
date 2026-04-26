@@ -49,27 +49,27 @@ seqNames.postln;
 ~sampleLibrary.metadata
 
 (
-~plaits.synths[0].sequences.engine.postln;
-~plaits.synths[1].sequences.engine.postln;
-~plaits.synths[2].sequences.engine.postln;
+~dreads.synths[0].sequences.engine.postln;
+~dreads.synths[1].sequences.engine.postln;
+~dreads.synths[2].sequences.engine.postln;
 )
 
 (
 // Check what sequence is stored
 "Sequence value:".postln;
-~plaits.samples[0].sequences.rate.postln;
+~dreads.samples[0].sequences.rate.postln;
 
 // Check what ~getSequenceValue returns
 "Get sequence value result:".postln;
-~getSequenceValue.(~plaits.samples[0], 0, \samples, \rate).postln;
+~getSequenceValue.(~dreads.samples[0], 0, \samples, \rate).postln;
 
 // Check the base rate value
 "Base rate:".postln;
-~plaits.samples[0].rate.postln;
+~dreads.samples[0].rate.postln;
 
 // Check if sample is even playing
 "Sample dur:".postln;
-~plaits.samples[0].dur.postln;
+~dreads.samples[0].dur.postln;
 
 )
 
@@ -165,8 +165,8 @@ Env.asr(0.02, 0.5, 1, 'linear').test(2).plot; // linear segments
 (Document.current.dir +/+ "test_modulate_refactor.scd").load;
 
 (
-~plaits.samples.size.postln;
-~plaits.samples.do { |s, i| [i, s.notNil].postln };
+~dreads.samples.size.postln;
+~dreads.samples.do { |s, i| [i, s.notNil].postln };
 )
 
 // controlPeriod = blockSize / sampleRate
@@ -348,9 +348,9 @@ x = {
 (
 [
 	"cloudsSends",
-	~plaits.synths[0].cloudsSend,
-	~plaits.synths[1].cloudsSend,
-	~plaits.synths[2].cloudsSend,
+	~dreads.synths[0].cloudsSend,
+	~dreads.synths[1].cloudsSend,
+	~dreads.synths[2].cloudsSend,
 ].postln;
 )
 

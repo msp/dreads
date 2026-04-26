@@ -44,12 +44,12 @@ fork {
 	};
 
 	// Simulate runtime state where user changed to \dense via UI
-	~plaits = (synths: [
+	~dreads = (synths: [
 		(sequences: (duration: \dense))
 	]);
 
 	"".postln;
-	("Runtime sequences: " ++ ~plaits.synths[0].sequences).postln;
+	("Runtime sequences: " ++ ~dreads.synths[0].sequences).postln;
 
 	// Process the section
 	testOutput = ~processSequenceSection.(testLines, \plaits, 0);
@@ -88,12 +88,12 @@ fork {
 	testLines.do { |line| ("  " ++ line).postln };
 
 	// Simulate runtime state where user changed to \sparse via UI
-	~plaits = (synths: [
+	~dreads = (synths: [
 		(sequences: (duration: \sparse))
 	]);
 
 	"".postln;
-	("Runtime sequences: " ++ ~plaits.synths[0].sequences).postln;
+	("Runtime sequences: " ++ ~dreads.synths[0].sequences).postln;
 
 	// Process the section
 	testOutput = ~processSequenceSection.(testLines, \plaits, 0);
@@ -130,12 +130,12 @@ fork {
 	testLines.do { |line| ("  " ++ line).postln };
 
 	// Runtime has custom stream (not a symbol)
-	~plaits = (synths: [
+	~dreads = (synths: [
 		(sequences: (duration: Pseq([0.5, 0.7], inf).asStream))
 	]);
 
 	"".postln;
-	("Runtime sequences: " ++ ~plaits.synths[0].sequences).postln;
+	("Runtime sequences: " ++ ~dreads.synths[0].sequences).postln;
 
 	// Process the section
 	testOutput = ~processSequenceSection.(testLines, \plaits, 0);
@@ -174,12 +174,12 @@ fork {
 	testLines.do { |line| ("  " ++ line).postln };
 
 	// Runtime has different custom stream (not a symbol)
-	~plaits = (synths: [
+	~dreads = (synths: [
 		(sequences: (duration: Pwhite(0.1, 0.9, inf).asStream))
 	]);
 
 	"".postln;
-	("Runtime sequences: " ++ ~plaits.synths[0].sequences).postln;
+	("Runtime sequences: " ++ ~dreads.synths[0].sequences).postln;
 
 	// Process the section
 	testOutput = ~processSequenceSection.(testLines, \plaits, 0);
@@ -215,12 +215,12 @@ fork {
 	testLines.do { |line| ("  " ++ line).postln };
 
 	// Runtime has additional symbol (decay)
-	~plaits = (synths: [
+	~dreads = (synths: [
 		(sequences: (duration: \dense, decay: \gauss))
 	]);
 
 	"".postln;
-	("Runtime sequences: " ++ ~plaits.synths[0].sequences).postln;
+	("Runtime sequences: " ++ ~dreads.synths[0].sequences).postln;
 
 	// Process the section
 	testOutput = ~processSequenceSection.(testLines, \plaits, 0);
@@ -256,12 +256,12 @@ fork {
 	testLines.do { |line| ("  " ++ line).postln };
 
 	// Runtime has symbol
-	~plaits = (synths: [
+	~dreads = (synths: [
 		(sequences: (duration: \sparse))
 	]);
 
 	"".postln;
-	("Runtime sequences: " ++ ~plaits.synths[0].sequences).postln;
+	("Runtime sequences: " ++ ~dreads.synths[0].sequences).postln;
 
 	// Process the section
 	testOutput = ~processSequenceSection.(testLines, \plaits, 0);

@@ -67,15 +67,15 @@
 	var ui, instanceNum;
 	ui = ~ui.();
 	instanceNum = idx + 1;
-	ui.sendMsg("/plaits/" ++ instanceNum ++ "/harm", ~plaits.synths[idx].harm);
-	ui.sendMsg("/plaits/" ++ instanceNum ++ "/engine", ~plaits.synths[idx].engine);
+	ui.sendMsg("/plaits/" ++ instanceNum ++ "/harm", ~dreads.synths[idx].harm);
+	ui.sendMsg("/plaits/" ++ instanceNum ++ "/engine", ~dreads.synths[idx].engine);
 };
 
 // Read bank index (0-based internal) from instance's engine
-~fmBankOf = { |idx| (~plaits.synths[idx].engine.asInteger - 18).clip(0, 2) };
+~fmBankOf = { |idx| (~dreads.synths[idx].engine.asInteger - 18).clip(0, 2) };
 
 // Read patch index (0-based internal) from instance's harm
-~fmPatchOf = { |idx| ~fmPatchFromHarm.(~plaits.synths[idx].harm) };
+~fmPatchOf = { |idx| ~fmPatchFromHarm.(~dreads.synths[idx].harm) };
 
 // Set patch on a plaits instance (1-based: plaits 1-3, patch 1-32)
 ~fm = { |inst=1, n=1|
@@ -85,7 +85,7 @@
 	var bankIdx = ~fmBankOf.(idx);
 	var name = ~fmBanks[bankIdx][patchIdx];
 
-	~plaits.synths[idx].harm = harm;
+	~dreads.synths[idx].harm = harm;
 	~fmPushUI.(idx);
 
 	(">> plaits " ++ inst ++ " [" ++ ~fmBankNames[bankIdx] ++ "] "
@@ -111,7 +111,7 @@
 ~fmBank = { |inst=1, b=1|
 	var idx = inst - 1;
 	var bankIdx = (b - 1).clip(0, 2);
-	~plaits.synths[idx].engine = bankIdx + 18;
+	~dreads.synths[idx].engine = bankIdx + 18;
 	("Switched plaits " ++ inst ++ " to bank " ++ b ++ ": " ++ ~fmBankNames[bankIdx]
 		++ " (engine " ++ (bankIdx + 18) ++ ")").postln;
 	~fm.(inst, 1);

@@ -58,7 +58,7 @@ if (~lfoReporter.notNil) { ~lfoReporter.free };
 ~lfoReporterFunc = OSCFunc({ |msg|
 	var bundle = Array.new(21);
 	3.do { |i|
-		var inst = ~plaits.synths[i];
+		var inst = ~dreads.synths[i];
 		var offset = 3 + (i * 5);
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/timbre", msg[offset]     * (inst.timbMod ? 0)]);
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/morph",  msg[offset + 1] * (inst.morphMod ? 0)]);
@@ -67,7 +67,7 @@ if (~lfoReporter.notNil) { ~lfoReporter.free };
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/volume", msg[offset + 4] * (inst.volumeMod ? 0)]);
 	};
 	3.do { |i|
-		var samp = ~plaits.samples[i];
+		var samp = ~dreads.samples[i];
 		var offset = 18 + (i * 2);
 		bundle = bundle.add(["/samples/" ++ i ++ "/lfo/rate",   msg[offset]     * (samp.rateMod ? 0)]);
 		bundle = bundle.add(["/samples/" ++ i ++ "/lfo/volume", msg[offset + 1] * (samp.volumeMod ? 0)]);

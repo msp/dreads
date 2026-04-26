@@ -3,7 +3,7 @@
 // PLAITS1 configured for clean FM auditioning — load this, then run fm-patches.scd
 ////////////////////////////////////////////////////////////////////////////////
 (
-~plaits = ~presetFactory.(
+~dreads = ~presetFactory.(
 	// Synth instances array
 	[
 		// $PLAITS1
@@ -149,7 +149,7 @@
 // ~morphLFO = Pfunc { 0.5 }.asStream;
 ~morphLFO = ~lfoSine.(1/8);
 ~decayLFO = Pfunc { 0.5 }.asStream;
-~tempoClock.tempo = ~plaits.synths[0].tempo/60;
+~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
 ~pushStateToUI.();
 )

@@ -96,10 +96,10 @@ if (~using6_1.notNil) {
 	"~using6_1 not set - run setup block first".postln;
 };
 
-if (~plaits.notNil) {
-	("Plaits instances loaded: " ++ ~plaits.synths.size).postln;
+if (~dreads.notNil) {
+	("Plaits instances loaded: " ++ ~dreads.synths.size).postln;
 } {
-	"~plaits not loaded - run setup block first".postln;
+	"~dreads not loaded - run setup block first".postln;
 };
 
 if (~voiceGroup.notNil) {

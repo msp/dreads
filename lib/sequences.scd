@@ -9,7 +9,7 @@ x = Pdef(\plaitsSequence,
 		Pbind(
 			\instrument, \plaits,
 			\pitch, Pfunc { |event|
-				// ["--->", ~state, ~plaits[0].engine, ~playCount].postln;
+				// ["--->", ~state, ~dreads[0].engine, ~playCount].postln;
 				~playCount = ~playCount + 1;
 
 				if (~playCount % 16 == 0) {
@@ -17,40 +17,40 @@ x = Pdef(\plaitsSequence,
 					// "Completed 16 steps".postln;
 				};
 
-				~plaits[0].dur = ~setDuration.(
-					~plaits[0].sequences.duration.next,
-					~plaits[0].sequences.div.next
+				~dreads[0].dur = ~setDuration.(
+					~dreads[0].sequences.duration.next,
+					~dreads[0].sequences.div.next
 				);
 
-				~plaits[0].pitch ;
+				~dreads[0].pitch ;
 			},
 			\dur, Pfunc { |event|
-				~plaits[0].dur
+				~dreads[0].dur
 			},
 			\decay, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.decay.next, ~plaits[0].decay)
+				~modulateBipolar.(~dreads[0].sequences.decay.next, ~dreads[0].decay)
 			},
 			\harm, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.harm.next, ~plaits[0].harm)
+				~modulateBipolar.(~dreads[0].sequences.harm.next, ~dreads[0].harm)
 			},
 			\timbre, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.timbre.next, ~plaits[0].timbre)
+				~modulateBipolar.(~dreads[0].sequences.timbre.next, ~dreads[0].timbre)
 			},
 			\morph, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.morph.next, ~plaits[0].morph)
+				~modulateBipolar.(~dreads[0].sequences.morph.next, ~dreads[0].morph)
 			},
 			\fmMod, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.fmMod.next, ~plaits[0].fmMod)
+				~modulateBipolar.(~dreads[0].sequences.fmMod.next, ~dreads[0].fmMod)
 			},
 			\lpgColour, Pfunc { |event|
-				~modulateBipolar.(~plaits[0].sequences.lpgColour.next, ~plaits[0].lpgColour)
+				~modulateBipolar.(~dreads[0].sequences.lpgColour.next, ~dreads[0].lpgColour)
 			},
-			\timbMod, ~plaits[0].timbMod,
-			\morphMod, ~plaits[0].morphMod,
+			\timbMod, ~dreads[0].timbMod,
+			\morphMod, ~dreads[0].morphMod,
 			\engine, Pfunc { |event|
-				~setEngine.(~plaits[0].sequences.engine.next, ~plaits[0].engine)
+				~setEngine.(~dreads[0].sequences.engine.next, ~dreads[0].engine)
 			},
-			\mul, ~plaits[0].mul,
+			\mul, ~dreads[0].mul,
 			\out, Pseq(
 				[
 					0
@@ -61,7 +61,7 @@ x = Pdef(\plaitsSequence,
 		Pbind(
 			\instrument, \plaits,
 			\dur, Pfunc { |event|
-				~plaits[0].dur
+				~dreads[0].dur
 			},
 			\pitch, 36,
 			\harm, 0.55,

@@ -16,7 +16,7 @@ SuperCollider patterns (like `Pseq`, `Pfunc`, etc.) cannot be serialized once co
 ### The Workflow Trap
 **Before this implementation:**
 1. Non-coder collaborator selects sequence from UI (e.g., `\dense`)
-2. Runtime state updates: `~plaits.synths[0].sequences.duration = \dense`
+2. Runtime state updates: `~dreads.synths[0].sequences.duration = \dense`
 3. Save preset → sequence section preserved as-is from template
 4. **UI selection lost!** File still shows old value
 

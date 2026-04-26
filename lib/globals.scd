@@ -19,7 +19,7 @@
 
 // Cycle sample variant within current bank
 ~cycleSampleVariant = { |instanceIndex, direction|
-	var instance = ~plaits.samples[instanceIndex];
+	var instance = ~dreads.samples[instanceIndex];
 	var bankName, bankBuffers, numVariants, newVariant, bankPaths, filepath, instanceNum;
 
 	if (instance.isNil) {

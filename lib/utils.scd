@@ -115,10 +115,10 @@
 			var val;
 			val = rrand(range[0], range[1]);
 			if (range[2] == \int) { val = val.round.asInteger };
-			~plaits.synths[idx][param] = val;
+			~dreads.synths[idx][param] = val;
 			// Reset any active sequence on this param so the scalar takes effect
-			if (~plaits.synths[idx].sequences[param].notNil) {
-				~plaits.synths[idx].sequences[param] = \hold;
+			if (~dreads.synths[idx].sequences[param].notNil) {
+				~dreads.synths[idx].sequences[param] = \hold;
 			};
 		};
 	};
@@ -128,7 +128,7 @@
 
 // Randomize all unmuted plaits instances
 ~randomizeAll = { |mode=\default|
-	~plaits.synths.do { |inst, idx|
+	~dreads.synths.do { |inst, idx|
 		if (inst.mute != 1) {
 			~randomize.(idx + 1, mode);
 		};
@@ -186,7 +186,7 @@
 	source = "Pseq([" ++ valStrings.join(", ") ++ "], inf).asStream";
 
 	// Store as Event with stream + source on the instance
-	~plaits.synths[idx].sequences[param] = (
+	~dreads.synths[idx].sequences[param] = (
 		stream: Pseq(values, inf).asStream,
 		source: source
 	);
@@ -504,7 +504,7 @@
 
 // Start a persistent drone synth for a plaits instance
 ~startDrone = { |i|
-	var instance = ~plaits.synths[i];
+	var instance = ~dreads.synths[i];
 	var out;
 
 	// Stop existing drone if any

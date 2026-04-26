@@ -3,7 +3,7 @@
 // PLAITS1 configured for clean FM auditioning — load this, then run fm-patches.scd
 ////////////////////////////////////////////////////////////////////////////////
 (
-~plaits = ~presetFactory.(
+~dreads = ~presetFactory.(
 	// Synth instances array
 	[
 		// $PLAITS1
@@ -109,7 +109,7 @@
 ~states = Pseq([\a, \b, \c, \d], inf).asStream;
 ~state = ~states.next;
 ~playCount = 0;
-~tempoClock.tempo = ~plaits.synths[0].tempo/60;
+~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
 // Server-side LFO speeds for this preset (per instance)
 3.do { |i|
@@ -130,12 +130,12 @@
 ~lfoSynths[0].pitch.set(\shape, 5);
 
 
-~plaits.samples[0].volume = 0.9;
-~plaits.samples[0][\volumeMod] = 0.9;
-~plaits.samples[0][\rateMod] = 0.9;
+~dreads.samples[0].volume = 0.9;
+~dreads.samples[0][\volumeMod] = 0.9;
+~dreads.samples[0][\rateMod] = 0.9;
 
-~plaits.synths[0][\volume] = 0.8;
-~plaits.synths[0].volume = 0.3;
+~dreads.synths[0][\volume] = 0.8;
+~dreads.synths[0].volume = 0.3;
 
 ~sampleLfoSynths[0].rate.set(\freq, 5, \shape, 4, \width, 0.9);
 ~sampleLfoSynths[0].volume.set(\freq, 1);

@@ -120,7 +120,7 @@
 };
 
 ~processParameterLine = { |line, plaitsIndex|
-	var currentPlaits = ~plaits[plaitsIndex];
+	var currentPlaits = ~dreads[plaitsIndex];
 	var parts = line.split($,);
 
 	parts = parts.collect { |part|
@@ -299,8 +299,8 @@
 
 	// Get runtime sequences dictionary
 	runtimeInstance = if(instanceType == \plaits) {
-		~plaits.synths[instanceIdx]
-	} { ~plaits.samples[instanceIdx] };
+		~dreads.synths[instanceIdx]
+	} { ~dreads.samples[instanceIdx] };
 
 	if (runtimeInstance.isNil) {
 		("WARNING: Instance " ++ instanceType ++ "[" ++ instanceIdx ++ "] not found in runtime").warn;
@@ -477,7 +477,7 @@
 			("Entering FX section").postln;
 
 			// Generate compact FX section — one line per category
-			currentFX = ~plaits.fx ?? ~defaultFX.deepCopy;
+			currentFX = ~dreads.fx ?? ~defaultFX.deepCopy;
 			("Current FX values for save: " ++ currentFX).postln;
 			categoryLines = [];
 
@@ -509,8 +509,8 @@
 			("Entering scalars section for synth " ++ plaitsIndex).postln;
 
 			// Generate compact scalar section
-			if ((plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~plaits.synths.size)) {
-				currentPlaits = ~plaits.synths[plaitsIndex];
+			if ((plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~dreads.synths.size)) {
+				currentPlaits = ~dreads.synths[plaitsIndex];
 				paramLines = [];
 
 				~defaultScalars.keys.asArray.sort.do { |key|
@@ -542,8 +542,8 @@
 			("Entering sample scalars section for sample " ++ sampleIndex).postln;
 
 			// Generate compact sample scalar section
-			if ((sampleIndex.isInteger) && (sampleIndex >= 0) && (sampleIndex < ~plaits.samples.size)) {
-				currentSample = ~plaits.samples[sampleIndex];
+			if ((sampleIndex.isInteger) && (sampleIndex >= 0) && (sampleIndex < ~dreads.samples.size)) {
+				currentSample = ~dreads.samples[sampleIndex];
 				paramLines = [];
 
 				~defaultSampleScalars.keys.asArray.sort.do { |key|
@@ -766,14 +766,14 @@
 
 	// Reload sequencer to rebuild pattern with new preset structure
 	// This is critical because the pattern "bakes in" the samples array size at creation:
-	// - If old preset had 1 sample, pattern has code accessing ~plaits.samples[0]
-	// - If new preset has 0 samples, ~plaits.samples[0] is nil → crashes
+	// - If old preset had 1 sample, pattern has code accessing ~dreads.samples[0]
+	// - If new preset has 0 samples, ~dreads.samples[0] is nil → crashes
 	// Reloading sequencer rebuilds pattern to match new samples array length
 	(~basePath +/+ "lib/sequencer.scd").load;
 
 	// Start/stop drones based on loaded preset's droneMode values
 	// Only start if playback is active — drones will be created on play otherwise
-	~plaits.synths.do { |instance, i|
+	~dreads.synths.do { |instance, i|
 		if (wasPlaying) {
 			if (instance.droneMode == 1) {
 				~startDrone.(i);
@@ -786,9 +786,9 @@
 	};
 
 	// Apply loaded FX values to the running FX synths
-	~plaits.fx.delay.keysValuesDo { |param, value| ~delayFX.set(param, value) };
-	~plaits.fx.reverb.keysValuesDo { |param, value| ~reverbFX.set(param, value) };
-	~plaits.fx.clouds.keysValuesDo { |param, value| ~cloudsFX.set(param, value) };
+	~dreads.fx.delay.keysValuesDo { |param, value| ~delayFX.set(param, value) };
+	~dreads.fx.reverb.keysValuesDo { |param, value| ~reverbFX.set(param, value) };
+	~dreads.fx.clouds.keysValuesDo { |param, value| ~cloudsFX.set(param, value) };
 
 	// Resume playback if it was running — causes a brief timing gap
 	if (wasPlaying) { Pdef(\plaitsSequence).play(~tempoClock) };
@@ -862,8 +862,8 @@
 	var instance, ui, path;
 
 	instance = if(instanceType == \plaits) {
-		~plaits.synths[instanceIdx]
-	} { ~plaits.samples[instanceIdx] };
+		~dreads.synths[instanceIdx]
+	} { ~dreads.samples[instanceIdx] };
 
 	if(~sequenceLibrary[seqName].notNil) {
 		instance.sequences[paramKey] = seqName;

@@ -2,7 +2,7 @@
 // Plaits State - Template-based default preset
 ////////////////////////////////////////////////////////////////////////////////
 (
-~plaits = ~presetFactory.(
+~dreads = ~presetFactory.(
 	// Synth instances array
 	[
 		// $PLAITS1
@@ -262,7 +262,7 @@
 ~timbreLFO = ~lfoSine.(3);
 ~morphLFO = ~lfoSine.(4);
 ~decayLFO = ~lfoSine.(1);
-~tempoClock.tempo = ~plaits.synths[0].tempo/60;
+~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
 ~pushStateToUI.();
 )

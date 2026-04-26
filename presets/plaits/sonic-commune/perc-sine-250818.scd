@@ -57,7 +57,7 @@ if(fixed,{
 	p2Div = Pseq([1], inf).asStream;
 });
 
-~plaits = ~presetFactory.(
+~dreads = ~presetFactory.(
 	// Synth instances array
 	[
 		// $PLAITS1
@@ -292,7 +292,7 @@ if(fixed,{
 ~timbreLFO = ~lfoSine.(3);
 ~morphLFO = ~lfoSine.(4);
 ~decayLFO = ~lfoSine.(5);
-~tempoClock.tempo = ~plaits.synths[0].tempo/60;
+~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
 ~pushStateToUI.();
 )

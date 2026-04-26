@@ -20,7 +20,7 @@ OSCdef.new(
 				// Clear stream cache so patterns like \offbeat start at position 0
 				~sequenceStreamCache = Dictionary.new;
 				// Start drone synths for any instances with droneMode enabled
-				~plaits.synths.do { |instance, idx|
+				~dreads.synths.do { |instance, idx|
 					if (instance.droneMode == 1) { ~startDrone.(idx) };
 				};
 				x.play(~tempoClock);
@@ -30,7 +30,7 @@ OSCdef.new(
 				x.stop;
 				~lfoReporter.run(false);
 				// Stop all drone synths
-				~plaits.synths.do { |instance, idx|
+				~dreads.synths.do { |instance, idx|
 					~stopDrone.(idx);
 				};
 			}
@@ -41,7 +41,7 @@ OSCdef.new(
 
 // Create OSC listeners for all instances and parameters
 ~setupPlaitsOSC = {
-	~plaits.synths.do { |instance, instanceIndex|
+	~dreads.synths.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
 
 		// ["binding plaits ------------------->", instanceIndex].postln;
@@ -57,11 +57,11 @@ OSCdef.new(
 
 					// Special handling for tempo (affects global tempo clock)
 					if (paramKey == 'tempo') {
-						~plaits.synths[instanceIndex][paramKey] = value;
+						~dreads.synths[instanceIndex][paramKey] = value;
 						~tempoClock.tempo = (value.max(0.1))/60;
 					} {
 						if (paramKey == 'droneMode') {
-							~plaits.synths[instanceIndex][paramKey] = value;
+							~dreads.synths[instanceIndex][paramKey] = value;
 							if (value == 1) {
 								~startDrone.(instanceIndex);
 							} {
@@ -69,18 +69,18 @@ OSCdef.new(
 							};
 						} {
 							if (paramKey == 'mute') {
-								~plaits.synths[instanceIndex][paramKey] = value;
+								~dreads.synths[instanceIndex][paramKey] = value;
 								// Forward mute to drone synth
 								if (~droneSynths.notNil && ~droneSynths[instanceIndex].notNil) {
 									if (value == 1) {
 										~droneSynths[instanceIndex].set(\mul, 0);
 									} {
-										~droneSynths[instanceIndex].set(\mul, ~plaits.synths[instanceIndex].mul);
+										~droneSynths[instanceIndex].set(\mul, ~dreads.synths[instanceIndex].mul);
 									};
 								};
 							} {
 								// Generic parameter update
-								~plaits.synths[instanceIndex][paramKey] = value;
+								~dreads.synths[instanceIndex][paramKey] = value;
 								// Forward to drone synth if active
 								if (~droneSynths.notNil && ~droneSynths[instanceIndex].notNil) {
 									~droneSynths[instanceIndex].set(paramKey, value);
@@ -126,9 +126,9 @@ OSCdef.new(
 			{
 				arg msg, time, addr, port;
 				var delta = ~nudgeAmount;
-				~plaits.synths[instanceIndex].nudgeOffset = (~plaits.synths[instanceIndex].nudgeOffset ? 0) + delta;
-				~plaits.synths[instanceIndex].phaseOffset = (~plaits.synths[instanceIndex].phaseOffset ? 0) + delta;
-				["plaits nudge fwd", instanceNum, "nudge:", ~plaits.synths[instanceIndex].nudgeOffset, "phase:", ~plaits.synths[instanceIndex].phaseOffset].postln;
+				~dreads.synths[instanceIndex].nudgeOffset = (~dreads.synths[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.synths[instanceIndex].phaseOffset = (~dreads.synths[instanceIndex].phaseOffset ? 0) + delta;
+				["plaits nudge fwd", instanceNum, "nudge:", ~dreads.synths[instanceIndex].nudgeOffset, "phase:", ~dreads.synths[instanceIndex].phaseOffset].postln;
 			},
 			"/plaits/" ++ instanceNum ++ "/nudgeForward"
 		);
@@ -139,9 +139,9 @@ OSCdef.new(
 			{
 				arg msg, time, addr, port;
 				var delta = ~nudgeAmount.neg;
-				~plaits.synths[instanceIndex].nudgeOffset = (~plaits.synths[instanceIndex].nudgeOffset ? 0) + delta;
-				~plaits.synths[instanceIndex].phaseOffset = (~plaits.synths[instanceIndex].phaseOffset ? 0) + delta;
-				["plaits nudge back", instanceNum, "nudge:", ~plaits.synths[instanceIndex].nudgeOffset, "phase:", ~plaits.synths[instanceIndex].phaseOffset].postln;
+				~dreads.synths[instanceIndex].nudgeOffset = (~dreads.synths[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.synths[instanceIndex].phaseOffset = (~dreads.synths[instanceIndex].phaseOffset ? 0) + delta;
+				["plaits nudge back", instanceNum, "nudge:", ~dreads.synths[instanceIndex].nudgeOffset, "phase:", ~dreads.synths[instanceIndex].phaseOffset].postln;
 			},
 			"/plaits/" ++ instanceNum ++ "/nudgeBack"
 		);
@@ -150,7 +150,7 @@ OSCdef.new(
 
 // Sample OSC Handlers
 ~setupSampleOSC = {
-	~plaits.samples.do { |instance, instanceIndex|
+	~dreads.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 
 		// ["binding sample ------------------->", instanceIndex].postln;
@@ -163,7 +163,7 @@ OSCdef.new(
 					arg msg, time, addr, port;
 					var value = msg[1];
 					msg.round(0.001).postln;
-					~plaits.samples[instanceIndex][paramKey] = value;
+					~dreads.samples[instanceIndex][paramKey] = value;
 				},
 				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString
 			);
@@ -190,9 +190,9 @@ OSCdef.new(
 			{
 				arg msg, time, addr, port;
 				var delta = ~nudgeAmount;
-				~plaits.samples[instanceIndex].nudgeOffset = (~plaits.samples[instanceIndex].nudgeOffset ? 0) + delta;
-				~plaits.samples[instanceIndex].phaseOffset = (~plaits.samples[instanceIndex].phaseOffset ? 0) + delta;
-				["sample nudge fwd", instanceNum, "nudge:", ~plaits.samples[instanceIndex].nudgeOffset, "phase:", ~plaits.samples[instanceIndex].phaseOffset].postln;
+				~dreads.samples[instanceIndex].nudgeOffset = (~dreads.samples[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.samples[instanceIndex].phaseOffset = (~dreads.samples[instanceIndex].phaseOffset ? 0) + delta;
+				["sample nudge fwd", instanceNum, "nudge:", ~dreads.samples[instanceIndex].nudgeOffset, "phase:", ~dreads.samples[instanceIndex].phaseOffset].postln;
 			},
 			"/samples/" ++ instanceNum ++ "/nudgeForward"
 		);
@@ -203,9 +203,9 @@ OSCdef.new(
 			{
 				arg msg, time, addr, port;
 				var delta = ~nudgeAmount.neg;
-				~plaits.samples[instanceIndex].nudgeOffset = (~plaits.samples[instanceIndex].nudgeOffset ? 0) + delta;
-				~plaits.samples[instanceIndex].phaseOffset = (~plaits.samples[instanceIndex].phaseOffset ? 0) + delta;
-				["sample nudge back", instanceNum, "nudge:", ~plaits.samples[instanceIndex].nudgeOffset, "phase:", ~plaits.samples[instanceIndex].phaseOffset].postln;
+				~dreads.samples[instanceIndex].nudgeOffset = (~dreads.samples[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.samples[instanceIndex].phaseOffset = (~dreads.samples[instanceIndex].phaseOffset ? 0) + delta;
+				["sample nudge back", instanceNum, "nudge:", ~dreads.samples[instanceIndex].nudgeOffset, "phase:", ~dreads.samples[instanceIndex].phaseOffset].postln;
 			},
 			"/samples/" ++ instanceNum ++ "/nudgeBack"
 		);
@@ -227,8 +227,8 @@ OSCdef.new(
 					["  Resolved to bank:", lookup.bankName, "variant:", lookup.variant].postln;
 
 					// Update bankName and variant for this instance
-					~plaits.samples[instanceIndex].bankName = lookup.bankName;
-					~plaits.samples[instanceIndex].variant = lookup.variant;
+					~dreads.samples[instanceIndex].bankName = lookup.bankName;
+					~dreads.samples[instanceIndex].variant = lookup.variant;
 
 					// Log sample metadata
 					metadata = ~sampleLibrary.metadata[lookup.bankName];
@@ -276,7 +276,7 @@ OSCdef.new(
 			["fx/delay", paramKey, value].postln;
 
 			// Update preset FX settings (nested structure)
-			~plaits.fx.delay[paramKey] = value;
+			~dreads.fx.delay[paramKey] = value;
 
 			// Send to synth using clean parameter names
 			if (~delayFX.notNil) {
@@ -301,7 +301,7 @@ OSCdef.new(
 			["fx/reverb", paramKey, value].postln;
 
 			// Update preset FX settings (nested structure)
-			~plaits.fx.reverb[paramKey] = value;
+			~dreads.fx.reverb[paramKey] = value;
 
 			// Send to synth using clean parameter names
 			if (~reverbFX.notNil) {
@@ -326,7 +326,7 @@ OSCdef.new(
 			["fx/clouds", paramKey, value].postln;
 
 			// Update preset FX settings (nested structure)
-			~plaits.fx.clouds[paramKey] = value;
+			~dreads.fx.clouds[paramKey] = value;
 
 			// Send to synth using clean parameter names
 			if (~cloudsFX.notNil) {
@@ -358,8 +358,8 @@ OSCdef.new(
 		["tempo", bpm].postln;
 		~tempoClock.tempo = bpm / 60;
 		// Update all instances so presets save the current tempo
-		~plaits.synths.do { |inst| inst.tempo = bpm };
-		~plaits.samples.do { |inst| inst.tempo = bpm };
+		~dreads.synths.do { |inst| inst.tempo = bpm };
+		~dreads.samples.do { |inst| inst.tempo = bpm };
 	},
 	"/tempo"
 );
@@ -468,11 +468,11 @@ OSCdef.new(
 	ui = ~ui.();
 
 	// Get current synth and FX data with fallback for compatibility
-	if (~plaits.isKindOf(Dictionary)) {
-		plaitsArray = ~plaits.synths;
-		fxSettings = ~plaits.fx ?? ();
+	if (~dreads.isKindOf(Dictionary)) {
+		plaitsArray = ~dreads.synths;
+		fxSettings = ~dreads.fx ?? ();
 	} {
-		plaitsArray = ~plaits; // Old array format fallback
+		plaitsArray = ~dreads; // Old array format fallback
 		fxSettings = ();
 	};
 
@@ -505,7 +505,7 @@ OSCdef.new(
 	};
 
 	// Send sample instance parameters
-	~plaits.samples.do { |instance, instanceIndex|
+	~dreads.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 
 		// Send all parameter values to UI
@@ -549,7 +549,7 @@ OSCdef.new(
 	};
 
 	// Send global tempo
-	ui.sendMsg("/tempo", ~plaits.synths[0].tempo);
+	ui.sendMsg("/tempo", ~dreads.synths[0].tempo);
 
 	// Send global FX parameters (nested structure)
 	fxSettings.keysValuesDo { |category, categoryParams|
