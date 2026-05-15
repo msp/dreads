@@ -122,8 +122,11 @@ if(fixed,{
 				duration: Pseq([1/4], inf).asStream,
 				// div: p1Div,
 				timbre: \euclid,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS2
@@ -167,8 +170,11 @@ if(fixed,{
 				// duration: p2Duration,
 				div: Pseq([1/16], inf).asStream,
 				delaySend: \euclid,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS3
@@ -218,8 +224,11 @@ if(fixed,{
 				div: Pseq([2], inf).asStream,
 				// div: Pseq([2.0], inf).asStream,
 				// duration: ~sinePattern.(p1Length, p1Min, p1Max).asStream,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		)
 	],
 	// Samples array
@@ -259,8 +268,11 @@ if(fixed,{
 				panDur: \euclid,
 				delaySend: \euclid,
 				atk: \ramp,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE2
@@ -295,8 +307,11 @@ if(fixed,{
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE3
@@ -342,8 +357,11 @@ if(fixed,{
 				], inf).asStream,
 			delaySend: \euclid,
 			revDrywet: \euclid,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		)
 	],
 	// Global FX settings
@@ -386,18 +404,22 @@ if(fixed,{
 ~states = Pseq([\a, \b, \c, \d], inf).asStream;
 ~state = ~states.next;
 ~playCount = 0;
-~lfoSine = { |freq=0.2|
-	var phase = 0;
-	Pfunc {
-		phase = phase + (freq * 2 * pi / 120); // adjust for your tempo
-		(sin(phase) * 0.5) + 0.5; // unipolar 0-1
-	}.asStream;
-};
 
-~timbreLFO = ~lfoSine.(3);
-~morphLFO = ~lfoSine.(4);
-~decayLFO = ~lfoSine.(5);
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
-~pushStateToUI.();
+// $LFO_SOURCES_START
+~dreads.lfoSources = (
+	lfo1: (freq: 0.2),
+	lfo2: (freq: 0.2667),
+	lfo3: (freq: 0.3333),
+	lfo6: (freq: 0.2),
+	lfo7: (freq: 0.2667),
+	lfo8: (freq: 0.3333),
+	lfo11: (freq: 0.2),
+	lfo12: (freq: 0.2667),
+	lfo13: (freq: 0.3333)
+);
+// $LFO_SOURCES_END
+
+~applyPatch.();
 )

@@ -15,8 +15,11 @@
 			(
 				duration: \hold,
 				div: \unit,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS2
@@ -29,8 +32,11 @@
 				div: \unit,
 				duration: \sync_1,
 				pitch: \hold,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS3
@@ -43,8 +49,11 @@
 				div: \unit,
 				duration: \offbeat,
 				pitch: \hold,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		)
 	],
 	// Samples array
@@ -61,8 +70,11 @@
 				mul: \unit,
 				duration: \unit,
 				startPos: \sine,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE2
@@ -76,8 +88,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE3
@@ -91,8 +106,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		)
 	],
 	// Global FX settings
@@ -137,25 +155,21 @@
 ~playCount = 0;
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
-// Server-side LFO speeds for this patch (per instance)
-3.do { |i|
-	~lfo.synths[i].timbre.set(\freq, 3);
-	~lfo.synths[i].morph.set(\freq, 2.2);
-	~lfo.synths[i].decay.set(\freq, 8.1);
-};
 
-~lfo.synths[0].timbre.set(\shape, 5);
-~lfo.synths[0].morph.set(\shape, 1);
-~lfo.synths[0].decay.set(\shape, 2);
+// $LFO_SOURCES_START
+~dreads.lfoSources = (
+	lfo1: (freq: 3, shape: 5),
+	lfo2: (freq: 2.2, shape: 1),
+	lfo3: (freq: 8.1, shape: 2),
+	lfo6: (freq: 3, shape: 4),
+	lfo7: (freq: 2.2, shape: 1),
+	lfo8: (freq: 8.1, shape: 1),
+	lfo11: (freq: 3, shape: 4),
+	lfo12: (freq: 2.2, shape: 1),
+	lfo13: (freq: 8.1, shape: 1)
+);
+// $LFO_SOURCES_END
 
-~lfo.synths[1].timbre.set(\shape, 4);
-~lfo.synths[1].morph.set(\shape, 1);
-~lfo.synths[1].decay.set(\shape, 1);
-
-~lfo.synths[2].timbre.set(\shape, 4);
-~lfo.synths[2].morph.set(\shape, 1);
-~lfo.synths[2].decay.set(\shape, 1);
-
-~pushStateToUI.();
+~applyPatch.();
 )
 

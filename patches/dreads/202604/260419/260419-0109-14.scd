@@ -16,8 +16,11 @@
 				duration: \sync_1,
 				pitch: \triad_min_inv,
 			div: \unit,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS2
@@ -30,8 +33,11 @@
 			div: \unit,
 			duration: \sync_1,
 			pitch: \triad_min_inv,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS3
@@ -44,8 +50,11 @@
 			div: \unit,
 			duration: \offbeat,
 			pitch: \triad_min,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		)
 	],
 	// Samples array
@@ -61,8 +70,11 @@
 			rate: \unit,
 			mul: \unit,
 			duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE2
@@ -76,8 +88,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE3
@@ -91,8 +106,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		)
 	],
 	// Global FX settings
@@ -135,21 +153,17 @@
 ~states = Pseq([\a, \b, \c, \d], inf).asStream;
 ~state = ~states.next;
 ~playCount = 0;
-~lfoSine = { |freq=0.2|
-	var phase = 0;
-	Pfunc {
-		phase = phase + (freq * 2 * pi / 120); // adjust for your tempo
-		(sin(phase) * 0.5) + 0.5; // unipolar 0-1
-	}.asStream;
-};
 
 // All LFOs neutralized for clean FM patch preview
-// ~timbreLFO = Pfunc { 0.5 }.asStream;
-~timbreLFO = ~lfoSine.(1/8);
-// ~morphLFO = Pfunc { 0.5 }.asStream;
-~morphLFO = ~lfoSine.(1/8);
-~decayLFO = Pfunc { 0.5 }.asStream;
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
-~pushStateToUI.();
+// $LFO_SOURCES_START
+~dreads.lfoSources = (
+	lfo3: (freq: 0),
+	lfo8: (freq: 0),
+	lfo13: (freq: 0)
+);
+// $LFO_SOURCES_END
+
+~applyPatch.();
 )

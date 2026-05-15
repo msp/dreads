@@ -46,8 +46,11 @@
 				duration: \eucl_5_8,
 				// duration: Pseq([1/2], inf).asStream,
 			div: \unit,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS2
@@ -91,8 +94,11 @@
 				duration: \offbeat,
 				// duration: Pseq([Rest(1/4), 1/4], inf).asStream,
 			div: \unit,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS3
@@ -138,8 +144,11 @@
 			distAmount: \gate_every8,
 			reverbSend: \gate_every8,
 			revDrywet: \gate_every8,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		)
 	],
 	// Samples array
@@ -184,8 +193,11 @@
 				rate: \unit,
 				mul: \unit,
 			delaySend: \gate_every8,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE2
@@ -225,8 +237,11 @@
 				mul: \unit,
 				duration: \unit,
 			atk: \sine_slow,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE3
@@ -265,8 +280,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		)
 	],
 	// Global FX settings
@@ -309,19 +327,20 @@
 ~states = Pseq([\a, \b, \c, \d], inf).asStream;
 ~state = ~states.next;
 ~playCount = 0;
-~lfoSine = { |freq=0.2|
-	var phase = 0;
-	Pfunc {
-		phase = phase + (freq * 2 * pi / 120); // adjust for your tempo
-		(sin(phase) * 0.5) + 0.5; // unipolar 0-1
-	}.asStream;
-};
 
-~timbreLFO = ~lfoSine.(1/8);
-~morphLFO = ~lfoSine.(1/2);
-~decayLFO = ~lfoSine.(1);
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
-~pushStateToUI.();
+// $LFO_SOURCES_START
+~dreads.lfoSources = (
+	lfo2: (freq: 0.0333),
+	lfo3: (freq: 0.0667),
+	lfo7: (freq: 0.0333),
+	lfo8: (freq: 0.0667),
+	lfo12: (freq: 0.0333),
+	lfo13: (freq: 0.0667)
+);
+// $LFO_SOURCES_END
+
+~applyPatch.();
 )
 // 

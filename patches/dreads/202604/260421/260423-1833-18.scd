@@ -15,8 +15,11 @@
 			(
 				duration: \hold,
 				div: \unit,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS2
@@ -29,8 +32,11 @@
 				div: \unit,
 				duration: \sync_1,
 				pitch: \hold,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS3
@@ -43,8 +49,11 @@
 				div: \unit,
 				duration: \offbeat,
 				pitch: \triad_min,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		)
 	],
 	// Samples array
@@ -61,8 +70,11 @@
 				mul: \unit,
 				duration: \unit,
 				startPos: \sine,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE2
@@ -76,8 +88,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE3
@@ -91,8 +106,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		)
 	],
 	// Global FX settings
@@ -137,12 +155,20 @@
 ~playCount = 0;
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
-// Server-side LFO speeds for this patch (per instance)
-3.do { |i|
-	~lfo.synths[i].timbre.set(\freq, 14);
-	~lfo.synths[i].morph.set(\freq, 5.2);
-	~lfo.synths[i].decay.set(\freq, 8.1);
-};
 
-~pushStateToUI.();
+// $LFO_SOURCES_START
+~dreads.lfoSources = (
+	lfo1: (freq: 14),
+	lfo2: (freq: 5.2),
+	lfo3: (freq: 8.1),
+	lfo6: (freq: 14),
+	lfo7: (freq: 5.2),
+	lfo8: (freq: 8.1),
+	lfo11: (freq: 14),
+	lfo12: (freq: 5.2),
+	lfo13: (freq: 8.1)
+);
+// $LFO_SOURCES_END
+
+~applyPatch.();
 )

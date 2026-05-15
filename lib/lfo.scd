@@ -1,65 +1,175 @@
 ////////////////////////////////////////////////////////////////////////////////
-// LFO infrastructure — buses, synths, reporter, VDMX relay
-// Requires: ~lfoGroup (Group), \lfo and \lfoReporter SynthDefs
+// LFO infrastructure — named sources, buses, reporter, VDMX relay
+// Requires: ~lfoGroup (Group), \lfo and \lfoReporter SynthDefs, ~defaultLFOSources
 ////////////////////////////////////////////////////////////////////////////////
 
 // Clean up previous if re-running
 if (~lfo.notNil) {
-	if (~lfo.buses.notNil) {
-		if (~lfo.buses.synths.notNil) {
-			~lfo.buses.synths.do { |b| b.timbre.free; b.morph.free; b.decay.free; b.pitch.free; b.volume.free };
-		};
-		if (~lfo.buses.samples.notNil) {
-			~lfo.buses.samples.do { |b| b.rate.free; b.volume.free };
+	if (~lfo.sources.notNil) {
+		~lfo.sources.do { |src|
+			if (src.synth.notNil) { src.synth.free };
+			if (src.bus.notNil) { src.bus.free };
 		};
 	};
 	if (~lfo.reporter.notNil) { ~lfo.reporter.free };
 	if (~lfo.reporterFunc.notNil) { ~lfo.reporterFunc.free };
 };
 
-// Initialize ~lfo namespace
-~lfo = (buses: (synths: nil, samples: nil));
+// Initialize ~lfo namespace with named sources (\lfo1–\lfo21)
+~lfo = (sources: ());
 
-// Per-instance LFO buses
-// Plaits: timbre, morph, decay, pitch, volume × 3 instances
-~lfo.buses.synths = Array.fill(3, {
-	(timbre: Bus.control(s, 1), morph: Bus.control(s, 1), decay: Bus.control(s, 1),
-	 pitch: Bus.control(s, 1), volume: Bus.control(s, 1))
-});
-// Samples: rate, volume × 3 instances
-~lfo.buses.samples = Array.fill(3, {
-	(rate: Bus.control(s, 1), volume: Bus.control(s, 1))
-});
-
-// Per-instance LFO synths (frequencies overridden per patch)
-~lfo.synths = ~lfo.buses.synths.collect { |buses|
-	(
-		timbre: Synth(\lfo, [\out, buses.timbre, \freq, 0.125], ~lfoGroup),
-		morph:  Synth(\lfo, [\out, buses.morph,  \freq, 0.125], ~lfoGroup),
-		decay:  Synth(\lfo, [\out, buses.decay,  \freq, 0.125], ~lfoGroup),
-		pitch:  Synth(\lfo, [\out, buses.pitch,  \freq, 0.125], ~lfoGroup),
-		volume: Synth(\lfo, [\out, buses.volume, \freq, 0.125], ~lfoGroup)
-	)
-};
-~lfo.samples = ~lfo.buses.samples.collect { |buses|
-	(
-		rate:   Synth(\lfo, [\out, buses.rate,   \freq, 0.125], ~lfoGroup),
-		volume: Synth(\lfo, [\out, buses.volume, \freq, 0.125], ~lfoGroup)
-	)
+~defaultLFOSources.keysValuesDo { |key, defaults|
+	var bus = Bus.control(s, 1);
+	~lfo.sources[key] = (
+		name: key,
+		synth: Synth(\lfo, [\out, bus, \freq, defaults[\freq], \shape, defaults[\shape], \width, defaults[\width]], ~lfoGroup),
+		bus: bus,
+		freq: defaults[\freq],
+		shape: defaults[\shape],
+		width: defaults[\width]
+	);
 };
 
 // Reporter relays all bus values to sclang for VDMX forwarding
+// Bus args follow reporter order: plaits 0-2 (timbre,morph,decay,pitch,volume), samples 0-2 (rate,volume)
 ~lfo.reporter = Synth(\lfoReporter, [
-	\timbreBus0, ~lfo.buses.synths[0].timbre, \morphBus0, ~lfo.buses.synths[0].morph,
-	\decayBus0, ~lfo.buses.synths[0].decay, \pitchBus0, ~lfo.buses.synths[0].pitch, \volumeBus0, ~lfo.buses.synths[0].volume,
-	\timbreBus1, ~lfo.buses.synths[1].timbre, \morphBus1, ~lfo.buses.synths[1].morph,
-	\decayBus1, ~lfo.buses.synths[1].decay, \pitchBus1, ~lfo.buses.synths[1].pitch, \volumeBus1, ~lfo.buses.synths[1].volume,
-	\timbreBus2, ~lfo.buses.synths[2].timbre, \morphBus2, ~lfo.buses.synths[2].morph,
-	\decayBus2, ~lfo.buses.synths[2].decay, \pitchBus2, ~lfo.buses.synths[2].pitch, \volumeBus2, ~lfo.buses.synths[2].volume,
-	\sRateBus0, ~lfo.buses.samples[0].rate, \sVolumeBus0, ~lfo.buses.samples[0].volume,
-	\sRateBus1, ~lfo.buses.samples[1].rate, \sVolumeBus1, ~lfo.buses.samples[1].volume,
-	\sRateBus2, ~lfo.buses.samples[2].rate, \sVolumeBus2, ~lfo.buses.samples[2].volume,
+	\timbreBus0, ~lfo.sources[\lfo1].bus, \morphBus0, ~lfo.sources[\lfo2].bus,
+	\decayBus0, ~lfo.sources[\lfo3].bus, \pitchBus0, ~lfo.sources[\lfo4].bus, \volumeBus0, ~lfo.sources[\lfo5].bus,
+	\timbreBus1, ~lfo.sources[\lfo6].bus, \morphBus1, ~lfo.sources[\lfo7].bus,
+	\decayBus1, ~lfo.sources[\lfo8].bus, \pitchBus1, ~lfo.sources[\lfo9].bus, \volumeBus1, ~lfo.sources[\lfo10].bus,
+	\timbreBus2, ~lfo.sources[\lfo11].bus, \morphBus2, ~lfo.sources[\lfo12].bus,
+	\decayBus2, ~lfo.sources[\lfo13].bus, \pitchBus2, ~lfo.sources[\lfo14].bus, \volumeBus2, ~lfo.sources[\lfo15].bus,
+	\sRateBus0, ~lfo.sources[\lfo16].bus, \sVolumeBus0, ~lfo.sources[\lfo17].bus,
+	\sRateBus1, ~lfo.sources[\lfo18].bus, \sVolumeBus1, ~lfo.sources[\lfo19].bus,
+	\sRateBus2, ~lfo.sources[\lfo20].bus, \sVolumeBus2, ~lfo.sources[\lfo21].bus,
 ], ~lfoGroup);
+
+// Apply LFO state from patch data to runtime sources and synth mappings
+// Called from ~applyPatch after patch load/re-evaluate
+~applyLFOState = {
+	// 1. Reset all sources to defaults, then apply overrides
+	var overrides = ~dreads.lfoSources ?? ();
+	~defaultLFOSources.keysValuesDo { |key, defaults|
+		var src, synth;
+		src = ~lfo.sources[key];
+		if (src.notNil) {
+			synth = src[\synth];
+			[\freq, \shape, \width].do { |param|
+				if (src[param] != defaults[param]) {
+					synth.set(param, defaults[param]);
+					src.put(param, defaults[param]);
+				};
+			};
+		};
+	};
+	overrides.keysValuesDo { |key, cfg|
+		var src, synth;
+		src = ~lfo.sources[key];
+		if (src.notNil) {
+			synth = src[\synth];
+			[\freq, \shape, \width].do { |param|
+				if (cfg[param].notNil) {
+					synth.set(param, cfg[param]);
+					src.put(param, cfg[param]);
+				};
+			};
+		} {
+			("WARNING: LFO source " ++ key ++ " not found").warn;
+		};
+	};
+
+	// 2. Hydrate plaits LFO mappings — resolve symbols to source Events on each instance
+	~dreads.synths.do { |inst, i|
+		var hydratedMap = ~defaultPlaitsLFOMap[i].copy;
+		// Apply per-instance overrides (symbols from patch file)
+		if (inst.lfo.notNil) { hydratedMap.putAll(inst.lfo) };
+		// Replace each symbol with the actual source Event
+		[\timbre, \morph, \decay, \pitch, \volume].do { |param|
+			var key = hydratedMap[param];
+			if (key.isKindOf(Symbol)) {
+				hydratedMap[param] = ~lfo.sources[key];
+			};
+			// Map LFO bus to drone synth if running
+			if (~drones.notNil && ~drones[i].notNil) {
+				~drones[i].map((param ++ "LFO").asSymbol, hydratedMap[param].bus);
+			};
+		};
+		inst.lfo = hydratedMap;
+		// Push mod depth scalars to running drone
+		if (~drones.notNil && ~drones[i].notNil) {
+			~drones[i].set(
+				\timbMod, inst[\timbMod], \morphMod, inst[\morphMod],
+				\decayMod, inst[\decayMod], \pitchMod, inst[\pitchMod],
+				\volumeMod, inst[\volumeMod]
+			);
+		};
+	};
+
+	// 3. Hydrate sample LFO mappings
+	~dreads.samples.do { |inst, i|
+		var hydratedMap = ~defaultSampleLFOMap[i].copy;
+		if (inst.lfo.notNil) { hydratedMap.putAll(inst.lfo) };
+		[\rate, \volume].do { |param|
+			var key = hydratedMap[param];
+			if (key.isKindOf(Symbol)) {
+				hydratedMap[param] = ~lfo.sources[key];
+			};
+		};
+		inst.lfo = hydratedMap;
+	};
+
+	"LFO state applied".postln;
+};
+
+// Hydrate current patch's LFO mappings now that sources exist
+~applyLFOState.();
+
+// Livecoding helper: tweak LFO params by instance type/index/param name
+// Single param: ~lfoTweak.(\plaits, 0, \pitch, \freq, 0.3)
+// Multi param:  ~lfoTweak.(\plaits, 0, \pitch, (freq: 3, shape: \square))
+// Shape names:  \sine, \tri, \saw, \square, \noise, \gaussian (or integers 0-5)
+~lfoShapeMap = (sine: 0, tri: 1, saw: 2, square: 3, noise: 4, gaussian: 5);
+~lfoTweak = { |instType, instIndex, paramName, lfoParamOrEvent, val|
+	var src, srcKey, synth, modKey, resolved, inst;
+	srcKey = if (instType == \plaits) {
+		~dreads.synths[instIndex].lfo[paramName].name;
+	} {
+		~dreads.samples[instIndex].lfo[paramName].name;
+	};
+	src = ~lfo.sources[srcKey];
+	synth = src[\synth];
+	modKey = if (paramName == \timbre) { \timbMod } { (paramName ++ "Mod").asSymbol };
+	inst = if (instType == \plaits) { ~dreads.synths[instIndex] } { ~dreads.samples[instIndex] };
+	if (lfoParamOrEvent.isKindOf(Event)) {
+		lfoParamOrEvent.keysValuesDo { |param, v|
+			if (param == \mod) {
+				inst.put(modKey, v);
+				if (instType == \plaits && ~drones.notNil && ~drones[instIndex].notNil) {
+					~drones[instIndex].set(modKey, v);
+				};
+			} {
+				resolved = if (param == \shape && v.isKindOf(Symbol)) {
+					~lfoShapeMap[v] ? v;
+				} { v };
+				synth.set(param, resolved);
+				src.put(param, resolved);
+			};
+		};
+	} {
+		if (lfoParamOrEvent == \mod) {
+			inst.put(modKey, val);
+			if (instType == \plaits && ~drones.notNil && ~drones[instIndex].notNil) {
+				~drones[instIndex].set(modKey, val);
+			};
+		} {
+			resolved = if (lfoParamOrEvent == \shape && val.isKindOf(Symbol)) {
+				~lfoShapeMap[val] ? val;
+			} { val };
+			synth.set(lfoParamOrEvent, resolved);
+			src.put(lfoParamOrEvent, resolved);
+		};
+	};
+};
 
 // Relay LFO values from server to VDMX via OSC, scaled by per-instance mod depth
 ~lfo.reporterFunc = OSCFunc({ |msg|

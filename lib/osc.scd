@@ -46,7 +46,7 @@ OSCdef.new(
 
 		// ["binding plaits ------------------->", instanceIndex].postln;
 		// Generic parameter handling - OSC keys match data structure keys
-		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \lfo) }).do { |paramKey|
 			// ["binding key", paramKey].postln;
 			OSCdef.new(
 				("plaits" ++ instanceNum ++ paramKey).asSymbol,
@@ -156,7 +156,7 @@ OSCdef.new(
 		// ["binding sample ------------------->", instanceIndex].postln;
 
 		// Generic parameter handling - OSC keys match data structure keys
-		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) && (key != \lfo) }).do { |paramKey|
 			OSCdef.new(
 				("sample" ++ instanceNum ++ paramKey).asSymbol,
 				{
@@ -481,7 +481,7 @@ OSCdef.new(
 		var instanceNum = instanceIndex + 1;
 
 		// Send all parameter values to UI
-		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \lfo) }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
 			// ["Sending:", path, value].postln;
@@ -509,7 +509,7 @@ OSCdef.new(
 		var instanceNum = instanceIndex + 1;
 
 		// Send all parameter values to UI
-		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \lfo) }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey;
 			// ["Sending:", path, value].postln;

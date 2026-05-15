@@ -15,8 +15,11 @@
 			(
 				duration: \hold,
 				div: \unit,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS2
@@ -29,8 +32,11 @@
 				div: \unit,
 				duration: \sync_1,
 				pitch: \hold,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 
 		// $PLAITS3
@@ -43,8 +49,11 @@
 				div: \unit,
 				duration: \offbeat,
 				pitch: \triad_min,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		)
 	],
 	// Samples array
@@ -61,8 +70,11 @@
 				mul: \unit,
 				duration: \unit,
 				startPos: \sine,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE2
@@ -76,8 +88,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 
 		// $SAMPLE3
@@ -91,8 +106,11 @@
 				rate: \unit,
 				mul: \unit,
 				duration: \unit,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		)
 	],
 	// Global FX settings
@@ -137,16 +155,26 @@
 ~playCount = 0;
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
-// Server-side LFO speeds for this patch (per instance)
-3.do { |i|
-	~lfo.synths[i].timbre.set(\freq, 1/5);
-	~lfo.synths[i].morph.set(\freq, 1/8);
-	~lfo.synths[i].decay.set(\freq, 1/6);
-	~lfo.synths[i].pitch.set(\freq, 1/10);
-	~lfo.synths[i].volume.set(\freq, 1/12);
-	~lfo.samples[i].rate.set(\freq, 1/8);
-	~lfo.samples[i].volume.set(\freq, 1/12);
-};
 
-~pushStateToUI.();
+// $LFO_SOURCES_START
+~dreads.lfoSources = (
+	lfo1: (freq: 0.2),
+	lfo3: (freq: 0.16666666666666666),
+	lfo4: (freq: 0.1),
+	lfo5: (freq: 0.08333333333333333),
+	lfo6: (freq: 0.2),
+	lfo8: (freq: 0.16666666666666666),
+	lfo9: (freq: 0.1),
+	lfo10: (freq: 0.08333333333333333),
+	lfo11: (freq: 0.2),
+	lfo13: (freq: 0.16666666666666666),
+	lfo14: (freq: 0.1),
+	lfo15: (freq: 0.08333333333333333),
+	lfo17: (freq: 0.08333333333333333),
+	lfo19: (freq: 0.08333333333333333),
+	lfo21: (freq: 0.08333333333333333)
+);
+// $LFO_SOURCES_END
+
+~applyPatch.();
 )

@@ -1,18 +1,20 @@
 //////////////////////////////////////////////////////////////////////////////
-// Mutable Instruments Plaits
+// Mutable Instruments Plaits (via MiPlaits UGen)
 //
+// TIMBRE/MORPH MODULATION — see docs/miplaits-modulation.md for full analysis
 //
-// When timbre is a literal/scalar, modulations.timbre_patched = false, allowing timbMod to work.
-// When timbre is an argument, modulations.timbre_patched = true, likely disabling timbMod.
+// The MiPlaits UGen conflates the hardware's TIMBRE knob and CV jack into a
+// single input. When timbre is a SynthDef arg (.kr), the UGen sets
+// modulations.timbre_patched = true, which disables timb_mod entirely
+// (it scales modulations.timbre, which is always 0).
 //
-// The UGen assumes if you're modulating timbre via control rate, you don't want the internal timbMod as well.
-
-// You have two options:
+// Our workaround: apply LFO modulation externally before the engine:
+//   timbre: (timbre + (timbreLFO * timbMod)).clip(0, 1)
 //
-// 1. Use literal timbre values when you want timbMod to work (only useful for modulating internal env gen [1])
-// 2. Use control-rate timbre arguments but implement modulation yourself
+// To use the internal decay envelope instead (per-trigger timbre sweep),
+// timbre must be .ir (scalar rate) — works for patterns, not for drones.
 //
-// [1] See "Controls: F. Attenuvertors": "https://pichenettes.github.io/mutable-instruments-documentation/modules/plaits/manual/"
+// fm_mod is unaffected: frequency_patched is hardcoded false in the UGen.
 //
 /////////////////////////////////////////////////////////////////////////////
 (
@@ -59,14 +61,8 @@
 
 SynthDef(\plaits, {
 	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
-	timbreBus=(-1), morphBus=(-1), decayBus=(-1), pitchBus=(-1), volumeBus=(-1),
+	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0,
 	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0;
-
-	var timbreLFO  = Select.kr(timbreBus > -1,  [0, In.kr(timbreBus, 1)]);
-	var morphLFO   = Select.kr(morphBus > -1,   [0, In.kr(morphBus, 1)]);
-	var decayLFO   = Select.kr(decayBus > -1,   [0, In.kr(decayBus, 1)]);
-	var pitchLFO   = Select.kr(pitchBus > -1,   [0, In.kr(pitchBus, 1)]);
-	var volumeLFO  = Select.kr(volumeBus > -1,  [0, In.kr(volumeBus, 1)]);
 
 	var sig = MiPlaits.ar(
 		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
@@ -92,14 +88,8 @@ SynthDef(\plaits, {
 // Drone variant: continuous trigger, ASR envelope with release on gate=0
 SynthDef(\plaitsDrone, {
 	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
-	timbreBus=(-1), morphBus=(-1), decayBus=(-1), pitchBus=(-1), volumeBus=(-1),
+	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0,
 	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0;
-
-	var timbreLFO  = Select.kr(timbreBus > -1,  [0, In.kr(timbreBus, 1)]);
-	var morphLFO   = Select.kr(morphBus > -1,   [0, In.kr(morphBus, 1)]);
-	var decayLFO   = Select.kr(decayBus > -1,   [0, In.kr(decayBus, 1)]);
-	var pitchLFO   = Select.kr(pitchBus > -1,   [0, In.kr(pitchBus, 1)]);
-	var volumeLFO  = Select.kr(volumeBus > -1,  [0, In.kr(volumeBus, 1)]);
 
 	var sig = MiPlaits.ar(
 		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
@@ -279,12 +269,10 @@ SynthDef(\panningSamplePlayer, {
 	cloudsSend=0.0, delaySend=0.0, reverbSend=0.0,
 	distDrive=0.0, distAmount=0.0,
 	revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0,
-	rateBus=(-1), rateMod=0.0,
-	volumeBus=(-1), volumeMod=0.0|
+	rateLFO=0, rateMod=0.0,
+	volumeLFO=0, volumeMod=0.0|
 
 	var sig, env, pan, monoPlay, cleanSig, distSig;
-	var rateLFO    = Select.kr(rateBus > -1,    [0, In.kr(rateBus, 1)]);
-	var volumeLFO  = Select.kr(volumeBus > -1,  [0, In.kr(volumeBus, 1)]);
 	var finalRate = rate + (rateLFO * rateMod);
 	var finalVolume = (volume + (volumeLFO * volumeMod)).clip(0, 2);
 

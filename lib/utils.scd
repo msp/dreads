@@ -502,6 +502,14 @@
 	result;
 };
 
+// Orchestrator: apply LFO state then push UI — replaces ~pushStateToUI.() in patch footers
+// Note: during initial SETUP boot, ~applyLFOState is nil (defined later in lfo.scd during RUN).
+// nil.() is a silent no-op in SC — lfo.scd calls ~applyLFOState.() itself after creating sources.
+~applyPatch = {
+	~applyLFOState.();
+	~pushStateToUI.();
+};
+
 // Start a persistent drone synth for a plaits instance
 ~startDrone = { |i|
 	var instance = ~dreads.synths[i];
@@ -538,17 +546,17 @@
 		\distDrive, instance.distDrive,
 		\distAmount, instance.distAmount,
 		\stereoMode, instance.stereoMode,
-		\timbreBus, ~lfo.buses.synths[i].timbre,
-		\morphBus, ~lfo.buses.synths[i].morph,
-		\decayBus, ~lfo.buses.synths[i].decay,
-		\pitchBus, ~lfo.buses.synths[i].pitch,
-		\volumeBus, ~lfo.buses.synths[i].volume,
 		\timbMod, instance.timbMod,
 		\morphMod, instance.morphMod,
 		\decayMod, instance.decayMod,
 		\pitchMod, instance.pitchMod,
 		\volumeMod, instance.volumeMod,
 	], ~voiceGroup, \addToHead);
+
+	// Map LFO buses to drone control args — instance.lfo is already hydrated
+	[\timbre, \morph, \decay, \pitch, \volume].do { |param|
+		~drones[i].map((param ++ "LFO").asSymbol, instance.lfo[param].bus);
+	};
 
 	["Drone started for plaits", i].postln;
 };
@@ -597,9 +605,9 @@ Event.addEventType(\oneShotSample, {
 					\revDamp, ~revDamp,
 					\revHp, ~revHp,
 					\revFreeze, ~revFreeze,
-					\rateBus, ~rateBus,
+					\rateLFO, ~rateLFO,
 					\rateMod, ~rateMod,
-					\volumeBus, ~volumeBus,
+					\volumeLFO, ~volumeLFO,
 					\volumeMod, ~volumeMod
 				],
 				~group ?? { server.defaultGroup },
@@ -615,5 +623,7 @@ Event.addEventType(\oneShotSample, {
 
 // Load sub-modules
 (Document.current.dir ++ "/lib/fm.scd").load;
+// (Document.current.dir ++ "/tempo.scd").load;
+(Document.current.dir ++ "/lib/tempo.scd").load;
 
 )

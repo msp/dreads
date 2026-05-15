@@ -68,8 +68,11 @@
 				// ], inf).asStream,
 				div: Pseq([1, 2, 1, 1, 2], inf).asStream,
 				pitch: \hold,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 		
 		// $PLAITS2
@@ -118,8 +121,11 @@
 				
 				// div: Pseq([0.5], inf).asStream,
 				harm: \hold,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		),
 		
 		// $PLAITS3
@@ -161,8 +167,11 @@
 				duration: Pseq([0.5], inf).asStream,
 				div: Pseq([0.5], inf).asStream,
 				harm: \hold,
-			)
+			),
 			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
 		)
 	],
 	// Samples array
@@ -206,6 +215,9 @@
 				variant: Pseq((5..15), inf).asStream,				
 			)			
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 		
 		// $SAMPLE2
@@ -241,8 +253,11 @@
 			(
 				duration: \hold,
 				variant: Pseq((0..2), inf).asStream,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		),
 		
 		// $SAMPLE3
@@ -278,8 +293,11 @@
 			(
 				rate: \gauss,
 				duration: \hold,
-			)
+			),
 			// $PRESET_SAMPLE_SEQUENCES_END
+			// $PRESET_SAMPLE_LFO_START
+			()
+			// $PRESET_SAMPLE_LFO_END
 		)
 	],
 	// Global FX settings
@@ -322,19 +340,23 @@
 ~states = Pseq([\a, \b, \c, \d], inf).asStream;
 ~state = ~states.next;
 ~playCount = 0;
-~lfoSine = { |freq=0.2|
-	var phase = 0;
-	Pfunc {
-		phase = phase + (freq * 2 * pi / 120); // adjust for your tempo
-		(sin(phase) * 0.5) + 0.5; // unipolar 0-1
-	}.asStream;
-};
 
-~timbreLFO = ~lfoSine.(3);
-~morphLFO = ~lfoSine.(4);
-~decayLFO = ~lfoSine.(1);
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
-~pushStateToUI.();
+// $LFO_SOURCES_START
+~dreads.lfoSources = (
+	lfo1: (freq: 0.2),
+	lfo2: (freq: 0.2667),
+	lfo3: (freq: 0.0667),
+	lfo6: (freq: 0.2),
+	lfo7: (freq: 0.2667),
+	lfo8: (freq: 0.0667),
+	lfo11: (freq: 0.2),
+	lfo12: (freq: 0.2667),
+	lfo13: (freq: 0.0667)
+);
+// $LFO_SOURCES_END
+
+~applyPatch.();
 )
 

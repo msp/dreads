@@ -251,4 +251,31 @@
 	startPos: \hold,
 	variant: Pseq([0], inf).asStream,  // integer index, not a modulation param
 );
+
+// Default LFO source configs (21 sources: 15 plaits + 6 samples)
+// Source numbering follows reporter order:
+//   lfo1-5: plaits 0 (timbre, morph, decay, pitch, volume)
+//   lfo6-10: plaits 1
+//   lfo11-15: plaits 2
+//   lfo16-17: samples 0 (rate, volume)
+//   lfo18-19: samples 1
+//   lfo20-21: samples 2
+~defaultLFOSources = ();
+(1..21).do { |n|
+	~defaultLFOSources[("lfo" ++ n).asSymbol] = (freq: 0.125, shape: 0, width: 0.3);
+};
+
+// Default 1:1 LFO mappings per plaits instance
+~defaultPlaitsLFOMap = [
+	(timbre: \lfo1, morph: \lfo2, decay: \lfo3, pitch: \lfo4, volume: \lfo5),
+	(timbre: \lfo6, morph: \lfo7, decay: \lfo8, pitch: \lfo9, volume: \lfo10),
+	(timbre: \lfo11, morph: \lfo12, decay: \lfo13, pitch: \lfo14, volume: \lfo15),
+];
+
+// Default 1:1 LFO mappings per sample instance
+~defaultSampleLFOMap = [
+	(rate: \lfo16, volume: \lfo17),
+	(rate: \lfo18, volume: \lfo19),
+	(rate: \lfo20, volume: \lfo21),
+];
 )

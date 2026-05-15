@@ -9,7 +9,44 @@ x.stop;
 
 ~pushStateToUI.()
 
-//////////////// RANDOM TEST //////////////
+
+//////////////// LFO TEST //////////////////////////////////////
+
+// Freq
+~dreads.synths[0][\timbMod]
+~dreads.synths[0].lfo[\morph].name;
+
+
+~lfoTweak.(\plaits, 0, \morph, \freq, 0.5);
+~lfoTweak.(\plaits, 0, \morph, \shape, 2);
+
+
+~lfoTweak.(\plaits, 0, \morph, (freq: 2, shape: \tri, width: 0.3, mod: 0.1));
+~lfoTweak.(\plaits, 0, \pitch, (freq: 3, shape: \sine, mod: 0.8));
+~lfoTweak.(\plaits, 0, \timbre, (freq: 5, shape: \sine, mod: 0.1));
+
+~lfo.sources[\lfo2][\freq]; 
+
+
+
+~lfoTweak.(\plaits, 2, \timbre, \freq, 1.5);
+~lfoTweak.(\sample, 0, \rate, \freq, 0.5);
+
+// Shape (0=sine, 1=tri, 2=saw, 3=square, 4=noise, 5=gaussian)
+~lfoTweak.(\plaits, 1, \morph, \shape, 3);
+
+// Width (gaussian only, 0.01–1.0)
+~lfoTweak.(\plaits, 0, \decay, \shape, 5);
+~lfoTweak.(\plaits, 0, \decay, \width, 0.1);
+
+// Relative rates from a base
+~base = 0.5;
+~lfoTweak.(\plaits, 0, \timbre, \freq, ~base);
+~lfoTweak.(\plaits, 0, \morph, \freq, ~base * 1.08);
+~lfoTweak.(\plaits, 0, \pitch, \freq, ~base / 3);
+
+
+//////////////// RANDOM TEST ///////////////////////////////////
 // Scalar randomization:
 ~randomize.(2)           // plaits 1, tonal + mod
 
@@ -211,6 +248,9 @@ NetAddr("127.0.0.1", 57120).sendMsg("/plaits/1/droneMode", 0);
 // 6. Check drone state
 ~drones.postln;
 ~dreads.synths.collect(_.droneMode).postln;
+
+
+~dreads.synths[2].pitchMod = 0;
 
 
 

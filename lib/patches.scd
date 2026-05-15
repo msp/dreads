@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 (
 // Template factory function to create plaits instances with inheritance
-~plaitsFactory = { |scalarOverrides, sequenceOverrides|
-	var scalars, sequences, sortedSequences;
+~plaitsFactory = { |scalarOverrides, sequenceOverrides, lfoMapOverrides|
+	var scalars, sequences, sortedSequences, lfoMap;
 
 	scalars = ~defaultScalars.copy;
 	sequences = ~defaultSequences.copy;
@@ -12,6 +12,7 @@
 	// Use empty dictionaries if no overrides provided
 	scalarOverrides = scalarOverrides ?? ();
 	sequenceOverrides = sequenceOverrides ?? ();
+	lfoMap = lfoMapOverrides ?? ();
 
 	// Merge overrides into defaults
 	scalars.putAll(scalarOverrides);
@@ -24,12 +25,12 @@
 	};
 
 	// Create the merged instance
-	scalars.putAll((sequences: sortedSequences))
+	scalars.putAll((sequences: sortedSequences, lfo: lfoMap))
 };
 
 // Template factory function to create sample instances with inheritance
-~sampleFactory = { |scalarOverrides, sequenceOverrides|
-	var scalars, sequences, sortedSequences;
+~sampleFactory = { |scalarOverrides, sequenceOverrides, lfoMapOverrides|
+	var scalars, sequences, sortedSequences, lfoMap;
 
 	scalars = ~defaultSampleScalars.copy;
 	sequences = ~defaultSampleSequences.copy;
@@ -37,6 +38,7 @@
 	// Use empty dictionaries if no overrides provided
 	scalarOverrides = scalarOverrides ?? ();
 	sequenceOverrides = sequenceOverrides ?? ();
+	lfoMap = lfoMapOverrides ?? ();
 
 	// Merge overrides into defaults
 	scalars.putAll(scalarOverrides);
@@ -49,7 +51,7 @@
 	};
 
 	// Create the merged instance
-	scalars.putAll((sequences: sortedSequences))
+	scalars.putAll((sequences: sortedSequences, lfo: lfoMap))
 };
 
 // Patch factory function that creates the full patch structure with FX
@@ -309,13 +311,17 @@
 
 	runtimeSequences = runtimeInstance.sequences;
 
-	// Find opening and closing parens
+	// Find opening and closing parens (closing may have trailing comma: "),")
 	openParenLine = lines.detect({ |line| line.stripWhiteSpace == "(" });
-	closeParenLine = lines.detect({ |line| line.stripWhiteSpace == ")" });
+	closeParenLine = lines.detect({ |line|
+		var s = line.stripWhiteSpace;
+		(s == ")") || (s == "),")
+	});
 
 	// Extract content lines (between parens)
 	contentLines = lines.select({ |line|
-		(line.stripWhiteSpace != "(") && (line.stripWhiteSpace != ")")
+		var s = line.stripWhiteSpace;
+		(s != "(") && (s != ")") && (s != "),")
 	});
 
 	// Parse the content
@@ -436,7 +442,7 @@
 };
 
 ~replaceScalarValues = { |content|
-	var lines, plaitsIndex, sampleIndex, inScalarsSection, inSampleScalarsSection, inSequencesSection, inSampleSequencesSection, inFXSection, result, match, currentPlaits, currentSample, currentFX, paramLines, currentValue, formattedValue, categoryLines;
+	var lines, plaitsIndex, sampleIndex, inScalarsSection, inSampleScalarsSection, inSequencesSection, inSampleSequencesSection, inFXSection, inLFOSection, inSampleLFOSection, inLFOSourcesSection, result, match, currentPlaits, currentSample, currentFX, paramLines, currentValue, formattedValue, categoryLines;
 	var sequenceSectionLines, sampleSequenceSectionLines;  // For accumulating lines in sequence sections
 
 	lines = content.split($\n);
@@ -447,6 +453,9 @@
 	inSequencesSection = false;
 	inSampleSequencesSection = false;
 	inFXSection = false;
+	inLFOSection = false;
+	inSampleLFOSection = false;
+	inLFOSourcesSection = false;
 	result = [];
 	sequenceSectionLines = [];
 	sampleSequenceSectionLines = [];
@@ -514,7 +523,7 @@
 				paramLines = [];
 
 				~defaultScalars.keys.asArray.sort.do { |key|
-					if (key != \sequences) {
+					if ((key != \sequences) && (key != \lfo)) {
 						currentValue = currentPlaits[key];
 						if (currentValue.notNil) {
 							formattedValue = if (currentValue.isNumber) {
@@ -547,7 +556,7 @@
 				paramLines = [];
 
 				~defaultSampleScalars.keys.asArray.sort.do { |key|
-					if (key != \sequences) {
+					if ((key != \sequences) && (key != \lfo)) {
 						currentValue = currentSample[key];
 						formattedValue = if (currentValue.isNil) {
 							"nil";
@@ -640,8 +649,123 @@
 			};
 		};
 
+		// Handle plaits LFO mapping section replacement
+		if (line.contains("$PRESET_LFO_START")) {
+			inLFOSection = true;
+			result = result.add(line);
+
+			if ((plaitsIndex.isInteger) && (plaitsIndex >= 0) && (plaitsIndex < ~dreads.synths.size)) {
+				var lfoMap = ~dreads.synths[plaitsIndex].lfo ?? ();
+				var defaultMap = ~defaultPlaitsLFOMap[plaitsIndex];
+				paramLines = [];
+				// Only serialize mappings that differ from defaults
+				lfoMap.keys.asArray.sort.do { |key|
+					if (lfoMap[key].name != defaultMap[key]) {
+						paramLines = paramLines.add(key ++ ": \\" ++ lfoMap[key].name);
+					};
+				};
+				if (paramLines.size > 0) {
+					result = result.add("\t\t\t(" ++ paramLines.join(", ") ++ ")");
+				} {
+					result = result.add("\t\t\t()");
+				};
+			};
+		};
+
+		if (line.contains("$PRESET_LFO_END")) {
+			inLFOSection = false;
+			result = result.add(line);
+		};
+
+		// Handle sample LFO mapping section replacement
+		if (line.contains("$PRESET_SAMPLE_LFO_START")) {
+			inSampleLFOSection = true;
+			result = result.add(line);
+
+			if ((sampleIndex.isInteger) && (sampleIndex >= 0) && (sampleIndex < ~dreads.samples.size)) {
+				var lfoMap = ~dreads.samples[sampleIndex].lfo ?? ();
+				var defaultMap = ~defaultSampleLFOMap[sampleIndex];
+				paramLines = [];
+				lfoMap.keys.asArray.sort.do { |key|
+					if (lfoMap[key].name != defaultMap[key]) {
+						paramLines = paramLines.add(key ++ ": \\" ++ lfoMap[key].name);
+					};
+				};
+				if (paramLines.size > 0) {
+					result = result.add("\t\t\t(" ++ paramLines.join(", ") ++ ")");
+				} {
+					result = result.add("\t\t\t()");
+				};
+			};
+		};
+
+		if (line.contains("$PRESET_SAMPLE_LFO_END")) {
+			inSampleLFOSection = false;
+			result = result.add(line);
+		};
+
+		// Handle LFO sources section replacement
+		if (line.contains("$LFO_SOURCES_START")) {
+			inLFOSourcesSection = true;
+			result = result.add(line);
+
+			// Diff ~lfo.sources against defaults, write only non-default values
+			if (~lfo.sources.notNil) {
+				var sourceLines = [];
+				// Build reverse map: source name → list of current usages
+				var sourceUsages = ();
+				~dreads.synths.do { |inst, i|
+					[\timbre, \morph, \decay, \pitch, \volume].do { |param|
+						var srcName = inst.lfo[param].name;
+						if (sourceUsages[srcName].isNil) { sourceUsages.put(srcName, []) };
+						sourceUsages[srcName] = sourceUsages[srcName].add("plaits " ++ i ++ " " ++ param);
+					};
+				};
+				~dreads.samples.do { |inst, i|
+					[\rate, \volume].do { |param|
+						var srcName = inst.lfo[param].name;
+						if (sourceUsages[srcName].isNil) { sourceUsages.put(srcName, []) };
+						sourceUsages[srcName] = sourceUsages[srcName].add("sample " ++ i ++ " " ++ param);
+					};
+				};
+				// Sort numerically by lfo number
+				(1..21).do { |n|
+					var key = ("lfo" ++ n).asSymbol;
+					var src = ~lfo.sources[key];
+					var defaults = ~defaultLFOSources[key];
+					var diffParams = [];
+					var usageComment;
+					if (src.notNil && defaults.notNil) {
+						[\freq, \shape, \width].do { |param|
+							if (src[param] != defaults[param]) {
+								diffParams = diffParams.add(param ++ ": " ++ src[param]);
+							};
+						};
+						if (diffParams.size > 0) {
+							usageComment = if (sourceUsages[key].notNil) {
+								sourceUsages[key].join(", ")
+							} { "unused" };
+							sourceLines = sourceLines.add("\t" ++ key ++ ": (" ++ diffParams.join(", ") ++ "), // " ++ usageComment);
+						};
+					};
+				};
+				if (sourceLines.size > 0) {
+					result = result.add("~dreads.lfoSources = (");
+					result = result.addAll(sourceLines);
+					result = result.add(");");
+				} {
+					result = result.add("~dreads.lfoSources = ();");
+				};
+			};
+		};
+
+		if (line.contains("$LFO_SOURCES_END")) {
+			inLFOSourcesSection = false;
+			result = result.add(line);
+		};
+
 		// Pass through lines outside all sections
-		if (inScalarsSection.not && inSampleScalarsSection.not && inSequencesSection.not && inSampleSequencesSection.not && inFXSection.not &&
+		if (inScalarsSection.not && inSampleScalarsSection.not && inSequencesSection.not && inSampleSequencesSection.not && inFXSection.not && inLFOSection.not && inSampleLFOSection.not && inLFOSourcesSection.not &&
 		   line.contains("$PRESET_SCALARS_START").not &&
 		   line.contains("$PRESET_SCALARS_END").not &&
 		   line.contains("$PRESET_SAMPLE_SCALARS_START").not &&
@@ -651,7 +775,13 @@
 		   line.contains("$PRESET_SAMPLE_SEQUENCES_START").not &&
 		   line.contains("$PRESET_SAMPLE_SEQUENCES_END").not &&
 		   line.contains("$PRESET_FX_START").not &&
-		   line.contains("$PRESET_FX_END").not) {
+		   line.contains("$PRESET_FX_END").not &&
+		   line.contains("$PRESET_LFO_START").not &&
+		   line.contains("$PRESET_LFO_END").not &&
+		   line.contains("$PRESET_SAMPLE_LFO_START").not &&
+		   line.contains("$PRESET_SAMPLE_LFO_END").not &&
+		   line.contains("$LFO_SOURCES_START").not &&
+		   line.contains("$LFO_SOURCES_END").not) {
 			// Outside sections, keep all lines as-is
 			result = result.add(line);
 		};
