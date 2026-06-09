@@ -9,6 +9,18 @@ x.stop;
 
 ~pushStateToUI.()
 
+(1-5)
+(1-5).mod(16)
+
+~dreads.synths[0].seqCache;
+
+
+//////////////// DELAYS TEST ///////////////////////////////////
+~tempoDelay.(\eighth);                       // -> seconds for 1/8 at current tempo
+~tempoDelayLR.(\eighth, \dottedEighth);      // -> [time, spread]
+~setTempoDelay.(\quarter, \dottedEighth);  // applies to live synth + UI
+~setTempoDelay.(\quarter, \sixteenth);  // applies to live synth + UI
+
 
 //////////////// LFO TEST //////////////////////////////////////
 
@@ -25,7 +37,7 @@ x.stop;
 ~lfoTweak.(\plaits, 0, \pitch, (freq: 3, shape: \sine, mod: 0.8));
 ~lfoTweak.(\plaits, 0, \timbre, (freq: 5, shape: \sine, mod: 0.1));
 
-~lfo.sources[\lfo2][\freq]; 
+~lfo.sources[\lfo2][\freq];
 
 
 
