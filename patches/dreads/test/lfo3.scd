@@ -147,9 +147,17 @@
 );
 // $LFO_SOURCES_END
 
-~base = 1.5;
-~dreads.lfoSources[\lfo2].freq = ~base + 0.04;
-
 ~applyPatch.();
+
+~base = 0.3;
+// Test
+// ~lfoTweak.(\plaits, 2, \volume, (freq: ~base/5, shape: \tri, mod: 1.0));
+// ~lfoTweak.(\plaits, 2, \decay, (freq: ~base, shape: \tri, mod: 0.0));
+// ~lfoTweak.(\plaits, 2, \morph, (freq: ~base*2, shape: \noise, width: 0.3, mod: 0.0));
+// ~lfoTweak.(\plaits, 2, \pitch, (freq: 20, shape: \noise, width: 0.3, mod: 0.0));
+~lfoTweak.(\plaits, 2, \pitch, (freq: ~base/2, shape: \sine, mod: 0.0));
+~lfoTweak.(\plaits, 2, \timbre, (freq: ~base/3, shape: \noise, width: 0.3, mod: 0.0));
+// ~lfoTweak.(\plaits, 0, \timbre, (freq: ~base/36, shape: \sine, mod: 0.3));
+
 )
 // 
