@@ -220,19 +220,39 @@ x = Pdef(\plaitsSequence,
 				\revHp, Pfunc { |event| ~dreads.synths[i].revHp },
 				\revFreeze, Pfunc { |event| ~dreads.synths[i].revFreeze },
 				\delaySend, Pfunc { |event|
-					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \delaySend), ~dreads.synths[i].delaySend);
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \delaySend);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\delaySend] = seqVal;
+					~modulateBipolar.(seqVal, inst.delaySend)
 				},
 				\reverbSend, Pfunc { |event|
-					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \reverbSend), ~dreads.synths[i].reverbSend);
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \reverbSend);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\reverbSend] = seqVal;
+					~modulateBipolar.(seqVal, inst.reverbSend)
 				},
 				\cloudsSend, Pfunc { |event|
-					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \cloudsSend), ~dreads.synths[i].cloudsSend);
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \cloudsSend);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\cloudsSend] = seqVal;
+					~modulateBipolar.(seqVal, inst.cloudsSend)
 				},
 				\distDrive, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \distDrive), ~dreads.synths[i].distDrive);
 				},
 				\distAmount, Pfunc { |event|
-					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \distAmount), ~dreads.synths[i].distAmount);
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \distAmount);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\distAmount] = seqVal;
+					~modulateBipolar.(seqVal, inst.distAmount)
 				},
 				\stereoMode, Pfunc { |event| ~dreads.synths[i].stereoMode },
 				\volume, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \volume), ~dreads.synths[i].volume); },

@@ -80,10 +80,23 @@ OSCdef.new(
 								};
 							} {
 								// Generic parameter update
+								var cache, modVal;
 								~dreads.synths[instanceIndex][paramKey] = value;
 								// Forward to drone synth if active
 								if (~drones.notNil && ~drones[instanceIndex].notNil) {
 									~drones[instanceIndex].set(paramKey, value);
+								};
+								// Drone-mode UI responsiveness stop-gap: for FX sends, echo the
+								// modulated value to visuals so live knob drags update VDMX
+								// smoothly (otherwise visuals are sequencer-tick rate).
+								// See docs/visualization-osc.md for full architecture discussion.
+								if ([\cloudsSend, \delaySend, \reverbSend, \distAmount].includes(paramKey)) {
+									cache = ~dreads.synths[instanceIndex].seqCache;
+									if (cache.notNil and: { cache[paramKey].notNil }) {
+										modVal = ~modulateBipolar.(cache[paramKey], value);
+										// Match sequencer's 0-based path convention (lib/sequencer.scd ~/vis bundle)
+										~vis.().sendMsg("/plaits/" ++ instanceIndex ++ "/" ++ paramKey.asString, modVal);
+									};
 								};
 							};
 						};
