@@ -18,9 +18,10 @@
 // ~numSpeakers = 6;
 ~recordingMode = true;
 
-// s.options.device = "Loopback";
+
 
 // Increase buffer size to reduce late messages
+s.options.device = "Loopback Audio";
 s.options.blockSize = 128;
 s.options.numBuffers = 2048;
 s.options.memSize = 8192 * 16;
