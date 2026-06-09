@@ -127,7 +127,8 @@ SynthDef(\lfo, {
 	Out.kr(out, sig * 0.5);
 }).add;
 
-// Reporter — reads per-instance LFO buses and sends values to sclang at ~30Hz for VDMX relay
+// Reporter — reads per-instance LFO buses and sends values to sclang at 60Hz for VDMX relay
+// (matches typical VDMX shader frame rate; lower rates cause stepped/jagged visuals)
 // Plaits: timbre/morph/decay/pitch/volume × 3 instances = 15
 // Samples: rate/volume × 3 instances = 6
 // Total: 21 floats in SendReply
@@ -139,7 +140,7 @@ SynthDef(\lfoReporter, {
 	    sRateBus1=0, sVolumeBus1=0,
 	    sRateBus2=0, sVolumeBus2=0;
 	SendReply.kr(
-		Impulse.kr(30),
+		Impulse.kr(60),
 		'/lfoValues',
 		[
 			In.kr(timbreBus0, 1), In.kr(morphBus0, 1), In.kr(decayBus0, 1), In.kr(pitchBus0, 1), In.kr(volumeBus0, 1),
