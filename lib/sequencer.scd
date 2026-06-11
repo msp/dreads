@@ -57,6 +57,7 @@ x = Pdef(\plaitsSequence,
 						"cloudsSend", (ev[\cloudsSend] ?? 0.0),
 						"delaySend",  (ev[\delaySend] ?? 0.0),
 						"reverbSend", (ev[\reverbSend] ?? 0.0),
+						"revDrywet",  (ev[\revDrywet] ?? 0.0),
 						"distAmount", (ev[\distAmount] ?? 0.0)
 					);
 
@@ -74,6 +75,7 @@ x = Pdef(\plaitsSequence,
 						["/plaits/" ++ i ++ "/cloudsSend", (ev[\cloudsSend] ?? 0.0)],
 						["/plaits/" ++ i ++ "/delaySend",  (ev[\delaySend] ?? 0.0)],
 						["/plaits/" ++ i ++ "/reverbSend", (ev[\reverbSend] ?? 0.0)],
+						["/plaits/" ++ i ++ "/revDrywet",  (ev[\revDrywet] ?? 0.0)],
 						["/plaits/" ++ i ++ "/distAmount", (ev[\distAmount] ?? 0.0)]
 					);
 
@@ -92,6 +94,7 @@ x = Pdef(\plaitsSequence,
 							"cloudsSend", (ev[\cloudsSend] ?? 0.0),
 							"delaySend",  (ev[\delaySend] ?? 0.0),
 							"reverbSend", (ev[\reverbSend] ?? 0.0),
+							"revDrywet",  (ev[\revDrywet] ?? 0.0),
 							"distAmount", (ev[\distAmount] ?? 0.0)
 						);
 					}
@@ -208,7 +211,12 @@ x = Pdef(\plaitsSequence,
 					};
 				},
 				\revDrywet, Pfunc { |event|
-					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \revDrywet), ~dreads.synths[i].revDrywet);
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \revDrywet);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\revDrywet] = seqVal;
+					~modulateBipolar.(seqVal, inst.revDrywet)
 				},
 				\revTime, Pfunc { |event|
 					var out = ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \revTime), ~dreads.synths[i].revTime);
