@@ -90,7 +90,7 @@ OSCdef.new(
 								// modulated value to visuals so live knob drags update VDMX
 								// smoothly (otherwise visuals are sequencer-tick rate).
 								// See docs/visualization-osc.md for full architecture discussion.
-								if ([\cloudsSend, \delaySend, \reverbSend, \revDrywet, \distAmount].includes(paramKey)) {
+								if ([\cloudsSend, \delaySend, \reverbSend, \revDrywet, \distAmount, \harm].includes(paramKey)) {
 									cache = ~dreads.synths[instanceIndex].seqCache;
 									if (cache.notNil and: { cache[paramKey].notNil }) {
 										modVal = ~modulateBipolar.(cache[paramKey], value);

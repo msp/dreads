@@ -178,7 +178,12 @@ x = Pdef(\plaitsSequence,
 					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \decay), ~dreads.synths[i].decay);
 				},
 				\harm, Pfunc { |event|
-					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \harm), ~dreads.synths[i].harm);
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \harm);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\harm] = seqVal;
+					~modulateBipolar.(seqVal, inst.harm)
 				},
 				\timbre, Pfunc { |event|
 					~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \timbre), ~dreads.synths[i].timbre);
