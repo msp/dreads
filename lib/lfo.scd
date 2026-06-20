@@ -169,6 +169,8 @@ if (~lfo.notNil) {
 			src.put(lfoParamOrEvent, resolved);
 		};
 	};
+	// Sync UI so exposed scalar params (e.g. *Mod) reflect lfoTweak changes
+	~pushStateToUI.();
 };
 
 // Relay LFO values from server to VDMX via OSC, scaled by per-instance mod depth

@@ -9,7 +9,7 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(cloudsSend: 0.0, decay: 1.0, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 0.5, engine: 2.0, fmMod: 0.3, harm: 0.01, legato: 8.0, lpgColour: 0.5, morph: 0.8, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 48.0, pitchMod: 0.0, revDamp: 0.58, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.14, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 95.72, timbMod: 0.0, timbre: 0.5, volume: 0.95, volumeMod: 1.0),
+			(cloudsSend: 0.0, decay: 1.0, decayMod: 0.0, delaySend: 0.46, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 0.5, engine: 2.0, fmMod: 0.3, harm: 0.01, legato: 8.0, lpgColour: 0.5, morph: 0.8, morphMod: 0.4, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 48.0, pitchMod: 0.0, revDamp: 0.58, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.14, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 95.72, timbMod: 0.5, timbre: 0.5, volume: 0.95, volumeMod: 1.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -47,7 +47,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(cloudsSend: 0.84, decay: 0.75, decayMod: 0.0, delaySend: 0.66, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.0), engine: 23.0, fmMod: 0.0, harm: 0.38, legato: 9.0, lpgColour: 0.5, morph: 0.31, morphMod: 0.73, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 52.0, pitchMod: 0.0, revDamp: 0.69, revDrywet: 1.0, revFreeze: 0.0, revHp: 0.94, revTime: 0.88, reverbSend: 0.0, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 95.72, timbMod: 0.42, timbre: 0.3, volume: 0.3, volumeMod: 0.0),
+			(cloudsSend: 0.84, decay: 0.75, decayMod: 0.0, delaySend: 0.66, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 1.0, engine: 23.0, fmMod: 0.0, harm: 0.38, legato: 9.0, lpgColour: 0.5, morph: 0.31, morphMod: 0.73, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 52.0, pitchMod: 0.0, revDamp: 0.69, revDrywet: 1.0, revFreeze: 0.0, revHp: 0.94, revTime: 0.88, reverbSend: 0.0, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 95.72, timbMod: 0.42, timbre: 0.3, volume: 0.3, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -123,7 +123,7 @@
 	// Global FX settings
 	// $PRESET_FX_START
 (
-	clouds: (blend: 0.26, density: 0.58, feedback: 0.49, freeze: 0.0, inGain: 1.0, lofi: 0.0, mix: 1.0, mode: 3.0, pitch: 1.92, position: 0.69, reverb: 0.55, size: 0.27, spread: 0.5, texture: 0.59, volume: 0.84),
+	clouds: (blend: 0.5, density: 0.58, feedback: 0.49, freeze: 0.0, inGain: 1.0, lofi: 0.0, mix: 1.0, mode: 3.0, pitch: 0.5, position: 0.36, reverb: 0.0, size: 0.74, spread: 0.5, texture: 0.4, volume: 0.84),
 	delay: (feedback: 0.48, filterFreq: 4636.46, spread: 1.5, time: 0.5),
 	reverb: (damp: 0.6, diffuse: 0.63, freeze: 0.0, hp: 0.23, time: 0.87)
 ),
@@ -182,13 +182,11 @@
 // ~mod = 0;
 
 // ~lfoTweak.(\plaits, 0, \volume, (freq: ~base/1.3, shape: \sine, mod: 1.0));
-~lfoTweak.(\plaits, 0, \volume, (freq: ~base*2, shape: \sine, mod: 0));
-// ~lfoTweak.(\plaits, 0, \volume, (freq: ~base*2, shape: \sine, mod: ~mod * 2));
-// ~lfoTweak.(\plaits, 0, \morph, (freq: ~base*1.3, shape: \sine, mod: ~mod - 0.1));
-~lfoTweak.(\plaits, 0, \morph, (freq: ~base*1.3, shape: \sine, mod: 0.8));
-// ~lfoTweak.(\plaits, 0, \morph, (freq: ~base*1.3, shape: \sine, mod: 0.3));
-// ~lfoTweak.(\plaits, 0, \pitch, (freq: 20, shape: \noise, mod: 0.0));
-~lfoTweak.(\plaits, 0, \pitch, (freq: ~base, shape: \square, mod: ~mod * 0.2));
+~lfoTweak.(\plaits, 0, \volume, (freq: ~base*2, shape: \sine, mod: ~mod * 2));
+~lfoTweak.(\plaits, 0, \morph, (freq: ~base*1.3, shape: \sine, mod: ~mod - 0.1));
+// ~lfoTweak.(\plaits, 0, \morph, (freq: ~base*1.3, shape: \sine, mod: 0.0));
+~lfoTweak.(\plaits, 0, \pitch, (freq: 20, shape: \noise, mod: 0.0));
+// ~lfoTweak.(\plaits, 0, \pitch, (freq: ~base, shape: \tri, mod: 0.9));
 ~lfoTweak.(\plaits, 0, \timbre, (freq: ~base*2, shape: \saw, mod: ~mod));
 // ~lfoTweak.(\plaits, 0, \timbre, (freq: ~base*2, shape: \saw, mod: 0.0));
 )
