@@ -277,6 +277,50 @@ OSCdef.new(
 	};
 };
 
+// LFO control OSC handlers (freq / shape / base per LFO-able param + global base)
+~setupLFOOSC = {
+	~dreads.synths.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		[\timbre, \morph, \decay, \pitch, \volume].do { |lfoParam|
+			[\freq, \shape, \base].do { |sub|
+				OSCdef.new(
+					("plaits" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
+					{ |msg|
+						var value, v, e;
+						value = msg[1];
+						v = if (sub == \shape) { value.asSymbol } { if (sub == \base) { value == 1 } { value.asFloat } };
+						e = ();
+						e.put(sub, v);
+						~lfoTweak.(\plaits, instanceIndex, lfoParam, e);
+					},
+					"/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam.asString ++ "/" ++ sub.asString
+				);
+			};
+		};
+	};
+	~dreads.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		[\rate, \volume].do { |lfoParam|
+			[\freq, \shape, \base].do { |sub|
+				OSCdef.new(
+					("sample" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
+					{ |msg|
+						var value, v, e;
+						value = msg[1];
+						v = if (sub == \shape) { value.asSymbol } { if (sub == \base) { value == 1 } { value.asFloat } };
+						e = ();
+						e.put(sub, v);
+						~lfoTweak.(\samples, instanceIndex, lfoParam, e);
+					},
+					"/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam.asString ++ "/" ++ sub.asString
+				);
+			};
+		};
+	};
+	OSCdef.new(\lfoBase, { |msg| ~setLFOBase.(msg[1]) }, "/dreads/lfoBase");
+};
+
+
 // Delay Effect OSC Handlers
 [\time, \feedback, \filterFreq, \spread].do { |paramKey|
 	// ['binding fx/delay->', paramKey].postln;
@@ -588,6 +632,36 @@ OSCdef.new(
 		"{\"values\":[" ++ seqNames.collect { |s| "\"" ++ s ++ "\"" }.join(",") ++ "]}"
 	);
 
+	// Push LFO state (freq / shape name / base) per param + global base
+	~dreads.synths.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		[\timbre, \morph, \decay, \pitch, \volume].do { |lfoParam|
+			var src;
+			src = instance.lfo[lfoParam];
+			if (src.isKindOf(Symbol)) { src = ~lfo.sources[src] };
+			if (src.notNil) {
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/freq", src[\freq]);
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/shape", ~lfoShapeNames[src[\shape]].asString);
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/base", if (src[\base] == true) { 1 } { 0 });
+			};
+		};
+	};
+	~dreads.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		[\rate, \volume].do { |lfoParam|
+			var src;
+			src = instance.lfo[lfoParam];
+			if (src.isKindOf(Symbol)) { src = ~lfo.sources[src] };
+			if (src.notNil) {
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/freq", src[\freq]);
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/shape", ~lfoShapeNames[src[\shape]].asString);
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/base", if (src[\base] == true) { 1 } { 0 });
+			};
+		};
+	};
+	ui.sendMsg("/dreads/lfoBase", ~base);
+
+
 	"Plaits state pushed to UI!".postln;
 };
 
@@ -623,6 +697,7 @@ OSCFunc({ |msg, time, addr, port|
 // Setup OSC for plaits instances (called after patch structure is loaded)
 ~setupPlaitsOSC.();
 ~setupSampleOSC.();
+~setupLFOOSC.();
 
 ~pushStateToUI.value;
 )

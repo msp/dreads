@@ -158,6 +158,7 @@ if (~lfo.notNil) {
 // Multi param:  ~lfoTweak.(\plaits, 0, \pitch, (freq: 3, shape: \square))
 // Shape names:  \sine, \tri, \saw, \square, \noise, \gaussian (or integers 0-5)
 ~lfoShapeMap = (sine: 0, tri: 1, saw: 2, square: 3, noise: 4, gaussian: 5);
+~lfoShapeNames = [\sine, \tri, \saw, \square, \noise, \gaussian];
 ~lfoTweak = { |instType, instIndex, paramName, lfoParamOrEvent, val|
 	var src, srcKey, synth, modKey, resolved, inst;
 	srcKey = if (instType == \plaits) {
