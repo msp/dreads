@@ -456,24 +456,6 @@ OSCdef.new(
 	"/dreads/fadeOutReverb"
 );
 
-// Helper function to send sequence state to UI
-~sendSequenceStateToUI = { |instances, instanceType, ui|
-	instances.do { |instance, instanceIndex|
-		var instanceNum = instanceIndex + 1;
-		instance.sequences.keysValuesDo { |paramKey, value|
-			var path = "/" ++ instanceType ++ "/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
-			if(value.isKindOf(Symbol)) {
-				// Send the library sequence name
-				ui.sendMsg(path, value.asString);
-			} {
-				// Custom Stream sequence - send "hold" to clear UI indicator
-				// (custom sequences aren't in the library, so UI can't display them)
-				ui.sendMsg(path, "hold");
-			};
-		};
-	};
-};
-
 // Push current state values to UI
 ~pushStateToUI = {
 	var ui, plaitsArray, fxSettings, seqNames, knownTags, uncategorized;
