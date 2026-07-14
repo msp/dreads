@@ -260,9 +260,12 @@
 //   lfo16-17: samples 0 (rate, volume)
 //   lfo18-19: samples 1
 //   lfo20-21: samples 2
+// Global LFO base frequency (Hz). Sources in "×base" mode multiply this value.
+~base = 0.125;
+
 ~defaultLFOSources = ();
 (1..21).do { |n|
-	~defaultLFOSources[("lfo" ++ n).asSymbol] = (freq: 0.125, shape: 0, width: 0.3);
+	~defaultLFOSources[("lfo" ++ n).asSymbol] = (freq: 0.125, shape: 0, width: 0.3, base: false);
 };
 
 // Default 1:1 LFO mappings per plaits instance

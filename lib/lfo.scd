@@ -26,7 +26,8 @@ if (~lfo.notNil) {
 		bus: bus,
 		freq: defaults[\freq],
 		shape: defaults[\shape],
-		width: defaults[\width]
+		width: defaults[\width],
+		base: defaults[\base] ? false
 	);
 };
 
@@ -44,6 +45,40 @@ if (~lfo.notNil) {
 	\sRateBus2, ~lfo.sources[\lfo20].bus, \sVolumeBus2, ~lfo.sources[\lfo21].bus,
 ], ~lfoGroup);
 
+// Resolve a source's authored freq to Hz (× ~base when base-locked)
+~resolveLFOFreq = { |src|
+	var f;
+	f = src[\freq] ? 0.125;
+	if (src[\base] == true) { f * ~base } { f };
+};
+
+// Set global LFO base and re-resolve every base-locked source
+~setLFOBase = { |v|
+	~base = v;
+	~lfo.sources.do { |src|
+		if (src[\base] == true) { src[\synth].set(\freq, ~resolveLFOFreq.(src)) };
+	};
+};
+
+// Apply one LFO param to a source (handles shape symbols, freq resolution, base flag)
+~setLFOParam = { |src, synth, param, v|
+	var val;
+	val = v;
+	if ((param == \shape) and: { val.isKindOf(Symbol) }) { val = ~lfoShapeMap[val] ? val };
+	if (param == \base) {
+		src.put(\base, val);
+		synth.set(\freq, ~resolveLFOFreq.(src));
+	} {
+		if (param == \freq) {
+			src.put(\freq, val);
+			synth.set(\freq, ~resolveLFOFreq.(src));
+		} {
+			synth.set(param, val);
+			src.put(param, val);
+		};
+	};
+};
+
 // Apply LFO state from patch data to runtime sources and synth mappings
 // Called from ~applyPatch after patch load/re-evaluate
 ~applyLFOState = {
@@ -54,12 +89,8 @@ if (~lfo.notNil) {
 		src = ~lfo.sources[key];
 		if (src.notNil) {
 			synth = src[\synth];
-			[\freq, \shape, \width].do { |param|
-				if (src[param] != defaults[param]) {
-					synth.set(param, defaults[param]);
-					src.put(param, defaults[param]);
-				};
-			};
+			[\freq, \shape, \width, \base].do { |param| src.put(param, defaults[param]) };
+			synth.set(\freq, ~resolveLFOFreq.(src), \shape, src[\shape], \width, src[\width]);
 		};
 	};
 	overrides.keysValuesDo { |key, cfg|
@@ -67,12 +98,10 @@ if (~lfo.notNil) {
 		src = ~lfo.sources[key];
 		if (src.notNil) {
 			synth = src[\synth];
-			[\freq, \shape, \width].do { |param|
-				if (cfg[param].notNil) {
-					synth.set(param, cfg[param]);
-					src.put(param, cfg[param]);
-				};
+			[\freq, \shape, \width, \base].do { |param|
+				if (cfg[param].notNil) { src.put(param, cfg[param]) };
 			};
+			synth.set(\freq, ~resolveLFOFreq.(src), \shape, src[\shape], \width, src[\width]);
 		} {
 			("WARNING: LFO source " ++ key ++ " not found").warn;
 		};
@@ -148,11 +177,7 @@ if (~lfo.notNil) {
 					~drones[instIndex].set(modKey, v);
 				};
 			} {
-				resolved = if (param == \shape && v.isKindOf(Symbol)) {
-					~lfoShapeMap[v] ? v;
-				} { v };
-				synth.set(param, resolved);
-				src.put(param, resolved);
+				~setLFOParam.(src, synth, param, v);
 			};
 		};
 	} {
@@ -162,11 +187,7 @@ if (~lfo.notNil) {
 				~drones[instIndex].set(modKey, val);
 			};
 		} {
-			resolved = if (lfoParamOrEvent == \shape && val.isKindOf(Symbol)) {
-				~lfoShapeMap[val] ? val;
-			} { val };
-			synth.set(lfoParamOrEvent, resolved);
-			src.put(lfoParamOrEvent, resolved);
+			~setLFOParam.(src, synth, lfoParamOrEvent, val);
 		};
 	};
 	// Sync UI so exposed scalar params (e.g. *Mod) reflect lfoTweak changes

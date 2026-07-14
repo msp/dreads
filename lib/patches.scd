@@ -736,7 +736,7 @@
 					var diffParams = [];
 					var usageComment;
 					if (src.notNil && defaults.notNil) {
-						[\freq, \shape, \width].do { |param|
+						[\freq, \shape, \width, \base].do { |param|
 							if (src[param] != defaults[param]) {
 								diffParams = diffParams.add(param ++ ": " ++ src[param]);
 							};
@@ -755,6 +755,9 @@
 					result = result.add(");");
 				} {
 					result = result.add("~dreads.lfoSources = ();");
+				};
+				if (~base != 0.125) {
+					result = result.add("~base = " ++ ~base ++ ";");
 				};
 			};
 		};
