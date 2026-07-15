@@ -230,6 +230,62 @@
         "target": "",
         "onCreate": "",
         "onValue": "window.updateSeqButtonStyle(\"#{@{parent.variables.module}||'plaits'}_@{parent.variables.name}Label_@{parent.variables.instance}\", value)"
+      },
+      {
+        "type": "text",
+        "id": "lfoState_#{@{parent.variables.module}||'plaits'}_@{parent.variables.name}_freq_@{parent.variables.instance}",
+        "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/lfo/@{parent.variables.name}/freq",
+        "value": "",
+        "visible": false,
+        "interaction": false,
+        "bypass": true,
+        "lock": false,
+        "top": "auto",
+        "left": "auto",
+        "width": "auto",
+        "height": "auto"
+      },
+      {
+        "type": "text",
+        "id": "lfoState_#{@{parent.variables.module}||'plaits'}_@{parent.variables.name}_shape_@{parent.variables.instance}",
+        "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/lfo/@{parent.variables.name}/shape",
+        "value": "",
+        "visible": false,
+        "interaction": false,
+        "bypass": true,
+        "lock": false,
+        "top": "auto",
+        "left": "auto",
+        "width": "auto",
+        "height": "auto"
+      },
+      {
+        "type": "text",
+        "id": "lfoState_#{@{parent.variables.module}||'plaits'}_@{parent.variables.name}_base_@{parent.variables.instance}",
+        "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/lfo/@{parent.variables.name}/base",
+        "value": "",
+        "visible": false,
+        "interaction": false,
+        "bypass": true,
+        "lock": false,
+        "top": "auto",
+        "left": "auto",
+        "width": "auto",
+        "height": "auto"
+      },
+      {
+        "type": "text",
+        "id": "lfoState_#{@{parent.variables.module}||'plaits'}_@{parent.variables.name}_mod_@{parent.variables.instance}",
+        "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/#{@{parent.variables.name}=='timbre'?'timbMod':@{parent.variables.name}+'Mod'}",
+        "value": "",
+        "visible": false,
+        "interaction": false,
+        "bypass": true,
+        "lock": false,
+        "top": "auto",
+        "left": "auto",
+        "width": "auto",
+        "height": "auto"
       }
     ],
     "tabs": []

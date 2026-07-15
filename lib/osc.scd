@@ -288,6 +288,7 @@ OSCdef.new(
 					{ |msg|
 						var value, v, e;
 						value = msg[1];
+						msg.postln;
 						v = if (sub == \shape) { value.asSymbol } { if (sub == \base) { value == 1 } { value.asFloat } };
 						e = ();
 						e.put(sub, v);
@@ -307,6 +308,7 @@ OSCdef.new(
 					{ |msg|
 						var value, v, e;
 						value = msg[1];
+						msg.postln;
 						v = if (sub == \shape) { value.asSymbol } { if (sub == \base) { value == 1 } { value.asFloat } };
 						e = ();
 						e.put(sub, v);
@@ -317,7 +319,7 @@ OSCdef.new(
 			};
 		};
 	};
-	OSCdef.new(\lfoBase, { |msg| ~setLFOBase.(msg[1]) }, "/dreads/lfoBase");
+	OSCdef.new(\lfoBase, { |msg| msg.postln; ~setLFOBase.(msg[1]) }, "/dreads/lfoBase");
 };
 
 

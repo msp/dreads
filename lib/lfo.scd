@@ -191,8 +191,11 @@ if (~lfo.notNil) {
 			~setLFOParam.(src, synth, lfoParamOrEvent, val);
 		};
 	};
-	// Sync UI so exposed scalar params (e.g. *Mod) reflect lfoTweak changes
-	~pushStateToUI.();
+	// NB: deliberately NOT calling ~pushStateToUI here. It rebuilds the entire
+	// seq-modal picker (~124 items) and re-pushes all state on every LFO change —
+	// heavy, and it fired inconsistently (freq/shape/base went through here, mod
+	// and ~base did not). The LFO UI reflects on modal-open instead (lfoReflect).
+	// Trade-off: a *livecoded* ~lfoTweak won't auto-refresh an already-open modal.
 };
 
 // Relay LFO values from server to VDMX via OSC, scaled by per-instance mod depth

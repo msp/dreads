@@ -57,6 +57,11 @@ x.stop;
 ~lfoTweak.(\plaits, 0, \morph, \freq, ~base * 1.08);
 ~lfoTweak.(\plaits, 0, \pitch, \freq, ~base / 3);
 
+n = NetAddr("127.0.0.1", 57120);
+n.sendMsg("/plaits/1/lfo/timbre/freq", 1/8);
+n.sendMsg("/plaits/1/lfo/timbre/base", 0);
+n.sendMsg("/dreads/lfoBase", 0.3);
+
 
 //////////////// RANDOM TEST ///////////////////////////////////
 // Scalar randomization:
