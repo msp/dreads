@@ -715,14 +715,14 @@
 				// Build reverse map: source name → list of current usages
 				var sourceUsages = ();
 				~dreads.synths.do { |inst, i|
-					[\timbre, \morph, \decay, \pitch, \volume].do { |param|
+					~plaitsLFOParams.do { |param|
 						var srcName = inst.lfo[param].name;
 						if (sourceUsages[srcName].isNil) { sourceUsages.put(srcName, []) };
 						sourceUsages[srcName] = sourceUsages[srcName].add("plaits " ++ i ++ " " ++ param);
 					};
 				};
 				~dreads.samples.do { |inst, i|
-					[\rate, \volume].do { |param|
+					~sampleLFOParams.do { |param|
 						var srcName = inst.lfo[param].name;
 						if (sourceUsages[srcName].isNil) { sourceUsages.put(srcName, []) };
 						sourceUsages[srcName] = sourceUsages[srcName].add("sample " ++ i ++ " " ++ param);

@@ -107,6 +107,7 @@
 	engine: 1.0,
 	fmMod: 0.0,
 	harm: 0.5,
+	harmMod: 0.0,
 	legato: 0.7,
 	lpgColour: 0.5,
 	morphMod: 0.0,
@@ -252,33 +253,37 @@
 	variant: Pseq([0], inf).asStream,  // integer index, not a modulation param
 );
 
-// Default LFO source configs (21 sources: 15 plaits + 6 samples)
+// Default LFO source configs (24 sources: 18 plaits + 6 samples)
 // Source numbering follows reporter order:
-//   lfo1-5: plaits 0 (timbre, morph, decay, pitch, volume)
-//   lfo6-10: plaits 1
-//   lfo11-15: plaits 2
-//   lfo16-17: samples 0 (rate, volume)
-//   lfo18-19: samples 1
-//   lfo20-21: samples 2
+//   lfo1-6: plaits 0 (timbre, morph, decay, pitch, volume, harm)
+//   lfo7-12: plaits 1
+//   lfo13-18: plaits 2
+//   lfo19-20: samples 0 (rate, volume)
+//   lfo21-22: samples 1
+//   lfo23-24: samples 2
 // Global LFO base frequency (Hz). Sources in "×base" mode multiply this value.
 ~base = 0.125;
 
 ~defaultLFOSources = ();
-(1..21).do { |n|
+(1..24).do { |n|
 	~defaultLFOSources[("lfo" ++ n).asSymbol] = (freq: 0.125, shape: 0, width: 0.3, base: false);
 };
 
+// Per-instance LFO-modulatable params (order matches the reporter + LFO maps)
+~plaitsLFOParams = [\timbre, \morph, \decay, \pitch, \volume, \harm];
+~sampleLFOParams = [\rate, \volume];
+
 // Default 1:1 LFO mappings per plaits instance
 ~defaultPlaitsLFOMap = [
-	(timbre: \lfo1, morph: \lfo2, decay: \lfo3, pitch: \lfo4, volume: \lfo5),
-	(timbre: \lfo6, morph: \lfo7, decay: \lfo8, pitch: \lfo9, volume: \lfo10),
-	(timbre: \lfo11, morph: \lfo12, decay: \lfo13, pitch: \lfo14, volume: \lfo15),
+	(timbre: \lfo1, morph: \lfo2, decay: \lfo3, pitch: \lfo4, volume: \lfo5, harm: \lfo6),
+	(timbre: \lfo7, morph: \lfo8, decay: \lfo9, pitch: \lfo10, volume: \lfo11, harm: \lfo12),
+	(timbre: \lfo13, morph: \lfo14, decay: \lfo15, pitch: \lfo16, volume: \lfo17, harm: \lfo18),
 ];
 
 // Default 1:1 LFO mappings per sample instance
 ~defaultSampleLFOMap = [
-	(rate: \lfo16, volume: \lfo17),
-	(rate: \lfo18, volume: \lfo19),
-	(rate: \lfo20, volume: \lfo21),
+	(rate: \lfo19, volume: \lfo20),
+	(rate: \lfo21, volume: \lfo22),
+	(rate: \lfo23, volume: \lfo24),
 ];
 )

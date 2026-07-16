@@ -281,7 +281,7 @@ OSCdef.new(
 ~setupLFOOSC = {
 	~dreads.synths.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
-		[\timbre, \morph, \decay, \pitch, \volume].do { |lfoParam|
+		~plaitsLFOParams.do { |lfoParam|
 			[\freq, \shape, \base].do { |sub|
 				OSCdef.new(
 					("plaits" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
@@ -301,7 +301,7 @@ OSCdef.new(
 	};
 	~dreads.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
-		[\rate, \volume].do { |lfoParam|
+		~sampleLFOParams.do { |lfoParam|
 			[\freq, \shape, \base].do { |sub|
 				OSCdef.new(
 					("sample" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
@@ -637,7 +637,7 @@ OSCdef.new(
 	// Push LFO state (freq / shape name / base) per param + global base
 	~dreads.synths.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
-		[\timbre, \morph, \decay, \pitch, \volume].do { |lfoParam|
+		~plaitsLFOParams.do { |lfoParam|
 			var src;
 			src = instance.lfo[lfoParam];
 			if (src.isKindOf(Symbol)) { src = ~lfo.sources[src] };
@@ -650,7 +650,7 @@ OSCdef.new(
 	};
 	~dreads.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
-		[\rate, \volume].do { |lfoParam|
+		~sampleLFOParams.do { |lfoParam|
 			var src;
 			src = instance.lfo[lfoParam];
 			if (src.isKindOf(Symbol)) { src = ~lfo.sources[src] };

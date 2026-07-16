@@ -32,17 +32,17 @@ if (~lfo.notNil) {
 };
 
 // Reporter relays all bus values to sclang for VDMX forwarding
-// Bus args follow reporter order: plaits 0-2 (timbre,morph,decay,pitch,volume), samples 0-2 (rate,volume)
+// Bus args follow reporter order: plaits 0-2 (timbre,morph,decay,pitch,volume,harm), samples 0-2 (rate,volume)
 ~lfo.reporter = Synth(\lfoReporter, [
 	\timbreBus0, ~lfo.sources[\lfo1].bus, \morphBus0, ~lfo.sources[\lfo2].bus,
-	\decayBus0, ~lfo.sources[\lfo3].bus, \pitchBus0, ~lfo.sources[\lfo4].bus, \volumeBus0, ~lfo.sources[\lfo5].bus,
-	\timbreBus1, ~lfo.sources[\lfo6].bus, \morphBus1, ~lfo.sources[\lfo7].bus,
-	\decayBus1, ~lfo.sources[\lfo8].bus, \pitchBus1, ~lfo.sources[\lfo9].bus, \volumeBus1, ~lfo.sources[\lfo10].bus,
-	\timbreBus2, ~lfo.sources[\lfo11].bus, \morphBus2, ~lfo.sources[\lfo12].bus,
-	\decayBus2, ~lfo.sources[\lfo13].bus, \pitchBus2, ~lfo.sources[\lfo14].bus, \volumeBus2, ~lfo.sources[\lfo15].bus,
-	\sRateBus0, ~lfo.sources[\lfo16].bus, \sVolumeBus0, ~lfo.sources[\lfo17].bus,
-	\sRateBus1, ~lfo.sources[\lfo18].bus, \sVolumeBus1, ~lfo.sources[\lfo19].bus,
-	\sRateBus2, ~lfo.sources[\lfo20].bus, \sVolumeBus2, ~lfo.sources[\lfo21].bus,
+	\decayBus0, ~lfo.sources[\lfo3].bus, \pitchBus0, ~lfo.sources[\lfo4].bus, \volumeBus0, ~lfo.sources[\lfo5].bus, \harmBus0, ~lfo.sources[\lfo6].bus,
+	\timbreBus1, ~lfo.sources[\lfo7].bus, \morphBus1, ~lfo.sources[\lfo8].bus,
+	\decayBus1, ~lfo.sources[\lfo9].bus, \pitchBus1, ~lfo.sources[\lfo10].bus, \volumeBus1, ~lfo.sources[\lfo11].bus, \harmBus1, ~lfo.sources[\lfo12].bus,
+	\timbreBus2, ~lfo.sources[\lfo13].bus, \morphBus2, ~lfo.sources[\lfo14].bus,
+	\decayBus2, ~lfo.sources[\lfo15].bus, \pitchBus2, ~lfo.sources[\lfo16].bus, \volumeBus2, ~lfo.sources[\lfo17].bus, \harmBus2, ~lfo.sources[\lfo18].bus,
+	\sRateBus0, ~lfo.sources[\lfo19].bus, \sVolumeBus0, ~lfo.sources[\lfo20].bus,
+	\sRateBus1, ~lfo.sources[\lfo21].bus, \sVolumeBus1, ~lfo.sources[\lfo22].bus,
+	\sRateBus2, ~lfo.sources[\lfo23].bus, \sVolumeBus2, ~lfo.sources[\lfo24].bus,
 ], ~lfoGroup);
 
 // Resolve a source's authored freq to Hz (× ~base when base-locked)
@@ -113,7 +113,7 @@ if (~lfo.notNil) {
 		// Apply per-instance overrides (symbols from patch file)
 		if (inst.lfo.notNil) { hydratedMap.putAll(inst.lfo) };
 		// Replace each symbol with the actual source Event
-		[\timbre, \morph, \decay, \pitch, \volume].do { |param|
+		~plaitsLFOParams.do { |param|
 			var key = hydratedMap[param];
 			if (key.isKindOf(Symbol)) {
 				hydratedMap[param] = ~lfo.sources[key];
@@ -129,7 +129,7 @@ if (~lfo.notNil) {
 			~drones[i].set(
 				\timbMod, inst[\timbMod], \morphMod, inst[\morphMod],
 				\decayMod, inst[\decayMod], \pitchMod, inst[\pitchMod],
-				\volumeMod, inst[\volumeMod]
+				\volumeMod, inst[\volumeMod], \harmMod, inst[\harmMod]
 			);
 		};
 	};
@@ -138,7 +138,7 @@ if (~lfo.notNil) {
 	~dreads.samples.do { |inst, i|
 		var hydratedMap = ~defaultSampleLFOMap[i].copy;
 		if (inst.lfo.notNil) { hydratedMap.putAll(inst.lfo) };
-		[\rate, \volume].do { |param|
+		~sampleLFOParams.do { |param|
 			var key = hydratedMap[param];
 			if (key.isKindOf(Symbol)) {
 				hydratedMap[param] = ~lfo.sources[key];
@@ -200,19 +200,20 @@ if (~lfo.notNil) {
 
 // Relay LFO values from server to VDMX via OSC, scaled by per-instance mod depth
 ~lfo.reporterFunc = OSCFunc({ |msg|
-	var bundle = Array.new(21);
+	var bundle = Array.new(24);
 	3.do { |i|
 		var inst = ~dreads.synths[i];
-		var offset = 3 + (i * 5);
+		var offset = 3 + (i * 6);
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/timbre", msg[offset]     * (inst.timbMod ? 0)]);
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/morph",  msg[offset + 1] * (inst.morphMod ? 0)]);
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/decay",  msg[offset + 2] * (inst.decayMod ? 0)]);
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/pitch",  msg[offset + 3] * (inst.pitchMod ? 0)]);
 		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/volume", msg[offset + 4] * (inst.volumeMod ? 0)]);
+		bundle = bundle.add(["/plaits/" ++ i ++ "/lfo/harm",   msg[offset + 5] * (inst.harmMod ? 0)]);
 	};
 	3.do { |i|
 		var samp = ~dreads.samples[i];
-		var offset = 18 + (i * 2);
+		var offset = 21 + (i * 2);
 		bundle = bundle.add(["/samples/" ++ i ++ "/lfo/rate",   msg[offset]     * (samp.rateMod ? 0)]);
 		bundle = bundle.add(["/samples/" ++ i ++ "/lfo/volume", msg[offset + 1] * (samp.volumeMod ? 0)]);
 	};

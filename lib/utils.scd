@@ -551,10 +551,11 @@
 		\decayMod, instance.decayMod,
 		\pitchMod, instance.pitchMod,
 		\volumeMod, instance.volumeMod,
+		\harmMod, instance.harmMod,
 	], ~voiceGroup, \addToHead);
 
 	// Map LFO buses to drone control args — instance.lfo is already hydrated
-	[\timbre, \morph, \decay, \pitch, \volume].do { |param|
+	~plaitsLFOParams.do { |param|
 		~drones[i].map((param ++ "LFO").asSymbol, instance.lfo[param].bus);
 	};
 

@@ -3000,7 +3000,7 @@
                 "type": "tab",
                 "lock": false,
                 "id": "lfo",
-                "visible": true,
+                "visible": "#{['timbre','morph','decay','pitch','volume','harm','rate'].indexOf(@{seqModal/context}.param) > -1}",
                 "interaction": true,
                 "comments": "",
                 "colorText": "auto",

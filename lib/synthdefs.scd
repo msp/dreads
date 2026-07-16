@@ -61,13 +61,13 @@
 
 SynthDef(\plaits, {
 	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
-	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0,
-	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0;
+	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0, harmLFO=0,
+	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0, harmMod=0.0;
 
 	var sig = MiPlaits.ar(
 		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
 		engine: engine.clip(0, 23),
-		harm: harm.clip(0, 1),
+		harm: (harm + (harmLFO * harmMod)).clip(0, 1),
 		timbre: (timbre + (timbreLFO * timbMod)).clip(0, 1),
 		morph: (morph + (morphLFO * morphMod)).clip(0, 1),
 		trigger: gate,
@@ -88,13 +88,13 @@ SynthDef(\plaits, {
 // Drone variant: continuous trigger, ASR envelope with release on gate=0
 SynthDef(\plaitsDrone, {
 	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
-	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0,
-	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0;
+	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0, harmLFO=0,
+	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0, harmMod=0.0;
 
 	var sig = MiPlaits.ar(
 		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
 		engine: engine.clip(0, 23),
-		harm: harm.clip(0, 1),
+		harm: (harm + (harmLFO * harmMod)).clip(0, 1),
 		timbre: (timbre + (timbreLFO * timbMod)).clip(0, 1),
 		morph: (morph + (morphLFO * morphMod)).clip(0, 1),
 		trigger: 1,
@@ -133,9 +133,9 @@ SynthDef(\lfo, {
 // Samples: rate/volume × 3 instances = 6
 // Total: 21 floats in SendReply
 SynthDef(\lfoReporter, {
-	arg timbreBus0=0, morphBus0=0, decayBus0=0, pitchBus0=0, volumeBus0=0,
-	    timbreBus1=0, morphBus1=0, decayBus1=0, pitchBus1=0, volumeBus1=0,
-	    timbreBus2=0, morphBus2=0, decayBus2=0, pitchBus2=0, volumeBus2=0,
+	arg timbreBus0=0, morphBus0=0, decayBus0=0, pitchBus0=0, volumeBus0=0, harmBus0=0,
+	    timbreBus1=0, morphBus1=0, decayBus1=0, pitchBus1=0, volumeBus1=0, harmBus1=0,
+	    timbreBus2=0, morphBus2=0, decayBus2=0, pitchBus2=0, volumeBus2=0, harmBus2=0,
 	    sRateBus0=0, sVolumeBus0=0,
 	    sRateBus1=0, sVolumeBus1=0,
 	    sRateBus2=0, sVolumeBus2=0;
@@ -143,9 +143,9 @@ SynthDef(\lfoReporter, {
 		Impulse.kr(60),
 		'/lfoValues',
 		[
-			In.kr(timbreBus0, 1), In.kr(morphBus0, 1), In.kr(decayBus0, 1), In.kr(pitchBus0, 1), In.kr(volumeBus0, 1),
-			In.kr(timbreBus1, 1), In.kr(morphBus1, 1), In.kr(decayBus1, 1), In.kr(pitchBus1, 1), In.kr(volumeBus1, 1),
-			In.kr(timbreBus2, 1), In.kr(morphBus2, 1), In.kr(decayBus2, 1), In.kr(pitchBus2, 1), In.kr(volumeBus2, 1),
+			In.kr(timbreBus0, 1), In.kr(morphBus0, 1), In.kr(decayBus0, 1), In.kr(pitchBus0, 1), In.kr(volumeBus0, 1), In.kr(harmBus0, 1),
+			In.kr(timbreBus1, 1), In.kr(morphBus1, 1), In.kr(decayBus1, 1), In.kr(pitchBus1, 1), In.kr(volumeBus1, 1), In.kr(harmBus1, 1),
+			In.kr(timbreBus2, 1), In.kr(morphBus2, 1), In.kr(decayBus2, 1), In.kr(pitchBus2, 1), In.kr(volumeBus2, 1), In.kr(harmBus2, 1),
 			In.kr(sRateBus0, 1), In.kr(sVolumeBus0, 1),
 			In.kr(sRateBus1, 1), In.kr(sVolumeBus1, 1),
 			In.kr(sRateBus2, 1), In.kr(sVolumeBus2, 1)
