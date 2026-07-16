@@ -89,7 +89,7 @@ if (~lfo.notNil) {
 		src = ~lfo.sources[key];
 		if (src.notNil) {
 			synth = src[\synth];
-			[\freq, \shape, \width, \base].do { |param| src.put(param, defaults[param]) };
+			~lfoSourceParams.do { |param| src.put(param, defaults[param]) };
 			synth.set(\freq, ~resolveLFOFreq.(src), \shape, src[\shape], \width, src[\width]);
 		};
 	};
@@ -98,7 +98,7 @@ if (~lfo.notNil) {
 		src = ~lfo.sources[key];
 		if (src.notNil) {
 			synth = src[\synth];
-			[\freq, \shape, \width, \base].do { |param|
+			~lfoSourceParams.do { |param|
 				if (cfg[param].notNil) { src.put(param, cfg[param]) };
 			};
 			synth.set(\freq, ~resolveLFOFreq.(src), \shape, src[\shape], \width, src[\width]);

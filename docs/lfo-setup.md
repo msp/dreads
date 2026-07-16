@@ -19,6 +19,13 @@ objects** — one mutates them now, the other saves/restores them.
   `lib/globals.scd`). Sources *can* be shared (routing matrix is future work).
 - **Shapes** (`~lfoShapeMap`, `lib/lfo.scd:160`): `sine`=0, `tri`=1, `saw`=2,
   `square`=3, `noise`=4, `gaussian`=5.
+  - `noise` = `LFNoise1` — *smoothed random* (linear interp), the Perlin-ish "random
+    with an overall shape" one.
+  - `gaussian` = `LFGauss` — **not** random. A periodic **bell-shaped swell**, one per
+    cycle (period = `1/freq`). Its `width` control (only shown for this shape) sets the
+    bell's narrowness: narrow = a brief spike with gaps, wide = a smooth sine-like swell.
+    Musically it's only interesting **slow** — at higher freqs the bells blur into a
+    buzzy pulse.
 - **Mod depth** is *not* on the source — it's the per-instance `*Mod` scalar
   (`timbre`→`timbMod`, others `<param>Mod`), stored in `$PRESET_SCALARS` and already
   a UI knob. The reporter relays live LFO values to VDMX scaled by `*Mod`

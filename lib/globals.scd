@@ -272,6 +272,8 @@
 // Per-instance LFO-modulatable params (order matches the reporter + LFO maps)
 ~plaitsLFOParams = [\timbre, \morph, \decay, \pitch, \volume, \harm];
 ~sampleLFOParams = [\rate, \volume];
+// Per-source LFO controls (mod is separate — a synth scalar, not a source param)
+~lfoSourceParams = [\freq, \shape, \width, \base];
 
 // Default 1:1 LFO mappings per plaits instance
 ~defaultPlaitsLFOMap = [

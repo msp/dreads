@@ -282,7 +282,7 @@ OSCdef.new(
 	~dreads.synths.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 		~plaitsLFOParams.do { |lfoParam|
-			[\freq, \shape, \base].do { |sub|
+			~lfoSourceParams.do { |sub|
 				OSCdef.new(
 					("plaits" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
 					{ |msg|
@@ -302,7 +302,7 @@ OSCdef.new(
 	~dreads.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 		~sampleLFOParams.do { |lfoParam|
-			[\freq, \shape, \base].do { |sub|
+			~lfoSourceParams.do { |sub|
 				OSCdef.new(
 					("sample" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
 					{ |msg|
@@ -645,6 +645,7 @@ OSCdef.new(
 				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/freq", src[\freq]);
 				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/shape", ~lfoShapeNames[src[\shape]].asString);
 				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/base", if (src[\base] == true) { 1 } { 0 });
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/width", src[\width]);
 			};
 		};
 	};
@@ -658,6 +659,7 @@ OSCdef.new(
 				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/freq", src[\freq]);
 				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/shape", ~lfoShapeNames[src[\shape]].asString);
 				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/base", if (src[\base] == true) { 1 } { 0 });
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/width", src[\width]);
 			};
 		};
 	};

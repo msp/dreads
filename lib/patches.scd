@@ -736,7 +736,7 @@
 					var diffParams = [];
 					var usageComment;
 					if (src.notNil && defaults.notNil) {
-						[\freq, \shape, \width, \base].do { |param|
+						~lfoSourceParams.do { |param|
 							if (src[param] != defaults[param]) {
 								diffParams = diffParams.add(param ++ ": " ++ src[param]);
 							};

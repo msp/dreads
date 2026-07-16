@@ -296,6 +296,20 @@
         "left": "auto",
         "width": "auto",
         "height": "auto"
+      },
+      {
+        "type": "text",
+        "id": "lfoState_#{@{parent.variables.module}||'plaits'}_volume_width_@{parent.variables.instance}",
+        "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/lfo/volume/width",
+        "value": "",
+        "visible": false,
+        "interaction": false,
+        "bypass": true,
+        "lock": false,
+        "top": "auto",
+        "left": "auto",
+        "width": "auto",
+        "height": "auto"
       }
     ],
     "tabs": []
