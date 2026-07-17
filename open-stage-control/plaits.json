@@ -3038,7 +3038,7 @@
                 "type": "tab",
                 "lock": false,
                 "id": "lfo",
-                "visible": "#{['timbre','morph','decay','pitch','volume','harm','rate'].indexOf(@{seqModal/context}.param) > -1}",
+                "visible": "#{(@{seqModal/context}.type == 'samples' ? ['rate','volume'] : ['timbre','morph','decay','pitch','volume','harm']).indexOf(@{seqModal/context}.param) > -1}",
                 "interaction": true,
                 "comments": "",
                 "colorText": "auto",
