@@ -74,13 +74,37 @@ sends, populate would **echo back out to SC**. A `window._initializing…` flag 
 that during populate — checked at the top of the seq switch's `onValue`, and (for LFO)
 inside the shared `lfoSend`, which every LFO `onValue` calls.
 
+## Override 4 — id-twin the cache to a real control for free two-way sync
+
+Overrides 1–3 keep the modal's *own* controls current. But when a cached value
+*also* has a dedicated on-page control — the `*Mod` depth knobs (`timbMod`,
+`morphMod`) sit on the module face **and** are editable via the modal's mod knob —
+the two would drift: the modal proxy-`send()`s (outgoing only), and the dedicated
+knob has a different id, so neither updates the other.
+
+Fix: make the hidden cache widget an **id-twin** of the dedicated control — give it
+the **same `id`** (its address minus the leading slash, e.g. `plaits/1/timbMod`).
+O-S-C auto-syncs same-`id` widgets (`{send:false, sync:false}` — no OSC, no scripts,
+no loop; the `onChange`/`widgetsById` path), so:
+
+- **modal → knob:** `lfoSend` does `set(scalarId, value, {send:false})`; the first
+  match updates and the sync cascades to its twin. `send(addr)` still carries the
+  value to SC (the cache is `bypass:true`, so it never emits on its own).
+- **knob → modal:** dragging the dedicated knob fires the same-id sync → the cache
+  mirrors it; `lfoPopulate` then reads the live value straight off that id.
+
+Only applies to caches whose value has a real control twin. The LFO **source**
+caches (freq/shape/base/width) are modal-only, so they keep their plain
+`lfoState_…` ids — no twin, nothing to sync. (Commit `1a235f2`.)
+
 ## Where the cache lives → what this means for coverage
 
 The hidden cache widgets live **inside the knob's fragment** — `large_knob` carries
-`…Label_seq_…` (seq) and `lfoState_…` (LFO), and `volume.json` carries its own copies.
-Consequence: **reflect only works for params whose knob is a fragment.** Still-inline knobs
-(e.g. `decay` and the FX sends) have no cache → no reflect until they're converted to a
-fragment (the cache rides along automatically once they are).
+`…Label_seq_…` (seq), and the `*_lfo` wrappers (`large_knob_lfo` / `small_knob_lfo`) plus
+`volume.json` carry the `lfoState_…` (LFO) copies. Consequence: **reflect only works for
+params whose knob is a fragment.** All the plaits/sample knobs are fragments now, so this
+is mostly a note for any future inline knob — the cache rides along automatically once a
+knob is converted.
 
 ## Reusable window functions (defined in `seqModal`'s `onCreate`)
 
@@ -89,8 +113,10 @@ Keep the per-widget `onValue` to one-liners; put the logic in shared functions:
 - `openSeqModal(param, instance, stateId, type)` — set context, populate, open.
 - `updateSeqButtonStyle(buttonId, value)` — restyle a seq label.
 - `lfoSend(sub, value)` — send an LFO control to its real address **and** write its
-  cache (handles the `mod` → `/{param}Mod` special case, `timbre`→`timbMod`).
-- `lfoPopulate()` — read the 4 `lfoState_…` caches and set the LFO widgets, guarded.
+  cache by that sub's id (handles the `mod` → `/{param}Mod` special case, `timbre`→`timbMod`;
+  for `mod` the cache id *is* the scalar — an id-twin of the dedicated knob, see Override 4).
+- `lfoPopulate()` — read the freq/shape/base/width `lfoState_…` caches plus the mod value
+  (off the scalar id) and set the 5 LFO widgets, guarded.
 
 ## Adding a new control to the modal
 

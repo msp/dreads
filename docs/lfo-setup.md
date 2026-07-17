@@ -124,28 +124,30 @@ switching params fast races: an async server reply can land after the context ha
 on, showing — and even writing — the wrong param's values.
 
 So we mirror the seq pattern: a **client-side cache**. Each fragment-backed knob carries
-**4 hidden widgets** (`lfoState_{module}_{param}_{freq|shape|base|mod}_{instance}`) holding
-that param's values. The cache is updated at **two moments** — a bare `send` does *not*
-touch local widgets: (1) SC's `~pushStateToUI` on load, (2) `window.lfoSend` writing it on
-each edit. On open, `window.lfoPopulate` reads the 4 caches with `get()` and populates the
-tab **synchronously** under a `window._initializingLfo` guard (checked inside `lfoSend`) so
-the populate doesn't echo out. Each widget's `onValue` is a one-liner: `lfoSend(sub, value)`.
-Full detail in `docs/osc-shared-modals.md`.
+**5 hidden widgets** (`freq`/`shape`/`base`/`mod`/`width`). The cache is updated at **two
+moments** — a bare `send` does *not* touch local widgets: (1) SC's `~pushStateToUI` on load,
+(2) `window.lfoSend` writing it on each edit. On open, `window.lfoPopulate` reads them with
+`get()` and populates the tab **synchronously** under a `window._initializingLfo` guard
+(checked inside `lfoSend`) so the populate doesn't echo out. Each widget's `onValue` is a
+one-liner: `lfoSend(sub, value)`. Full detail in `docs/osc-shared-modals.md`.
 
+- **Widget ids:** freq/shape/base/width use `lfoState_{module}_{param}_{sub}_{instance}`. The
+  **mod** cache is different — its id *is* the `*Mod` scalar address (minus slash, e.g.
+  `plaits/1/timbMod`), making it an **id-twin** of the dedicated mod knob so O-S-C keeps the
+  two in sync for free (see Override 4 in `docs/osc-shared-modals.md`, commit `1a235f2`).
 - **No ping, no race** — same lifecycle as the seq switch's hidden `…Label_seq_…` cache.
-- **Coverage:** works for fragment-backed knobs — timbre/morph/pitch (`large_knob`) and
-  volume (`volume.json`) today. decay + the sample knobs get it once they become fragments.
+- **Coverage:** all plaits/sample knobs are fragments now, so reflect works across the board.
 
 ### Tab visibility
 
-LFO only applies to the 6 param names above, so the **lfo tab's `visible`** is bound to
-`#{ [...].indexOf(@{seqModal/context}.param) > -1 }` — it hides itself for non-LFO
-params (delay, dist, harm, …). `openSeqModal` also forces the seq tab active
+The **lfo tab's `visible`** is **module-aware**: it branches on `@{seqModal/context}.type` —
+samples see `['rate','volume']`, plaits see `['timbre','morph','decay','pitch','volume','harm']`
+(these must stay in sync with `~plaitsLFOParams`/`~sampleLFOParams`). It hides itself for
+non-LFO params and for sample `decay`. `openSeqModal` also forces the seq tab active
 (`set('seqModalPanel', 0)`) so you're never stranded on a hidden tab.
 
 ## Status
 
-Base-frequency mode + OSC wiring are committed (`1b6acc0`, `e51bcfe`). The UI tab,
-client-side cache, and the `lfoSend`/`lfoPopulate` functions are **built but uncommitted**,
-pending testing — reflect works for timbre/morph/pitch/volume. Adding `harm` to the LFO
-set (interleaving the source numbering to 24) is the remaining build TODO.
+All shipped: base-frequency mode + OSC wiring (`1b6acc0`, `e51bcfe`), the UI tab +
+client-side cache + `lfoSend`/`lfoPopulate`, `harm` in the LFO set (24 sources), module-aware
+tab visibility (`8876587`), and dedicated-mod-knob sync via id-twin caches (`1a235f2`).
