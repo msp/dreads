@@ -357,7 +357,7 @@
       },
       {
         "type": "text",
-        "id": "lfoState_#{@{parent.variables.module}||'plaits'}_volume_mod_@{parent.variables.instance}",
+        "id": "#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/volumeMod",
         "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/volumeMod",
         "value": "",
         "visible": false,

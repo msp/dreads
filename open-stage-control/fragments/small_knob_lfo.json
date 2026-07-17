@@ -155,7 +155,7 @@
       },
       {
         "type": "text",
-        "id": "lfoState_#{@{parent.variables.module}||'plaits'}_@{parent.variables.name}_mod_@{parent.variables.instance}",
+        "id": "#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/#{@{parent.variables.name}=='timbre'?'timbMod':@{parent.variables.name}+'Mod'}",
         "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/#{@{parent.variables.name}=='timbre'?'timbMod':@{parent.variables.name}+'Mod'}",
         "value": "",
         "visible": false,
