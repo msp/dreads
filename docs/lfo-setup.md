@@ -4,6 +4,10 @@ How LFO modulation is wired, changed, and persisted. The key thing to hold onto:
 **the livecoding API and the preset blocks act on the *same* runtime source
 objects** — one mutates them now, the other saves/restores them.
 
+> **Design rationale** for *which* params should be LFO-able (and the parked
+> source-pool refactor needed before broadening the sample set) lives in
+> [`lfo-param-rationale.md`](lfo-param-rationale.md).
+
 ## Runtime model
 
 - **21 named sources** `\lfo1`–`\lfo21`, each a running `\lfo` synth writing to a
