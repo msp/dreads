@@ -485,7 +485,7 @@
           "variables": {
             "instance": "@{parent.variables.instance}",
             "name": "panDur",
-            "displayName": "pan",
+            "displayName": "pan-t",
             "module": "samples",
             "min": "0.01"
           }
