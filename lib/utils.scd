@@ -60,11 +60,11 @@
 	~pushStateToUI.();
 };
 
-// Randomization ranges per tier
-// Tier 1 (\tonal): sound character
-// Tier 2 (\mod): modulation/dynamics
-// Tier 3 (\fx): effects sends
-~randomizeRanges = (
+// Scalar randomisation ranges per tier. Tiers are isolatable profiles; composites
+// (\full = everything, \default = tonal+mod) select several. \colour = tonal minus
+// engine/pitch. The \lfo tier is separate — see ~randomiseLFO / ~randomiseInstanceLFO,
+// which write LFO sources + *Mod depths, not synth scalars.
+~randomiseRanges = (
 	tonal: (
 		engine:    [0, 23, \int],
 		harm:      [0.0, 1.0],
@@ -99,43 +99,87 @@
 	),
 );
 
-// Randomize a plaits instance (1-based)
-// mode: \tonal (tier 1), \default (tiers 1+2), \full (tiers 1+2+3)
-~randomize = { |inst=1, mode=\default|
+// LFO-tier randomisation config (richer than a flat [min,max]).
+// base flips freq's meaning: ×base multiplier when true, absolute Hz when false.
+~randomiseLFO = (
+	enableProb: 0.6,                 // chance a param gets an active LFO (else depth 0)
+	baseProb:   0.5,                 // chance it runs in ×base mode vs absolute Hz
+	freqBase:   [0.25, 4.0],         // multiplier range when base = true
+	freqHz:     [0.05, 1.5],         // Hz range when base = false
+	shapes:     [\sine, \sine, \sine, \tri, \tri, \saw, \square, \noise],  // weighted
+	depth:      [0.1, 0.5],          // *Mod depth when enabled
+);
+
+// Randomise every LFO-able param on a plaits instance (0-based idx). Writes the LFO
+// sources + *Mod depths via ~lfoTweak — a different write-path from scalar randomise.
+~randomiseInstanceLFO = { |idx|
+	~plaitsLFOParams.do { |param|
+		var enable, base, freq, shape, depth;
+		enable = ~randomiseLFO.enableProb.coin;
+		if (enable) {
+			base = ~randomiseLFO.baseProb.coin;
+			freq = if (base) {
+				rrand(~randomiseLFO.freqBase[0], ~randomiseLFO.freqBase[1])
+			} {
+				rrand(~randomiseLFO.freqHz[0], ~randomiseLFO.freqHz[1])
+			};
+			shape = ~randomiseLFO.shapes.choose;
+			depth = rrand(~randomiseLFO.depth[0], ~randomiseLFO.depth[1]);
+			~lfoTweak.(\plaits, idx, param, (base: base, freq: freq, shape: shape, mod: depth));
+		} {
+			~lfoTweak.(\plaits, idx, param, (mod: 0.0));
+		};
+	};
+};
+
+// Randomise a plaits instance (1-based).
+// mode profiles: \tonal \colour \mod \fx \lfo (isolatable) · \full (everything incl LFO)
+// · \default (tonal + mod). \colour = tonal minus engine/pitch.
+~randomise = { |inst=1, mode=\default|
 	var idx, tiers;
 	idx = inst - 1;
 	tiers = switch(mode,
 		\tonal,  { [\tonal] },
 		\colour, { [\colour] },
-		\full,   { [\tonal, \mod, \fx] },
+		\mod,    { [\mod] },
+		\fx,     { [\fx] },
+		\lfo,    { [\lfo] },
+		\full,   { [\tonal, \mod, \fx, \lfo] },
 		         { [\tonal, \mod] }
 	);
 	tiers.do { |tier|
-		~randomizeRanges[tier].keysValuesDo { |param, range|
-			var val;
-			val = rrand(range[0], range[1]);
-			if (range[2] == \int) { val = val.round.asInteger };
-			~dreads.synths[idx][param] = val;
-			// Reset any active sequence on this param so the scalar takes effect
-			if (~dreads.synths[idx].sequences[param].notNil) {
-				~dreads.synths[idx].sequences[param] = \hold;
+		if (tier == \lfo) {
+			~randomiseInstanceLFO.(idx);
+		} {
+			~randomiseRanges[tier].keysValuesDo { |param, range|
+				var val;
+				val = rrand(range[0], range[1]);
+				if (range[2] == \int) { val = val.round.asInteger };
+				~dreads.synths[idx][param] = val;
+				// Reset any active sequence on this param so the scalar takes effect.
+				// Skip \engine — its sequence holds the "e" placeholder ~setEngine needs;
+				// \hold breaks it (Index not an Integer), and the engine scalar flows
+				// through "e" anyway, so it takes effect without a reset.
+				if ((param != \engine) and: { ~dreads.synths[idx].sequences[param].notNil }) {
+					~dreads.synths[idx].sequences[param] = \hold;
+				};
 			};
 		};
 	};
-	("Randomized plaits " ++ inst ++ " (" ++ mode ++ ")").postln;
+	("Randomised plaits " ++ inst ++ " (" ++ mode ++ ")").postln;
 	~pushStateToUI.();
 };
 
-// Randomize all unmuted plaits instances
-~randomizeAll = { |mode=\default|
+// Randomise all unmuted plaits instances
+~randomiseAll = { |mode=\default|
 	~dreads.synths.do { |inst, idx|
 		if (inst.mute != 1) {
-			~randomize.(idx + 1, mode);
+			~randomise.(idx + 1, mode);
 		};
 	};
 };
 
-// Param-to-type mapping for dice randomization
+// Param-to-type mapping for dice randomisation
 ~diceParamTypes = (
 	duration: \rhythm, div: \timing,
 	pitch: \pitch, harm: \shape, timbre: \shape, morph: \shape,
@@ -284,7 +328,7 @@
 		};
 		stream.next;
 	} {
-		// Inline sequence with source (from dice/randomization)
+		// Inline sequence with source (from dice/randomisation)
 		if (value.isKindOf(Dictionary) and: { value[\stream].notNil }) {
 			value[\stream].next;
 		} {

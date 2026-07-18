@@ -575,6 +575,31 @@
         "maxLength": "",
         "typeTags": "",
         "ignoreDefaults": false
+      },
+      {
+        "type": "fragment",
+        "top": 560,
+        "left": 48,
+        "lock": false,
+        "id": "randomiseDiceAll",
+        "visible": true,
+        "interaction": true,
+        "comments": "",
+        "width": 60,
+        "height": 132,
+        "expand": false,
+        "css": "background: transparent !important; box-shadow: none !important;",
+        "file": "fragments/randomise_dice.json",
+        "fallback": "",
+        "props": {
+          "variables": {
+            "module": "dreads",
+            "instance": "all",
+            "scope": "all"
+          }
+        },
+        "address": "auto",
+        "variables": "@{parent.variables}"
       }
     ],
     "tabs": []

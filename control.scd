@@ -64,16 +64,18 @@ n.sendMsg("/dreads/lfoBase", 0.3);
 
 
 //////////////// RANDOM TEST ///////////////////////////////////
-// Scalar randomization:
-~randomize.(2)           // plaits 1, tonal + mod
+// Scalar randomisation:
+~randomise.(1, \lfo)
 
-~randomize.(3, \tonal)   // just sound character (engine, harm, timbre, morph, decay, pitch...)
+~randomise.(1)           // plaits 1, tonal + mod
 
-~randomize.(3, \color) //randomizes harm, timbre, morph, decay, lpgColour, and fmMod — keeps engine and pitch untouched.
+~randomise.(1, \tonal)   // just sound character (engine, harm, timbre, morph, decay, pitch...)
 
-~randomize.(3, \full)    // everything including effects sends
-~randomizeAll.()         // all unmuted modules
-~randomizeAll.(\full)    // all unmuted, with effects
+~randomise.(1, \colour) //randomises harm, timbre, morph, decay, lpgColour, and fmMod — keeps engine and pitch untouched.
+
+~randomise.(1, \full)    // everything including effects sends
+~randomiseAll.()         // all unmuted modules
+~randomiseAll.(\full)    // all unmuted, with effects
 
 // Random sequence generation:
 ~randomSeq.(\myRhythm3, \user, 8)   // 8-step rhythm with rests

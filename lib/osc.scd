@@ -39,6 +39,19 @@ OSCdef.new(
 	"/dreads/start"
 );
 
+// Randomise all unmuted plaits instances with a profile
+// OSC: /dreads/randomiseAll  profileName  (tonal/colour/mod/fx/lfo/full)
+OSCdef.new(
+	\randomiseAll,
+	{
+		arg msg, time, addr, port;
+		var mode;
+		mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+		~randomiseAll.(mode);
+	},
+	"/dreads/randomiseAll"
+);
+
 // Create OSC listeners for all instances and parameters
 ~setupPlaitsOSC = {
 	~dreads.synths.do { |instance, instanceIndex|
@@ -131,6 +144,19 @@ OSCdef.new(
 				~diceSeq.(instanceIndex + 1, paramKey);
 			},
 			"/plaits/" ++ instanceNum ++ "/dice"
+		);
+
+		// Randomise: apply a randomisation profile to this instance
+		// OSC: /plaits/{n}/randomise  profileName  (tonal/colour/mod/fx/lfo/full)
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "randomise").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var mode;
+				mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+				~randomise.(instanceIndex + 1, mode);
+			},
+			"/plaits/" ++ instanceNum ++ "/randomise"
 		);
 
 		// Nudge forward: /plaits/{n}/nudgeForward
@@ -629,7 +655,7 @@ OSCdef.new(
 		seqNames.add("── OTHER ──");
 		seqNames.addAll(uncategorized);
 	};
-	["seqModal:", seqNames.size, "items"].postln;
+	// ["seqModal:", seqNames.size, "items"].postln;
 	ui.sendMsg('/EDIT', 'seqModal/switch',
 		"{\"values\":[" ++ seqNames.collect { |s| "\"" ++ s ++ "\"" }.join(",") ++ "]}"
 	);

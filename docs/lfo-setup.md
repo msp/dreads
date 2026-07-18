@@ -80,7 +80,7 @@ A patch stores LFO state in **two** places (they separate routing from values):
   separately from `instance.lfo`.
 
 That reset-then-apply is why the preset structure exists: livecode tweaks are
-ephemeral mutations of the source objects; the preset is the serialized snapshot
+ephemeral mutations of the source objects; the preset is the serialised snapshot
 that recreates them on load. Same objects, different lifecycle.
 
 ## Base frequency (×base mode)
@@ -90,7 +90,7 @@ A source's `freq` can be **absolute Hz** or a **multiple of a global `~base`**:
 - **`~base`** (`lib/globals.scd`, default `0.125`) — global base frequency.
 - Each source stores an authored `freq` + a `base` bool. `~resolveLFOFreq` (`lib/lfo.scd`)
   computes the actual synth freq: `base ? freq * ~base : freq`. The **authored** value
-  is what's stored/serialized; the resolved Hz is what the synth runs at.
+  is what's stored/serialised; the resolved Hz is what the synth runs at.
 - `~setLFOBase.(v)` sets `~base` and re-resolves every base-locked source.
 - **Toggling `base` off reinterprets the same number as Hz** (chosen behaviour): e.g.
   `freq 4` at `~base 0.5` runs at 2 Hz; flick base off → 4 Hz (the number stays, the
