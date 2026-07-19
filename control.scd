@@ -64,18 +64,24 @@ n.sendMsg("/dreads/lfoBase", 0.3);
 
 
 //////////////// RANDOM TEST ///////////////////////////////////
-// Scalar randomisation:
-~randomise.(1, \lfo)
+// Profiles — static / animate / timing (same set the dice palette fires):
+~randomise.(1, \tonal)   // static sound: engine, harm, timbre, morph, decay, lpgColour, fmMod, pitch
+~randomise.(1, \colour)  // static sound minus engine/pitch (keeps key + engine)
+~randomise.(1, \fx)      // static fx sends
+~randomise.(1, \mod)     // animate sound: per-param smooth (LFO depth) OR stepped (seq), sparse
+~randomise.(1, \modFx)   // animate fx sends (stepped sequences)
+~randomise.(1, \lfo)     // LFO *character* only (freq/shape/base) — no depth (depth is \mod)
+~randomise.(1, \seq)     // timing: dice duration + randomise legato
+~randomise.(1, \full)    // tonal + fx + lfo + mod (a new, animated sound)
+~randomise.(1)           // default = tonal + mod
 
-~randomise.(1)           // plaits 1, tonal + mod
-
-~randomise.(1, \tonal)   // just sound character (engine, harm, timbre, morph, decay, pitch...)
-
-~randomise.(1, \colour) //randomises harm, timbre, morph, decay, lpgColour, and fmMod — keeps engine and pitch untouched.
-
-~randomise.(1, \full)    // everything including effects sends
 ~randomiseAll.()         // all unmuted modules
-~randomiseAll.(\full)    // all unmuted, with effects
+~randomiseAll.(\full)
+
+// Tune the animate/lfo feel live (read fresh each roll — no reload needed):
+~randomiseMod.animateProb = 0.75;         // sparsity — more params move (default 0.5)
+~randomiseMod.depth = [0.2, 0.8];         // deeper LFO wobble on the smooth ones
+~randomiseLFO.shapes = [\sine, \tri];     // bias which LFO shapes \lfo picks
 
 // Random sequence generation:
 ~randomSeq.(\myRhythm3, \user, 8)   // 8-step rhythm with rests
