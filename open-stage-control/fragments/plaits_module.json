@@ -675,7 +675,7 @@
         "interaction": true,
         "comments": "",
         "width": 60,
-        "height": 132,
+        "height": 156,
         "expand": false,
         "css": "background: transparent !important; box-shadow: none !important;",
         "file": "fragments/randomise_dice.json",

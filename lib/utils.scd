@@ -60,10 +60,7 @@
 	~pushStateToUI.();
 };
 
-// Scalar randomisation ranges per tier. Tiers are isolatable profiles; composites
-// (\full = everything, \default = tonal+mod) select several. \colour = tonal minus
-// engine/pitch. The \lfo tier is separate — see ~randomiseLFO / ~randomiseInstanceLFO,
-// which write LFO sources + *Mod depths, not synth scalars.
+// Scalar randomisation ranges (static profiles). \colour = tonal minus engine/pitch.
 ~randomiseRanges = (
 	tonal: (
 		engine:    [0, 23, \int],
@@ -83,11 +80,6 @@
 		lpgColour: [0.0, 1.0],
 		fmMod:     [-0.3, 0.3],
 	),
-	mod: (
-		timbMod:   [0.0, 0.5],
-		morphMod:  [0.0, 0.5],
-		legato:    [0.5, 9.0],
-	),
 	fx: (
 		revDrywet:  [0.0, 0.4],
 		revTime:    [0.1, 0.6],
@@ -99,72 +91,136 @@
 	),
 );
 
-// LFO-tier randomisation config (richer than a flat [min,max]).
-// base flips freq's meaning: ×base multiplier when true, absolute Hz when false.
+// Params \mod (animate sound) can touch — LFO-able ∪ sequenceable sound params, excl
+// fx / timing / engine. LFO-able ones can go smooth OR stepped; the rest are stepped only.
+~modSoundParams = ~plaitsLFOParams ++ [\lpgColour, \fmMod];
+// fx sends \modFx can animate (stepped only — no LFO sources for fx)
+~modFXParams = [\cloudsSend, \delaySend, \distAmount, \distDrive, \reverbSend, \revDamp, \revDrywet, \revHp, \revTime];
+
+// \lfo profile — the LFO's *character* only (freq/shape/base). Depth lives in \mod.
 ~randomiseLFO = (
-	enableProb: 0.6,                 // chance a param gets an active LFO (else depth 0)
-	baseProb:   0.5,                 // chance it runs in ×base mode vs absolute Hz
-	freqBase:   [0.25, 4.0],         // multiplier range when base = true
-	freqHz:     [0.05, 1.5],         // Hz range when base = false
-	shapes:     [\sine, \sine, \sine, \tri, \tri, \saw, \square, \noise],  // weighted
-	depth:      [0.1, 0.5],          // *Mod depth when enabled
+	baseProb: 0.5,                 // ×base mode vs absolute Hz
+	freqBase: [0.25, 4.0],         // multiplier range when base = true
+	freqHz:   [0.05, 1.5],         // Hz range when base = false
+	shapes:   [\sine, \sine, \sine, \tri, \tri, \saw, \square, \noise],  // weighted
+);
+// \mod / \modFx — animation amount + sparsity (coin-flip which params actually move)
+~randomiseMod = (
+	animateProb: 0.5,              // chance a given param gets animated (else left static)
+	depth:       [0.1, 0.5],       // *Mod depth for the smooth (LFO) method
+);
+// \seq — timing
+~randomiseSeq = (
+	legato: [0.5, 9.0],
 );
 
-// Randomise every LFO-able param on a plaits instance (0-based idx). Writes the LFO
-// sources + *Mod depths via ~lfoTweak — a different write-path from scalar randomise.
+// \lfo — dice each LFO param's source character (freq/shape/base). No depth (that's \mod).
 ~randomiseInstanceLFO = { |idx|
 	~plaitsLFOParams.do { |param|
-		var enable, base, freq, shape, depth;
-		enable = ~randomiseLFO.enableProb.coin;
-		if (enable) {
-			base = ~randomiseLFO.baseProb.coin;
-			freq = if (base) {
-				rrand(~randomiseLFO.freqBase[0], ~randomiseLFO.freqBase[1])
-			} {
-				rrand(~randomiseLFO.freqHz[0], ~randomiseLFO.freqHz[1])
-			};
-			shape = ~randomiseLFO.shapes.choose;
-			depth = rrand(~randomiseLFO.depth[0], ~randomiseLFO.depth[1]);
-			~lfoTweak.(\plaits, idx, param, (base: base, freq: freq, shape: shape, mod: depth));
+		var base, freq, shape;
+		base = ~randomiseLFO.baseProb.coin;
+		freq = if (base) {
+			rrand(~randomiseLFO.freqBase[0], ~randomiseLFO.freqBase[1])
 		} {
-			~lfoTweak.(\plaits, idx, param, (mod: 0.0));
+			rrand(~randomiseLFO.freqHz[0], ~randomiseLFO.freqHz[1])
+		};
+		shape = ~randomiseLFO.shapes.choose;
+		~lfoTweak.(\plaits, idx, param, (base: base, freq: freq, shape: shape));
+	};
+};
+
+// \mod — animate the sound. Per param: coin-flip whether it animates at all; if so,
+// smooth (LFO depth) or stepped (dice a sequence). Non-animated params are made static
+// (depth 0 + sequence cleared) so each roll is a fresh, self-contained animation setup.
+~randomiseInstanceMod = { |idx|
+	var inst, summary;
+	inst = ~dreads.synths[idx];
+	summary = List.new;
+	~modSoundParams.do { |param|
+		var animate, lfoAble, method, depth;
+		animate = ~randomiseMod.animateProb.coin;
+		lfoAble = ~plaitsLFOParams.includes(param);
+		method = if (animate) { if (lfoAble) { [\lfo, \seq].choose } { \seq } } { \none };
+		switch(method,
+			\lfo, {
+				depth = rrand(~randomiseMod.depth[0], ~randomiseMod.depth[1]);
+				~lfoTweak.(\plaits, idx, param, (mod: depth));
+				if (inst.sequences[param].notNil) { inst.sequences[param] = \hold };
+				summary.add(param.asString ++ " lfo=" ++ depth.round(0.01));
+			},
+			\seq, {
+				~diceSeq.(idx + 1, param);   // ~diceSeq prints its own value line
+				if (lfoAble) { ~lfoTweak.(\plaits, idx, param, (mod: 0.0)) };
+				summary.add(param.asString ++ " seq");
+			},
+			{ // \none — de-animate
+				if (lfoAble) { ~lfoTweak.(\plaits, idx, param, (mod: 0.0)) };
+				if (inst.sequences[param].notNil) { inst.sequences[param] = \hold };
+				summary.add(param.asString ++ " -");
+			}
+		);
+	};
+	("Mod plaits " ++ (idx + 1) ++ ": " ++ summary.join(", ")).postln;
+};
+
+// \modFx — animate the fx sends (stepped only; fx has no LFO sources).
+~randomiseInstanceModFX = { |idx|
+	var inst;
+	inst = ~dreads.synths[idx];
+	~modFXParams.do { |param|
+		if (~randomiseMod.animateProb.coin) {
+			~diceSeq.(idx + 1, param);
+		} {
+			if (inst.sequences[param].notNil) { inst.sequences[param] = \hold };
 		};
 	};
 };
 
-// Randomise a plaits instance (1-based).
-// mode profiles: \tonal \colour \mod \fx \lfo (isolatable) · \full (everything incl LFO)
-// · \default (tonal + mod). \colour = tonal minus engine/pitch.
+// \seq — timing: dice the rhythm (duration) + randomise legato (note-length overlap).
+~randomiseInstanceSeq = { |idx|
+	~diceSeq.(idx + 1, \duration);
+	~dreads.synths[idx][\legato] = rrand(~randomiseSeq.legato[0], ~randomiseSeq.legato[1]);
+};
+
+// Randomise a plaits instance (1-based). Profiles:
+//   static:  \tonal \colour (sound) · \fx (sends)
+//   animate: \mod (sound) · \modFx (sends) · \lfo (LFO character)
+//   timing:  \seq (duration + legato)
+//   \full = tonal+fx+lfo+mod (new animated sound; no rhythm change) · \default = tonal+mod
 ~randomise = { |inst=1, mode=\default|
 	var idx, tiers;
 	idx = inst - 1;
 	tiers = switch(mode,
 		\tonal,  { [\tonal] },
 		\colour, { [\colour] },
-		\mod,    { [\mod] },
 		\fx,     { [\fx] },
 		\lfo,    { [\lfo] },
-		\full,   { [\tonal, \mod, \fx, \lfo] },
+		\mod,    { [\mod] },
+		\modFx,  { [\modFx] },
+		\seq,    { [\seq] },
+		\full,   { [\tonal, \fx, \lfo, \mod] },
 		         { [\tonal, \mod] }
 	);
 	tiers.do { |tier|
-		if (tier == \lfo) {
-			~randomiseInstanceLFO.(idx);
-		} {
-			~randomiseRanges[tier].keysValuesDo { |param, range|
-				var val;
-				val = rrand(range[0], range[1]);
-				if (range[2] == \int) { val = val.round.asInteger };
-				~dreads.synths[idx][param] = val;
-				// Reset any active sequence on this param so the scalar takes effect.
-				// Skip \engine — its sequence holds the "e" placeholder ~setEngine needs;
-				// \hold breaks it (Index not an Integer), and the engine scalar flows
-				// through "e" anyway, so it takes effect without a reset.
-				if ((param != \engine) and: { ~dreads.synths[idx].sequences[param].notNil }) {
-					~dreads.synths[idx].sequences[param] = \hold;
+		switch(tier,
+			\lfo,   { ~randomiseInstanceLFO.(idx) },
+			\mod,   { ~randomiseInstanceMod.(idx) },
+			\modFx, { ~randomiseInstanceModFX.(idx) },
+			\seq,   { ~randomiseInstanceSeq.(idx) },
+			{ // scalar tiers: \tonal \colour \fx
+				~randomiseRanges[tier].keysValuesDo { |param, range|
+					var val;
+					val = rrand(range[0], range[1]);
+					if (range[2] == \int) { val = val.round.asInteger };
+					~dreads.synths[idx][param] = val;
+					// Reset active sequence so the scalar is heard — except \engine
+					// (its sequence holds the "e" placeholder ~setEngine needs).
+					if ((param != \engine) and: { ~dreads.synths[idx].sequences[param].notNil }) {
+						~dreads.synths[idx].sequences[param] = \hold;
+					};
 				};
-			};
-		};
+			}
+		);
 	};
 	("Randomised plaits " ++ inst ++ " (" ++ mode ++ ")").postln;
 	~pushStateToUI.();
