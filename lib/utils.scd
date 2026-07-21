@@ -164,6 +164,12 @@
 ~randomiseSeq = (
 	legato: [0.5, 9.0],
 );
+// startPos ceiling — guarantee at least minRemain seconds of audio survive the
+// start offset, so percussive one-shots effectively start at the top while long
+// sounds keep the full range. See the duration-aware branch in ~randomise.
+~randomiseSample = (
+	minRemain: 0.4,                // seconds of audio to leave after startPos
+);
 
 // \lfo — dice each LFO param's source character (freq/shape/base). No depth (that's \mod).
 ~randomiseInstanceLFO = { |idx, type=\plaits|
@@ -275,8 +281,27 @@
 				// samples: \tonal also picks a fresh sample from the whole library
 				if ((type == \samples) and: { tier == \tonal }) { ~randomiseSampleSelection.(idx) };
 				cfg.ranges[tier].keysValuesDo { |param, range|
-					var val;
-					val = rrand(range[0], range[1]);
+					var val, bank, variant, metaList, dur, maxStart;
+					// Duration-aware startPos ceiling for samples: leave at least
+					// ~randomiseSample.minRemain seconds of audio after the offset, so
+					// percussive one-shots start at the top and long sounds roam freely.
+					if ((type == \samples) and: { param == \startPos }) {
+						bank = coll[idx].bankName;
+						variant = coll[idx].variant;
+						metaList = ~sampleLibrary.metadata[bank];
+						dur = nil;
+						if (metaList.notNil and: { variant.notNil } and: { variant < metaList.size }) {
+							dur = metaList[variant].duration;
+						};
+						maxStart = if (dur.notNil) {
+							((dur - ~randomiseSample.minRemain) / dur).clip(0.0, range[1])
+						} {
+							range[1]
+						};
+						val = rrand(range[0], maxStart);
+					} {
+						val = rrand(range[0], range[1]);
+					};
 					if (range[2] == \int) { val = val.round.asInteger };
 					coll[idx][param] = val;
 					// Reset active sequence so the scalar is heard — except \engine
