@@ -189,7 +189,7 @@
         "decimals": 2,
         "target": "",
         "onCreate": "",
-        "onValue": ""
+        "onValue": "setVar('#{@{parent.variables.module}||'plaits'}_@{parent.variables.name}Label_@{parent.variables.instance}', 'lfoStyle', value > 0 ? 'border-bottom: 1px dashed #6db5fd;' : '')"
       },
       {
         "type": "text",

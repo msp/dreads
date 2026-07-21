@@ -109,7 +109,7 @@
       },
       {
         "type": "text",
-        "id": "volumeLabel_seq_@{parent.variables.instance}",
+        "id": "#{@{parent.variables.module}||'plaits'}_volumeLabel_seq_@{parent.variables.instance}",
         "visible": false,
         "value": "hold",
         "address": "/#{@{parent.variables.module}||'plaits'}/@{parent.variables.instance}/volume/seq",
@@ -143,14 +143,14 @@
         "decimals": 2,
         "target": "",
         "onCreate": "",
-        "onValue": "window.updateSeqButtonStyle('volumeLabel_@{parent.variables.instance}', value)"
+        "onValue": "window.updateSeqButtonStyle('#{@{parent.variables.module}||'plaits'}_volumeLabel_@{parent.variables.instance}', value)"
       },
       {
         "type": "button",
         "top": 0,
         "left": 0,
         "lock": false,
-        "id": "volumeLabel_@{parent.variables.instance}",
+        "id": "#{@{parent.variables.module}||'plaits'}_volumeLabel_@{parent.variables.instance}",
         "visible": true,
         "interaction": true,
         "comments": "",
@@ -168,17 +168,17 @@
         "borderRadius": "auto",
         "padding": "auto",
         "html": "",
-        "css": "VAR{seqStyle}",
+        "css": "VAR{seqStyle} VAR{lfoStyle}",
         "value": "hold",
         "default": "",
-        "linkId": "volumeLabel_seq_@{parent.variables.instance}",
+        "linkId": "#{@{parent.variables.module}||'plaits'}_volumeLabel_seq_@{parent.variables.instance}",
         "address": "auto",
         "preArgs": "",
         "decimals": 2,
         "target": "",
         "bypass": true,
         "onCreate": "",
-        "onValue": "window.openSeqModal('volume', '@{parent.variables.instance}', 'volumeLabel_seq_@{parent.variables.instance}')",
+        "onValue": "window.openSeqModal('volume', '@{parent.variables.instance}', '#{@{parent.variables.module}||'plaits'}_volumeLabel_seq_@{parent.variables.instance}')",
         "vertical": false,
         "wrap": false,
         "colorTextOn": "auto",
@@ -391,7 +391,7 @@
         "decimals": 2,
         "target": "",
         "onCreate": "",
-        "onValue": ""
+        "onValue": "setVar('#{@{parent.variables.module}||'plaits'}_volumeLabel_@{parent.variables.instance}', 'lfoStyle', value > 0 ? 'border-bottom: 1px dashed #6db5fd;' : '')"
       },
       {
         "type": "text",

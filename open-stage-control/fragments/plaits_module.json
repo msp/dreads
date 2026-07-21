@@ -331,7 +331,8 @@
             "instance": "@{parent.variables.instance}",
             "name": "timbMod",
             "displayName": "t-mod",
-            "showInput": false
+            "showInput": false,
+            "modTarget": "timbre"
           }
         },
         "address": "auto",
@@ -384,7 +385,8 @@
             "instance": "@{parent.variables.instance}",
             "name": "morphMod",
             "displayName": "m-mod",
-            "showInput": false
+            "showInput": false,
+            "modTarget": "morph"
           }
         },
         "address": "auto",
