@@ -83,6 +83,7 @@ n.sendMsg("/dreads/lfoBase", 0.3);
 ~randomiseMod.depth = [0.2, 0.8];         // deeper LFO wobble on the smooth ones
 ~randomiseLFO.shapes = [\sine, \tri];     // bias which LFO shapes \lfo picks
 ~randomiseSample.minRemain = 0.4;         // sample startPos: seconds of audio to leave after the offset
+~randomiseSample.panFactor = 0.5;         // sample panDur: sweep ceiling = duration * this (lower = faster pan on percs)
 
 // Random sequence generation:
 ~randomSeq.(\myRhythm3, \user, 8)   // 8-step rhythm with rests

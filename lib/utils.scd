@@ -164,11 +164,17 @@
 ~randomiseSeq = (
 	legato: [0.5, 9.0],
 );
-// startPos ceiling — guarantee at least minRemain seconds of audio survive the
-// start offset, so percussive one-shots effectively start at the top while long
-// sounds keep the full range. See the duration-aware branch in ~randomise.
+// Duration-aware ceilings for sample scalar randomisation (see the branch in
+// ~randomise). Both use the picked variant's stored buffer duration:
+//   startPos — leave at least minRemain seconds of audio after the offset, so
+//     percussive one-shots start at the top and long sounds keep the full range.
+//   panDur — cap the L→R sweep time at duration * panFactor, so the pan actually
+//     traverses within a short sound instead of appearing hard-panned.
 ~randomiseSample = (
 	minRemain: 0.4,                // seconds of audio to leave after startPos
+	panFactor: 0.5,                // panDur ceiling = duration * this (capped at the range)
+	                               // <1 keeps the sweep to a fraction of the sound so it
+	                               // clears hard-left and crosses centre while still loud
 );
 
 // \lfo — dice each LFO param's source character (freq/shape/base). No depth (that's \mod).
@@ -281,27 +287,33 @@
 				// samples: \tonal also picks a fresh sample from the whole library
 				if ((type == \samples) and: { tier == \tonal }) { ~randomiseSampleSelection.(idx) };
 				cfg.ranges[tier].keysValuesDo { |param, range|
-					var val, bank, variant, metaList, dur, maxStart;
-					// Duration-aware startPos ceiling for samples: leave at least
-					// ~randomiseSample.minRemain seconds of audio after the offset, so
-					// percussive one-shots start at the top and long sounds roam freely.
-					if ((type == \samples) and: { param == \startPos }) {
+					var val, bank, variant, metaList, dur, lo, hi;
+					// Duration-aware ceilings for samples: startPos leaves at least
+					// minRemain seconds of audio, panDur caps the sweep to the sound's
+					// length. Both read the picked variant's stored buffer duration.
+					dur = nil;
+					lo = range[0];
+					hi = range[1];
+					if ((type == \samples) and: { [\startPos, \panDur].includes(param) }) {
 						bank = coll[idx].bankName;
 						variant = coll[idx].variant;
 						metaList = ~sampleLibrary.metadata[bank];
-						dur = nil;
 						if (metaList.notNil and: { variant.notNil } and: { variant < metaList.size }) {
 							dur = metaList[variant].duration;
 						};
-						maxStart = if (dur.notNil) {
-							((dur - ~randomiseSample.minRemain) / dur).clip(0.0, range[1])
-						} {
-							range[1]
-						};
-						val = rrand(range[0], maxStart);
-					} {
-						val = rrand(range[0], range[1]);
 					};
+					if (dur.notNil) {
+						switch(param,
+							\startPos, {
+								hi = ((dur - ~randomiseSample.minRemain) / dur).clip(0.0, range[1]);
+							},
+							\panDur, {
+								hi = (dur * ~randomiseSample.panFactor).min(range[1]);
+								lo = range[0].min(hi);
+							}
+						);
+					};
+					val = rrand(lo, hi);
 					if (range[2] == \int) { val = val.round.asInteger };
 					coll[idx][param] = val;
 					// Reset active sequence so the scalar is heard — except \engine
