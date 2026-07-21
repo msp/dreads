@@ -2760,7 +2760,7 @@
             "borderRadius": "auto",
             "padding": "auto",
             "html": "",
-            "css": ".navigation {\n  //height: 28px;\n  border: 0px solid red;\n}\n\n.navigation.tabs-left div { \n  padding: 0 4rem;\n  border: 0px solid green;\n  writing-mode: vertical-rl; \n  text-orientation: upright;\n  text-transform: uppercase;\n  /*font-weight: 300;*/\n}\n\n.tab-container {\n  border: 0px solid red;\n}",
+            "css": ".navigation {\n  //height: 28px;\n  border: 0px solid red;\n}\n\n.navigation.tabs-left div { \n  padding: 0 4rem;\n  font-size: 10px;\n  border: 0px solid green;\n  writing-mode: vertical-rl; \n  text-orientation: upright;\n  text-transform: uppercase;\n  /*font-weight: 300;*/\n}\n\n.tab-container {\n  border: 0px solid green;\n}",
             "colorBg": "auto",
             "layout": "default",
             "justify": "start",
