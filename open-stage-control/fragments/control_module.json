@@ -579,21 +579,21 @@
       {
         "type": "fragment",
         "top": 269.99999999999994,
-        "left": 77.69230769230768,
+        "left": 57.999999999999986,
         "lock": false,
         "id": "randomiseDiceAll",
         "visible": true,
         "interaction": true,
         "comments": "",
-        "width": 60,
-        "height": 156,
+        "width": 80,
+        "height": 240,
         "expand": false,
         "css": "background: transparent !important; box-shadow: none !important;",
         "file": "fragments/randomise_dice.json",
         "fallback": "",
         "props": {
           "variables": {
-            "module": "dreads",
+            "module": "@{parent.variables.randTarget}",
             "instance": "all",
             "scope": "all"
           }

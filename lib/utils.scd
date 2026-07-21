@@ -97,6 +97,57 @@
 // fx sends \modFx can animate (stepped only — no LFO sources for fx)
 ~modFXParams = [\cloudsSend, \delaySend, \distAmount, \distDrive, \reverbSend, \revDamp, \revDrywet, \revHp, \revTime];
 
+// --- Sample randomisation config (mirrors plaits with sample params) ---
+// Curated musical bands. \tonal also picks a fresh sample from the whole library
+// (see ~randomiseSampleSelection); \colour keeps the sample + rate, reshapes the rest.
+~randomiseSampleRanges = (
+	tonal: (
+		rate:     [0.25, 4.0],
+		atk:      [0.001, 0.3],
+		decay:    [0.1, 0.9],
+		startPos: [0.0, 0.6],
+		panDur:   [0.1, 1.0],
+	),
+	colour: (
+		atk:      [0.001, 0.3],
+		decay:    [0.1, 0.9],
+		startPos: [0.0, 0.6],
+		panDur:   [0.1, 1.0],
+	),
+	fx: ~randomiseRanges.fx,   // samples share the same fx sends
+);
+// \mod sound params for samples: rate/volume LFO-able, atk/decay/startPos/panDur seq-able
+~modSampleParams = [\rate, \volume, \atk, \decay, \startPos, \panDur];
+
+// Per-type dispatch: instance collection, ranges, LFO/mod param sets, seq defaults (for
+// seq-able checks), the ~lfoTweak type symbol, and the OSC/log name.
+~randomiseTypes = (
+	plaits:  (coll: \synths,  ranges: ~randomiseRanges,       lfoParams: ~plaitsLFOParams, modParams: ~modSoundParams,  seqs: ~defaultSequences,       lfoType: \plaits, name: "plaits"),
+	samples: (coll: \samples, ranges: ~randomiseSampleRanges, lfoParams: ~sampleLFOParams, modParams: ~modSampleParams, seqs: ~defaultSampleSequences, lfoType: \sample, name: "samples"),
+);
+
+// Pick a random sample (any bank, any variant) from the whole library for sample
+// instance idx (0-based) + update the UI path. Reuses ~cycleSampleVariant's UI pattern.
+~randomiseSampleSelection = { |idx|
+	var inst, banks, bank, buffers, variant, paths;
+	inst = ~dreads.samples[idx];
+	banks = ~sampleLibrary.banks.keys.asArray;
+	if (banks.isEmpty) {
+		"WARNING: sample library empty — skipping sample selection".postln;
+	} {
+		bank = banks.choose;
+		buffers = ~sampleLibrary.banks[bank];
+		variant = rrand(0, buffers.size - 1);
+		inst.bankName = bank;
+		inst.variant = variant;
+		paths = ~sampleLibrary.paths[bank];
+		if (paths.notNil and: { paths[variant].notNil }) {
+			~ui.().sendMsg("/samples/" ++ (idx + 1) ++ "/samplePath", paths[variant]);
+		};
+		("Sample select samples " ++ (idx + 1) ++ ": " ++ bank ++ " variant " ++ variant).postln;
+	};
+};
+
 // \lfo profile — the LFO's *character* only (freq/shape/base). Depth lives in \mod.
 ~randomiseLFO = (
 	baseProb: 0.5,                 // ×base mode vs absolute Hz
@@ -115,8 +166,10 @@
 );
 
 // \lfo — dice each LFO param's source character (freq/shape/base). No depth (that's \mod).
-~randomiseInstanceLFO = { |idx|
-	~plaitsLFOParams.do { |param|
+~randomiseInstanceLFO = { |idx, type=\plaits|
+	var cfg;
+	cfg = ~randomiseTypes[type];
+	cfg.lfoParams.do { |param|
 		var base, freq, shape;
 		base = ~randomiseLFO.baseProb.coin;
 		freq = if (base) {
@@ -125,51 +178,58 @@
 			rrand(~randomiseLFO.freqHz[0], ~randomiseLFO.freqHz[1])
 		};
 		shape = ~randomiseLFO.shapes.choose;
-		~lfoTweak.(\plaits, idx, param, (base: base, freq: freq, shape: shape));
+		~lfoTweak.(cfg.lfoType, idx, param, (base: base, freq: freq, shape: shape));
 	};
 };
 
 // \mod — animate the sound. Per param: coin-flip whether it animates at all; if so,
 // smooth (LFO depth) or stepped (dice a sequence). Non-animated params are made static
 // (depth 0 + sequence cleared) so each roll is a fresh, self-contained animation setup.
-~randomiseInstanceMod = { |idx|
-	var inst, summary;
-	inst = ~dreads.synths[idx];
+~randomiseInstanceMod = { |idx, type=\plaits|
+	var cfg, inst, summary;
+	cfg = ~randomiseTypes[type];
+	inst = ~dreads[cfg.coll][idx];
 	summary = List.new;
-	~modSoundParams.do { |param|
-		var animate, lfoAble, method, depth;
+	cfg.modParams.do { |param|
+		var animate, lfoAble, seqAble, method, depth;
 		animate = ~randomiseMod.animateProb.coin;
-		lfoAble = ~plaitsLFOParams.includes(param);
-		method = if (animate) { if (lfoAble) { [\lfo, \seq].choose } { \seq } } { \none };
+		lfoAble = cfg.lfoParams.includes(param);
+		seqAble = cfg.seqs[param].notNil;
+		method = if (animate) {
+			if (lfoAble and: { seqAble }) { [\lfo, \seq].choose } {
+				if (lfoAble) { \lfo } { if (seqAble) { \seq } { \none } }
+			}
+		} { \none };
 		switch(method,
 			\lfo, {
 				depth = rrand(~randomiseMod.depth[0], ~randomiseMod.depth[1]);
-				~lfoTweak.(\plaits, idx, param, (mod: depth));
+				~lfoTweak.(cfg.lfoType, idx, param, (mod: depth));
 				if (inst.sequences[param].notNil) { inst.sequences[param] = \hold };
 				summary.add(param.asString ++ " lfo=" ++ depth.round(0.01));
 			},
 			\seq, {
-				~diceSeq.(idx + 1, param);   // ~diceSeq prints its own value line
-				if (lfoAble) { ~lfoTweak.(\plaits, idx, param, (mod: 0.0)) };
+				~diceSeq.(idx + 1, param, nil, type);   // ~diceSeq prints its own value line
+				if (lfoAble) { ~lfoTweak.(cfg.lfoType, idx, param, (mod: 0.0)) };
 				summary.add(param.asString ++ " seq");
 			},
 			{ // \none — de-animate
-				if (lfoAble) { ~lfoTweak.(\plaits, idx, param, (mod: 0.0)) };
+				if (lfoAble) { ~lfoTweak.(cfg.lfoType, idx, param, (mod: 0.0)) };
 				if (inst.sequences[param].notNil) { inst.sequences[param] = \hold };
 				summary.add(param.asString ++ " -");
 			}
 		);
 	};
-	("Mod plaits " ++ (idx + 1) ++ ": " ++ summary.join(", ")).postln;
+	("Mod " ++ cfg.name ++ " " ++ (idx + 1) ++ ": " ++ summary.join(", ")).postln;
 };
 
 // \modFx — animate the fx sends (stepped only; fx has no LFO sources).
-~randomiseInstanceModFX = { |idx|
-	var inst;
-	inst = ~dreads.synths[idx];
+~randomiseInstanceModFX = { |idx, type=\plaits|
+	var cfg, inst;
+	cfg = ~randomiseTypes[type];
+	inst = ~dreads[cfg.coll][idx];
 	~modFXParams.do { |param|
 		if (~randomiseMod.animateProb.coin) {
-			~diceSeq.(idx + 1, param);
+			~diceSeq.(idx + 1, param, nil, type);
 		} {
 			if (inst.sequences[param].notNil) { inst.sequences[param] = \hold };
 		};
@@ -177,9 +237,11 @@
 };
 
 // \seq — timing: dice the rhythm (duration) + randomise legato (note-length overlap).
-~randomiseInstanceSeq = { |idx|
-	~diceSeq.(idx + 1, \duration);
-	~dreads.synths[idx][\legato] = rrand(~randomiseSeq.legato[0], ~randomiseSeq.legato[1]);
+~randomiseInstanceSeq = { |idx, type=\plaits|
+	var cfg;
+	cfg = ~randomiseTypes[type];
+	~diceSeq.(idx + 1, \duration, nil, type);
+	~dreads[cfg.coll][idx][\legato] = rrand(~randomiseSeq.legato[0], ~randomiseSeq.legato[1]);
 };
 
 // Randomise a plaits instance (1-based). Profiles:
@@ -187,9 +249,11 @@
 //   animate: \mod (sound) · \modFx (sends) · \lfo (LFO character)
 //   timing:  \seq (duration + legato)
 //   \full = tonal+fx+lfo+mod (new animated sound; no rhythm change) · \default = tonal+mod
-~randomise = { |inst=1, mode=\default|
-	var idx, tiers;
+~randomise = { |inst=1, mode=\default, type=\plaits|
+	var idx, tiers, cfg, coll;
 	idx = inst - 1;
+	cfg = ~randomiseTypes[type];
+	coll = ~dreads[cfg.coll];
 	tiers = switch(mode,
 		\tonal,  { [\tonal] },
 		\colour, { [\colour] },
@@ -203,34 +267,36 @@
 	);
 	tiers.do { |tier|
 		switch(tier,
-			\lfo,   { ~randomiseInstanceLFO.(idx) },
-			\mod,   { ~randomiseInstanceMod.(idx) },
-			\modFx, { ~randomiseInstanceModFX.(idx) },
-			\seq,   { ~randomiseInstanceSeq.(idx) },
+			\lfo,   { ~randomiseInstanceLFO.(idx, type) },
+			\mod,   { ~randomiseInstanceMod.(idx, type) },
+			\modFx, { ~randomiseInstanceModFX.(idx, type) },
+			\seq,   { ~randomiseInstanceSeq.(idx, type) },
 			{ // scalar tiers: \tonal \colour \fx
-				~randomiseRanges[tier].keysValuesDo { |param, range|
+				// samples: \tonal also picks a fresh sample from the whole library
+				if ((type == \samples) and: { tier == \tonal }) { ~randomiseSampleSelection.(idx) };
+				cfg.ranges[tier].keysValuesDo { |param, range|
 					var val;
 					val = rrand(range[0], range[1]);
 					if (range[2] == \int) { val = val.round.asInteger };
-					~dreads.synths[idx][param] = val;
+					coll[idx][param] = val;
 					// Reset active sequence so the scalar is heard — except \engine
 					// (its sequence holds the "e" placeholder ~setEngine needs).
-					if ((param != \engine) and: { ~dreads.synths[idx].sequences[param].notNil }) {
-						~dreads.synths[idx].sequences[param] = \hold;
+					if ((param != \engine) and: { coll[idx].sequences[param].notNil }) {
+						coll[idx].sequences[param] = \hold;
 					};
 				};
 			}
 		);
 	};
-	("Randomised plaits " ++ inst ++ " (" ++ mode ++ ")").postln;
+	("Randomised " ++ cfg.name ++ " " ++ inst ++ " (" ++ mode ++ ")").postln;
 	~pushStateToUI.();
 };
 
-// Randomise all unmuted plaits instances
-~randomiseAll = { |mode=\default|
-	~dreads.synths.do { |inst, idx|
+// Randomise all unmuted instances of a type (\plaits or \samples)
+~randomiseAll = { |mode=\default, type=\plaits|
+	~dreads[~randomiseTypes[type].coll].do { |inst, idx|
 		if (inst.mute != 1) {
-			~randomise.(idx + 1, mode);
+			~randomise.(idx + 1, mode, type);
 		};
 	};
 };
@@ -247,9 +313,11 @@
 
 // Generate a random concrete sequence and assign directly to an instance
 // inst: 1-based plaits number, param: symbol, len: steps (optional)
-~diceSeq = { |inst=1, param=\duration, len|
-	var idx, type, values, source, valStrings;
+~diceSeq = { |inst=1, param=\duration, len, dest=\plaits|
+	var idx, type, values, source, valStrings, coll, destName;
 	idx = inst - 1;
+	coll = if (dest == \plaits) { ~dreads.synths } { ~dreads.samples };
+	destName = if (dest == \plaits) { "plaits" } { "samples" };
 	len = len ? rrand(4, 16);
 	type = ~diceParamTypes[param] ? \shape;
 
@@ -286,15 +354,15 @@
 	source = "Pseq([" ++ valStrings.join(", ") ++ "], inf).asStream";
 
 	// Store as Event with stream + source on the instance
-	~dreads.synths[idx].sequences[param] = (
+	coll[idx].sequences[param] = (
 		stream: Pseq(values, inf).asStream,
 		source: source
 	);
 
 	// Update seqModal UI to show custom indicator
-	~ui.().sendMsg("/plaits/" ++ inst ++ "/" ++ param ++ "/seq", "custom");
+	~ui.().sendMsg("/" ++ destName ++ "/" ++ inst ++ "/" ++ param ++ "/seq", "custom");
 
-	("Dice " ++ param ++ " on plaits " ++ inst ++ ": " ++ values).postln;
+	("Dice " ++ param ++ " on " ++ destName ++ " " ++ inst ++ ": " ++ values).postln;
 };
 
 // Duration calculation with safety bounds

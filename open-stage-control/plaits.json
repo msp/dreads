@@ -254,7 +254,11 @@
                 "css": "",
                 "file": "fragments/control_module.json",
                 "fallback": "",
-                "props": {},
+                "props": {
+                  "variables": {
+                    "randTarget": "plaits"
+                  }
+                },
                 "address": "auto",
                 "variables": "@{parent.variables}"
               }
@@ -315,7 +319,11 @@
                 "css": "",
                 "file": "fragments/control_module.json",
                 "fallback": "",
-                "props": {},
+                "props": {
+                  "variables": {
+                    "randTarget": "samples"
+                  }
+                },
                 "address": "auto",
                 "variables": "@{parent.variables}"
               },

@@ -52,6 +52,18 @@ OSCdef.new(
 	"/dreads/randomiseAll"
 );
 
+// Randomise all unmuted sample instances with a profile
+OSCdef.new(
+	\randomiseAllSamples,
+	{
+		arg msg, time, addr, port;
+		var mode;
+		mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+		~randomiseAll.(mode, \samples);
+	},
+	"/dreads/randomiseAllSamples"
+);
+
 // Create OSC listeners for all instances and parameters
 ~setupPlaitsOSC = {
 	~dreads.synths.do { |instance, instanceIndex|
@@ -247,6 +259,19 @@ OSCdef.new(
 				["sample nudge back", instanceNum, "nudge:", ~dreads.samples[instanceIndex].nudgeOffset, "phase:", ~dreads.samples[instanceIndex].phaseOffset].postln;
 			},
 			"/samples/" ++ instanceNum ++ "/nudgeBack"
+		);
+
+		// Randomise: apply a randomisation profile to this sample instance
+		// OSC: /samples/{n}/randomise  profileName  (tonal/colour/mod/fx/modFx/lfo/seq/full)
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "randomise").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var mode;
+				mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+				~randomise.(instanceIndex + 1, mode, \samples);
+			},
+			"/samples/" ++ instanceNum ++ "/randomise"
 		);
 
 		// File browser handler for this instance

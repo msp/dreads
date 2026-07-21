@@ -683,6 +683,30 @@
           }
         ],
         "tabs": []
+      },
+      {
+        "type": "fragment",
+        "top": 0,
+        "left": 232,
+        "lock": false,
+        "id": "randomiseDice",
+        "visible": true,
+        "interaction": true,
+        "comments": "",
+        "width": 80,
+        "height": 230,
+        "expand": false,
+        "css": "background: transparent !important; box-shadow: none !important;",
+        "file": "fragments/randomise_dice.json",
+        "fallback": "",
+        "props": {
+          "variables": {
+            "module": "samples",
+            "instance": "@{parent.variables.instance}"
+          }
+        },
+        "address": "auto",
+        "variables": "@{parent.variables}"
       }
     ],
     "tabs": [],
