@@ -679,7 +679,7 @@
         "width": 80,
         "height": 230,
         "expand": false,
-        "css": "background: transparent !important; box-shadow: none !important;",
+        "css": "background: transparent !important; box-shadow: none !important; pointer-events: none;",
         "file": "fragments/randomise_dice.json",
         "fallback": "",
         "props": {
