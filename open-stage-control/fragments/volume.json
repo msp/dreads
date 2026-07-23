@@ -178,7 +178,7 @@
         "target": "",
         "bypass": true,
         "onCreate": "",
-        "onValue": "window.openSeqModal('volume', '@{parent.variables.instance}', '#{@{parent.variables.module}||'plaits'}_volumeLabel_seq_@{parent.variables.instance}')",
+        "onValue": "window.openSeqModal('volume', '@{parent.variables.instance}', '#{@{parent.variables.module}||'plaits'}_volumeLabel_seq_@{parent.variables.instance}', '#{@{parent.variables.module}||'plaits'}')",
         "vertical": false,
         "wrap": false,
         "colorTextOn": "auto",
