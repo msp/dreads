@@ -321,7 +321,8 @@
                 "fallback": "",
                 "props": {
                   "variables": {
-                    "randTarget": "samples"
+                    "randTarget": "samples",
+                    "showRefresh": 1
                   }
                 },
                 "address": "auto",

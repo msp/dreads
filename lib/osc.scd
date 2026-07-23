@@ -726,7 +726,10 @@ OSCdef(\refreshSampleLibrary, {
 
 	"Refreshing sample library...".postln;
 
-	// Reload library
+	// Free old buffers first so repeated refreshes don't leak buffer numbers.
+	// Buffers are resolved fresh per note (~getSampleBuffer), so the reload is
+	// safe mid-play — worst case is one glitched note during the async read.
+	~freeSampleLibrary.();
 	~loadSampleLibrary.();
 
 	"Sample library refreshed".postln;
