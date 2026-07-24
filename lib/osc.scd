@@ -16,21 +16,62 @@ OSCdef.new(
 		var value = msg[1];
 		msg.postln;
 		if (value == 1.0,
-			{ x.play(~tempoClock) },
-			{ x.stop }
+			{
+				// Clear stream cache so patterns like \offbeat start at position 0
+				~sequenceStreamCache = Dictionary.new;
+				// Start drone synths for any instances with droneMode enabled
+				~dreads.synths.do { |instance, idx|
+					if (instance.droneMode == 1) { ~startDrone.(idx) };
+				};
+				x.play(~tempoClock);
+				~lfo.reporter.run(true);
+			},
+			{
+				x.stop;
+				~lfo.reporter.run(false);
+				// Stop all drone synths
+				~dreads.synths.do { |instance, idx|
+					~stopDrone.(idx);
+				};
+			}
 		);
 	},
-	"/plaits/start"
+	"/dreads/start"
+);
+
+// Randomise all unmuted plaits instances with a profile
+// OSC: /dreads/randomiseAll  profileName  (tonal/colour/mod/fx/lfo/full)
+OSCdef.new(
+	\randomiseAll,
+	{
+		arg msg, time, addr, port;
+		var mode;
+		mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+		~randomiseAll.(mode);
+	},
+	"/dreads/randomiseAll"
+);
+
+// Randomise all unmuted sample instances with a profile
+OSCdef.new(
+	\randomiseAllSamples,
+	{
+		arg msg, time, addr, port;
+		var mode;
+		mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+		~randomiseAll.(mode, \samples);
+	},
+	"/dreads/randomiseAllSamples"
 );
 
 // Create OSC listeners for all instances and parameters
 ~setupPlaitsOSC = {
-	~plaits.synths.do { |instance, instanceIndex|
+	~dreads.synths.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1; // Convert to 1-based for OSC paths
 
 		// ["binding plaits ------------------->", instanceIndex].postln;
 		// Generic parameter handling - OSC keys match data structure keys
-		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \lfo) }).do { |paramKey|
 			// ["binding key", paramKey].postln;
 			OSCdef.new(
 				("plaits" ++ instanceNum ++ paramKey).asSymbol,
@@ -41,39 +82,197 @@ OSCdef.new(
 
 					// Special handling for tempo (affects global tempo clock)
 					if (paramKey == 'tempo') {
-						~plaits.synths[instanceIndex][paramKey] = value;
+						~dreads.synths[instanceIndex][paramKey] = value;
 						~tempoClock.tempo = (value.max(0.1))/60;
 					} {
-						// Generic parameter update
-						~plaits.synths[instanceIndex][paramKey] = value;
+						if (paramKey == 'droneMode') {
+							~dreads.synths[instanceIndex][paramKey] = value;
+							if (value == 1) {
+								~startDrone.(instanceIndex);
+							} {
+								~stopDrone.(instanceIndex);
+							};
+						} {
+							if (paramKey == 'mute') {
+								~dreads.synths[instanceIndex][paramKey] = value;
+								// Forward mute to drone synth
+								if (~drones.notNil && ~drones[instanceIndex].notNil) {
+									if (value == 1) {
+										~drones[instanceIndex].set(\mul, 0);
+									} {
+										~drones[instanceIndex].set(\mul, ~dreads.synths[instanceIndex].mul);
+									};
+								};
+							} {
+								// Generic parameter update
+								var cache, modVal;
+								~dreads.synths[instanceIndex][paramKey] = value;
+								// Forward to drone synth if active
+								if (~drones.notNil && ~drones[instanceIndex].notNil) {
+									~drones[instanceIndex].set(paramKey, value);
+								};
+								// Drone-mode UI responsiveness stop-gap: for FX sends, echo the
+								// modulated value to visuals so live knob drags update VDMX
+								// smoothly (otherwise visuals are sequencer-tick rate).
+								// See docs/visualization-osc.md for full architecture discussion.
+								if ([\cloudsSend, \delaySend, \reverbSend, \revDrywet, \distAmount, \harm].includes(paramKey)) {
+									cache = ~dreads.synths[instanceIndex].seqCache;
+									if (cache.notNil and: { cache[paramKey].notNil }) {
+										modVal = ~modulateBipolar.(cache[paramKey], value);
+										// Match sequencer's 0-based path convention (lib/sequencer.scd ~/vis bundle)
+										~vis.().sendMsg("/plaits/" ++ instanceIndex ++ "/" ++ paramKey.asString, modVal);
+									};
+								};
+							};
+						};
 					};
 				},
 				"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString
 			);
 		};
+
+		// Sequence selection OSC handlers for all sequenceable parameters
+		~defaultSequences.keys.do { |paramKey|
+
+			OSCdef.new(
+				("plaits" ++ instanceNum ++ paramKey ++ "Seq").asSymbol,
+				{
+					arg msg, time, addr, port;
+					var seqName = msg[1].asSymbol;
+					msg.postln;
+					~selectSequence.(\plaits, instanceIndex, paramKey, seqName);
+				},
+				"/plaits/" ++ instanceNum ++ "/" ++ paramKey.asString ++ "/seq"
+			);
+		};
+
+		// Dice: generate random sequence for a param
+		// OSC: /plaits/{n}/dice  paramName
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "dice").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var paramKey = msg[1].asSymbol;
+				~diceSeq.(instanceIndex + 1, paramKey);
+			},
+			"/plaits/" ++ instanceNum ++ "/dice"
+		);
+
+		// Randomise: apply a randomisation profile to this instance
+		// OSC: /plaits/{n}/randomise  profileName  (tonal/colour/mod/fx/lfo/full)
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "randomise").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var mode;
+				mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+				~randomise.(instanceIndex + 1, mode);
+			},
+			"/plaits/" ++ instanceNum ++ "/randomise"
+		);
+
+		// Nudge forward: /plaits/{n}/nudgeForward
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "nudgeForward").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount;
+				~dreads.synths[instanceIndex].nudgeOffset = (~dreads.synths[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.synths[instanceIndex].phaseOffset = (~dreads.synths[instanceIndex].phaseOffset ? 0) + delta;
+				["plaits nudge fwd", instanceNum, "nudge:", ~dreads.synths[instanceIndex].nudgeOffset, "phase:", ~dreads.synths[instanceIndex].phaseOffset].postln;
+			},
+			"/plaits/" ++ instanceNum ++ "/nudgeForward"
+		);
+
+		// Nudge back: /plaits/{n}/nudgeBack
+		OSCdef.new(
+			("plaits" ++ instanceNum ++ "nudgeBack").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount.neg;
+				~dreads.synths[instanceIndex].nudgeOffset = (~dreads.synths[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.synths[instanceIndex].phaseOffset = (~dreads.synths[instanceIndex].phaseOffset ? 0) + delta;
+				["plaits nudge back", instanceNum, "nudge:", ~dreads.synths[instanceIndex].nudgeOffset, "phase:", ~dreads.synths[instanceIndex].phaseOffset].postln;
+			},
+			"/plaits/" ++ instanceNum ++ "/nudgeBack"
+		);
 	};
 };
 
 // Sample OSC Handlers
 ~setupSampleOSC = {
-	~plaits.samples.do { |instance, instanceIndex|
+	~dreads.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 
 		// ["binding sample ------------------->", instanceIndex].postln;
 
 		// Generic parameter handling - OSC keys match data structure keys
-		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \samplePath) && (key != \lfo) }).do { |paramKey|
 			OSCdef.new(
 				("sample" ++ instanceNum ++ paramKey).asSymbol,
 				{
 					arg msg, time, addr, port;
 					var value = msg[1];
 					msg.round(0.001).postln;
-					~plaits.samples[instanceIndex][paramKey] = value;
+					~dreads.samples[instanceIndex][paramKey] = value;
 				},
 				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString
 			);
 		};
+
+		// Sequence selection OSC handlers for all sequenceable parameters
+		~defaultSampleSequences.keys.do { |paramKey|
+
+			OSCdef.new(
+				("sample" ++ instanceNum ++ paramKey ++ "Seq").asSymbol,
+				{
+					arg msg, time, addr, port;
+					var seqName = msg[1].asSymbol;
+					msg.postln;
+					~selectSequence.(\samples, instanceIndex, paramKey, seqName);
+				},
+				"/samples/" ++ instanceNum ++ "/" ++ paramKey.asString ++ "/seq"
+			);
+		};
+
+		// Nudge forward: /samples/{n}/nudgeForward
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "nudgeForward").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount;
+				~dreads.samples[instanceIndex].nudgeOffset = (~dreads.samples[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.samples[instanceIndex].phaseOffset = (~dreads.samples[instanceIndex].phaseOffset ? 0) + delta;
+				["sample nudge fwd", instanceNum, "nudge:", ~dreads.samples[instanceIndex].nudgeOffset, "phase:", ~dreads.samples[instanceIndex].phaseOffset].postln;
+			},
+			"/samples/" ++ instanceNum ++ "/nudgeForward"
+		);
+
+		// Nudge back: /samples/{n}/nudgeBack
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "nudgeBack").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var delta = ~nudgeAmount.neg;
+				~dreads.samples[instanceIndex].nudgeOffset = (~dreads.samples[instanceIndex].nudgeOffset ? 0) + delta;
+				~dreads.samples[instanceIndex].phaseOffset = (~dreads.samples[instanceIndex].phaseOffset ? 0) + delta;
+				["sample nudge back", instanceNum, "nudge:", ~dreads.samples[instanceIndex].nudgeOffset, "phase:", ~dreads.samples[instanceIndex].phaseOffset].postln;
+			},
+			"/samples/" ++ instanceNum ++ "/nudgeBack"
+		);
+
+		// Randomise: apply a randomisation profile to this sample instance
+		// OSC: /samples/{n}/randomise  profileName  (tonal/colour/mod/fx/modFx/lfo/seq/full)
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "randomise").asSymbol,
+			{
+				arg msg, time, addr, port;
+				var mode;
+				mode = if (msg[1].notNil) { msg[1].asSymbol } { \default };
+				~randomise.(instanceIndex + 1, mode, \samples);
+			},
+			"/samples/" ++ instanceNum ++ "/randomise"
+		);
 
 		// File browser handler for this instance
 		OSCdef.new(
@@ -92,8 +291,8 @@ OSCdef.new(
 					["  Resolved to bank:", lookup.bankName, "variant:", lookup.variant].postln;
 
 					// Update bankName and variant for this instance
-					~plaits.samples[instanceIndex].bankName = lookup.bankName;
-					~plaits.samples[instanceIndex].variant = lookup.variant;
+					~dreads.samples[instanceIndex].bankName = lookup.bankName;
+					~dreads.samples[instanceIndex].variant = lookup.variant;
 
 					// Log sample metadata
 					metadata = ~sampleLibrary.metadata[lookup.bankName];
@@ -107,8 +306,73 @@ OSCdef.new(
 			},
 			"/samples/" ++ instanceNum ++ "/samplePath"
 		);
+
+		// Variant cycling handlers
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "PrevVariant").asSymbol,
+			{
+				arg msg, time, addr, port;
+				~cycleSampleVariant.(instanceIndex, -1);
+			},
+			"/samples/" ++ instanceNum ++ "/prevVariant"
+		);
+
+		OSCdef.new(
+			("sample" ++ instanceNum ++ "NextVariant").asSymbol,
+			{
+				arg msg, time, addr, port;
+				~cycleSampleVariant.(instanceIndex, 1);
+			},
+			"/samples/" ++ instanceNum ++ "/nextVariant"
+		);
 	};
 };
+
+// LFO control OSC handlers (freq / shape / base per LFO-able param + global base)
+~setupLFOOSC = {
+	~dreads.synths.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		~plaitsLFOParams.do { |lfoParam|
+			~lfoSourceParams.do { |sub|
+				OSCdef.new(
+					("plaits" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
+					{ |msg|
+						var value, v, e;
+						value = msg[1];
+						msg.postln;
+						v = if (sub == \shape) { value.asSymbol } { if (sub == \base) { value == 1 } { value.asFloat } };
+						e = ();
+						e.put(sub, v);
+						~lfoTweak.(\plaits, instanceIndex, lfoParam, e);
+					},
+					"/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam.asString ++ "/" ++ sub.asString
+				);
+			};
+		};
+	};
+	~dreads.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		~sampleLFOParams.do { |lfoParam|
+			~lfoSourceParams.do { |sub|
+				OSCdef.new(
+					("sample" ++ instanceNum ++ "lfo" ++ lfoParam ++ sub).asSymbol,
+					{ |msg|
+						var value, v, e;
+						value = msg[1];
+						msg.postln;
+						v = if (sub == \shape) { value.asSymbol } { if (sub == \base) { value == 1 } { value.asFloat } };
+						e = ();
+						e.put(sub, v);
+						~lfoTweak.(\samples, instanceIndex, lfoParam, e);
+					},
+					"/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam.asString ++ "/" ++ sub.asString
+				);
+			};
+		};
+	};
+	OSCdef.new(\lfoBase, { |msg| msg.postln; ~setLFOBase.(msg[1]) }, "/dreads/lfoBase");
+};
+
 
 // Delay Effect OSC Handlers
 [\time, \feedback, \filterFreq, \spread].do { |paramKey|
@@ -121,14 +385,14 @@ OSCdef.new(
 			var synthParam = ("fx_delay_" ++ paramKey).asSymbol;
 			["fx/delay", paramKey, value].postln;
 
-			// Update preset FX settings (nested structure)
-			~plaits.fx.delay[paramKey] = value;
+			// Update patch FX settings (nested structure)
+			~dreads.fx.delay[paramKey] = value;
 
 			// Send to synth using clean parameter names
-			if (~delayFX.notNil) {
-				~delayFX.set(paramKey, value);
+			if (~fx.delay.notNil) {
+				~fx.delay.set(paramKey, value);
 			} {
-				"ERROR: ~delayFX is nil!".postln;
+				"ERROR: ~fx.delay is nil!".postln;
 			};
 		},
 		"/fx/delay/" ++ paramKey.asString
@@ -146,14 +410,14 @@ OSCdef.new(
 			var synthParam = ("fx_reverb_" ++ paramKey).asSymbol;
 			["fx/reverb", paramKey, value].postln;
 
-			// Update preset FX settings (nested structure)
-			~plaits.fx.reverb[paramKey] = value;
+			// Update patch FX settings (nested structure)
+			~dreads.fx.reverb[paramKey] = value;
 
 			// Send to synth using clean parameter names
-			if (~reverbFX.notNil) {
-				~reverbFX.set(paramKey, value);
+			if (~fx.reverb.notNil) {
+				~fx.reverb.set(paramKey, value);
 			} {
-				"ERROR: ~reverbFX is nil!".postln;
+				"ERROR: ~fx.reverb is nil!".postln;
 			};
 		},
 		"/fx/reverb/" ++ paramKey.asString
@@ -171,14 +435,14 @@ OSCdef.new(
 			var synthParam = ("fx_clouds_" ++ paramKey).asSymbol;
 			["fx/clouds", paramKey, value].postln;
 
-			// Update preset FX settings (nested structure)
-			~plaits.fx.clouds[paramKey] = value;
+			// Update patch FX settings (nested structure)
+			~dreads.fx.clouds[paramKey] = value;
 
 			// Send to synth using clean parameter names
-			if (~cloudsFX.notNil) {
-				~cloudsFX.set(paramKey, value);
+			if (~fx.clouds.notNil) {
+				~fx.clouds.set(paramKey, value);
 			} {
-				"ERROR: ~cloudsFX is nil!".postln;
+				"ERROR: ~fx.clouds is nil!".postln;
 			};
 		},
 		"/fx/clouds/" ++ paramKey.asString
@@ -186,47 +450,81 @@ OSCdef.new(
 };
 
 OSCdef.new(
-	\loadPreset.asSymbol,
+	\loadPatch.asSymbol,
 	{
 		arg msg, time, addr, port;
 		var value = msg[1];
-		["loadPreset", value].postln;
-		~loadPreset.(value.asString)
+		["loadPatch", value].postln;
+		~loadPatch.(value.asString)
 	},
-	"/loadPreset"
+	"/dreads/loadPatch"
 );
 
 OSCdef.new(
-	\savePreset.asSymbol,
+	\globalTempo.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var bpm = msg[1].max(1);
+		["tempo", bpm].postln;
+		~tempoClock.tempo = bpm / 60;
+		// Update all instances so patches save the current tempo
+		~dreads.synths.do { |inst| inst.tempo = bpm };
+		~dreads.samples.do { |inst| inst.tempo = bpm };
+	},
+	"/dreads/tempo"
+);
+
+OSCdef.new(
+	\savePatch.asSymbol,
 	{
 		arg msg, time, addr, port;
 		var value = msg[1];
-		["savePreset", value].postln;
-		~savePreset.()
+		["savePatch", value].postln;
+		~savePatch.()
 	},
-	"/savePreset"
+	"/dreads/savePatch"
 );
 
 OSCdef.new(
-	\savePresetAs.asSymbol,
+	\savePatchAs.asSymbol,
 	{
 		arg msg, time, addr, port;
 		var value = msg[1];
-		["savePresetAs", value].postln;
-		~savePresetAs.()
+		["savePatchAs", value].postln;
+		~savePatchAs.()
 	},
-	"/savePresetAs"
+	"/dreads/savePatchAs"
 );
 
 OSCdef.new(
-	\reloadPreset.asSymbol,
+	\prevPatch.asSymbol,
 	{
 		arg msg, time, addr, port;
-		var value = ~currentPresetTemplate;
-		["reloadPreset", value].postln;
-		~loadPreset.(value);
+		["prevPatch"].postln;
+		~loadAdjacentPatch.(-1);
 	},
-	"/reloadPreset"
+	"/dreads/prevPatch"
+);
+
+OSCdef.new(
+	\nextPatch.asSymbol,
+	{
+		arg msg, time, addr, port;
+		["nextPatch"].postln;
+		~loadAdjacentPatch.(1);
+	},
+	"/dreads/nextPatch"
+);
+
+OSCdef.new(
+	\reloadPatch.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var value = ~currentPatchTemplate;
+		["reloadPatch", value].postln;
+		~loadPatch.(value);
+	},
+	"/dreads/reloadPatch"
 );
 
 OSCdef.new(
@@ -236,8 +534,12 @@ OSCdef.new(
 		var value = msg[1];
 		["flushSynths", value].postln;
 		~voiceGroup.freeAll;
+		// Clear drone synth references (synths already freed by freeAll)
+		if (~drones.notNil) {
+			~drones.size.do { |i| ~drones[i] = nil };
+		};
 	},
-	"/flushSynths"
+	"/dreads/flushSynths"
 );
 
 OSCdef.new(
@@ -248,21 +550,21 @@ OSCdef.new(
 		"fadeOutReverb".postln;
 		~fadeOutReverb.()
 	},
-	"/fadeOutReverb"
+	"/dreads/fadeOutReverb"
 );
 
 // Push current state values to UI
 ~pushStateToUI = {
-	var ui, plaitsArray, fxSettings;
+	var ui, plaitsArray, fxSettings, seqNames, knownTags, uncategorized;
 
 	ui = ~ui.();
 
 	// Get current synth and FX data with fallback for compatibility
-	if (~plaits.isKindOf(Dictionary)) {
-		plaitsArray = ~plaits.synths;
-		fxSettings = ~plaits.fx ?? ();
+	if (~dreads.isKindOf(Dictionary)) {
+		plaitsArray = ~dreads.synths;
+		fxSettings = ~dreads.fx ?? ();
 	} {
-		plaitsArray = ~plaits; // Old array format fallback
+		plaitsArray = ~dreads; // Old array format fallback
 		fxSettings = ();
 	};
 
@@ -271,24 +573,53 @@ OSCdef.new(
 		var instanceNum = instanceIndex + 1;
 
 		// Send all parameter values to UI
-		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \lfo) }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey;
 			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
 		};
+
+		// Send sequence state to UI
+		if (instance.sequences.notNil) {
+			instance.sequences.keysValuesDo { |paramKey, value|
+				var seqState, path;
+				path = "/plaits/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
+				seqState = if (value.isKindOf(Symbol)) {
+					value.asString
+				} {
+					// Bare stream or Event with source — both are custom sequences
+					"custom"
+				};
+				ui.sendMsg(path, seqState);
+			};
+		};
 	};
 
 	// Send sample instance parameters
-	~plaits.samples.do { |instance, instanceIndex|
+	~dreads.samples.do { |instance, instanceIndex|
 		var instanceNum = instanceIndex + 1;
 
 		// Send all parameter values to UI
-		instance.keys.select({ |key| key != \sequences }).do { |paramKey|
+		instance.keys.select({ |key| (key != \sequences) && (key != \lfo) }).do { |paramKey|
 			var value = instance[paramKey];
 			var path = "/samples/" ++ instanceNum ++ "/" ++ paramKey;
 			// ["Sending:", path, value].postln;
 			ui.sendMsg(path, value);
+		};
+
+		// Send sequence state to UI
+		if (instance.sequences.notNil) {
+			instance.sequences.keysValuesDo { |paramKey, value|
+				var seqState, path;
+				path = "/samples/" ++ instanceNum ++ "/" ++ paramKey ++ "/seq";
+				seqState = if (value.isKindOf(Symbol)) {
+					value.asString
+				} {
+					"custom"
+				};
+				ui.sendMsg(path, seqState);
+			};
 		};
 
 		// Resolve and send file path from bankName/variant
@@ -309,6 +640,9 @@ OSCdef.new(
 		};
 	};
 
+	// Send global tempo
+	ui.sendMsg("/dreads/tempo", ~dreads.synths[0].tempo);
+
 	// Send global FX parameters (nested structure)
 	fxSettings.keysValuesDo { |category, categoryParams|
 		categoryParams.keysValuesDo { |param, value|
@@ -317,6 +651,71 @@ OSCdef.new(
 			ui.sendMsg(path, value);
 		};
 	};
+
+	// Populate sequence modal switch with categorized sequences from library
+	seqNames = List[];
+	[
+		[\rhythm, "RHYTHM"],
+		[\shape, "SHAPE"],
+		[\accent, "ACCENT"],
+		[\pitch, "PITCH"],
+		[\timing, "TIMING"],
+	].do { |pair|
+		var tag, label, entries;
+		tag = pair[0]; label = pair[1];
+		entries = ~sequenceLibrary.keys.asArray.select { |k|
+			~sequenceLibrary[k].tag == tag
+		}.sort.collect(_.asString);
+		if (entries.size > 0) {
+			seqNames.add("── " ++ label ++ " ──");
+			seqNames.addAll(entries);
+		};
+	};
+	// Collect any entries with unrecognized tags (e.g. user sequences with custom tags)
+	knownTags = [\all, \rhythm, \shape, \accent, \pitch, \timing];
+	uncategorized = ~sequenceLibrary.keys.asArray.select { |k|
+		knownTags.includes(~sequenceLibrary[k].tag).not
+	}.sort.collect(_.asString);
+	if (uncategorized.size > 0) {
+		seqNames.add("── OTHER ──");
+		seqNames.addAll(uncategorized);
+	};
+	// ["seqModal:", seqNames.size, "items"].postln;
+	ui.sendMsg('/EDIT', 'seqModal/switch',
+		"{\"values\":[" ++ seqNames.collect { |s| "\"" ++ s ++ "\"" }.join(",") ++ "]}"
+	);
+
+	// Push LFO state (freq / shape name / base) per param + global base
+	~dreads.synths.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		~plaitsLFOParams.do { |lfoParam|
+			var src;
+			src = instance.lfo[lfoParam];
+			if (src.isKindOf(Symbol)) { src = ~lfo.sources[src] };
+			if (src.notNil) {
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/freq", src[\freq]);
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/shape", ~lfoShapeNames[src[\shape]].asString);
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/base", if (src[\base] == true) { 1 } { 0 });
+				ui.sendMsg("/plaits/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/width", src[\width]);
+			};
+		};
+	};
+	~dreads.samples.do { |instance, instanceIndex|
+		var instanceNum = instanceIndex + 1;
+		~sampleLFOParams.do { |lfoParam|
+			var src;
+			src = instance.lfo[lfoParam];
+			if (src.isKindOf(Symbol)) { src = ~lfo.sources[src] };
+			if (src.notNil) {
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/freq", src[\freq]);
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/shape", ~lfoShapeNames[src[\shape]].asString);
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/base", if (src[\base] == true) { 1 } { 0 });
+				ui.sendMsg("/samples/" ++ instanceNum ++ "/lfo/" ++ lfoParam ++ "/width", src[\width]);
+			};
+		};
+	};
+	ui.sendMsg("/dreads/lfoBase", ~base);
+
 
 	"Plaits state pushed to UI!".postln;
 };
@@ -327,11 +726,14 @@ OSCdef(\refreshSampleLibrary, {
 
 	"Refreshing sample library...".postln;
 
-	// Reload library
+	// Free old buffers first so repeated refreshes don't leak buffer numbers.
+	// Buffers are resolved fresh per note (~getSampleBuffer), so the reload is
+	// safe mid-play — worst case is one glitched note during the async read.
+	~freeSampleLibrary.();
 	~loadSampleLibrary.();
 
 	"Sample library refreshed".postln;
-}, '/refreshSampleLibrary');
+}, '/dreads/refreshSampleLibrary');
 
 // Debug OSCFunc for catching all sample-related messages
 OSCFunc({ |msg, time, addr, port|
@@ -345,14 +747,15 @@ OSCFunc({ |msg, time, addr, port|
 	    path.asString.contains("/delay") ||
 	    path.asString.contains("/reverb") ||
 	    path.asString.contains("/clouds") ||
-	    path.asString.contains("/preset")) {
+	    path.asString.contains("/patch")) {
 		["POSSIBLE TYPO:", msg].postln;
 	};
 });
 
-// Setup OSC for plaits instances (called after preset structure is loaded)
+// Setup OSC for plaits instances (called after patch structure is loaded)
 ~setupPlaitsOSC.();
 ~setupSampleOSC.();
+~setupLFOOSC.();
 
 ~pushStateToUI.value;
 )

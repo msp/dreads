@@ -2,7 +2,11 @@ ideas/
 .DS_Store
 CLAUDE.md
 osc-test.scd
+reddit.scd
 samples/
 to-review/
 todo/
 trash/
+ref/
+lib/user_sequence_library.scd
+TODO.md

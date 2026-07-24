@@ -1,0 +1,47 @@
+////////////////////////////////////////////////////////////////////////////////
+// User Sequence Library
+// Add your own reusable patterns here — they merge into ~sequenceLibrary
+// and can be referenced by symbol name in patches, e.g. \my_pattern
+//
+// Format:  name: (pattern: Pseq([...], inf), tag: \rhythm)
+// Tags:    \rhythm, \shape, \accent, \pitch, \timing
+////////////////////////////////////////////////////////////////////////////////
+
+(
+~mergeUserSequences.((
+	// my_bass: (pattern: Pseq([0.3, 0.5, 0.7, 0.5], inf), tag: \shape),
+	kik_half_time: (
+		pattern: Pseq([
+			0.25,
+			Rest(0.5),
+			0.5,
+			Rest(0.25),
+			Rest(0.25),
+			Pwrand([Rest(1/4), 1/4], [0.9, 0.1].normalizeSum),
+		] , inf),
+		tag: \rhythm
+	),
+	kik_half_time2: (
+		pattern: Pseq([
+			0.25,
+			0.5,
+			0.5,
+			Rest(0.25),
+			Rest(0.25),
+			Pwrand([Rest(1/4), 1/4], [0.2, 0.9].normalizeSum),
+		] , inf),
+		tag: \user
+	),
+	kik_half_tim3: (
+		pattern: Pseq([
+			0.25,
+			0.5,
+			0.5,
+			Rest(0.25),
+			Rest(0.25),
+			Pwrand([Rest(1/4), 1/4], [0.5, 0.5].normalizeSum),
+		] , inf),
+		tag: \user
+	),
+));
+)

@@ -6,15 +6,56 @@
 // Note: Plaits outputs stereo, so last speaker won't be used in rotation
 // numSpeakers=4 → [0, 1, 2, 3] (but \out=3 writes to buses 3-4, which is out of range)
 // that's fine for now :)
-~outputBuses = (0..(~numSpeakers - 1));
+~outputBuses = (0..(~numSpeakers - 1)); 
 
-// Default tempo, will be updated by presets
+// Recording mode: route each voice to its own stereo bus
+// Plaits 0-2 → buses 0,2,4 | Samples 0-2 → buses 6,8,10
+// Delay → 12 | Reverb → 14 | Clouds → 16
+~voiceOutBus = { |type, index|
+	if (~recordingMode) {
+		if (type == \plaits) { index * 2 } { 6 + (index * 2) };
+	} { 0 };
+};
+
+// Cycle sample variant within current bank
+~cycleSampleVariant = { |instanceIndex, direction|
+	var instance = ~dreads.samples[instanceIndex];
+	var bankName, bankBuffers, numVariants, newVariant, bankPaths, filepath, instanceNum;
+
+	if (instance.isNil) {
+		("WARNING: Sample instance " ++ instanceIndex ++ " not found").postln;
+	} {
+		bankName = instance.bankName;
+		bankBuffers = ~sampleLibrary.banks[bankName];
+
+		if (bankBuffers.isNil) {
+			("WARNING: Bank " ++ bankName ++ " not found").postln;
+		} {
+			numVariants = bankBuffers.size;
+			newVariant = (instance.variant.asInteger + direction).wrap(0, numVariants - 1);
+			instance.variant = newVariant;
+
+			// Update UI with new file path
+			instanceNum = instanceIndex + 1;
+			bankPaths = ~sampleLibrary.paths[bankName];
+			if (bankPaths.notNil && bankPaths[newVariant].notNil) {
+				filepath = bankPaths[newVariant];
+				~ui.().sendMsg("/samples/" ++ instanceNum ++ "/samplePath", filepath);
+			};
+
+			["Sample " ++ instanceIndex ++ ": variant " ++ newVariant ++ "/" ++ numVariants ++ " (" ++ bankName ++ ")"].postln;
+		};
+	};
+};
+
+// Default tempo, will be updated by patches
 ~tempoClock = TempoClock.new(120/60);
 ~sendToPhones = false;
+~nudgeAmount = 0.25; // Per-module nudge step size in beats
 
 ~ui = {
 	if (~uiAddr.isNil) {
-		~uiAddr = NetAddr("127.0.0.1", 8080);
+		~uiAddr = NetAddr("127.0.0.1", 9000);
 	};
 	~uiAddr;
 };
@@ -24,6 +65,13 @@
 		~tdAddr = NetAddr("127.0.0.1", 10000);
 	};
 	~tdAddr;
+};
+
+~vis = {
+	if (~visAddr.isNil) {
+		~visAddr = NetAddr("127.0.0.1", 1234);
+	};
+	~visAddr;
 };
 
 ~ws = {
@@ -50,19 +98,25 @@
 ~defaultScalars = (
 	cloudsSend: 1.0,
 	decay: 0.5,
+	decayMod: 0.3,  // legacy default — was hardcoded in sequencer before bus-based LFOs
 	delaySend: 0.0,
 	distAmount: 0.0,
 	distDrive: 0.0,
+	droneMode: 0,
 	dur: 0.25,
 	engine: 1.0,
 	fmMod: 0.0,
 	harm: 0.5,
+	harmMod: 0.0,
 	legato: 0.7,
 	lpgColour: 0.5,
 	morphMod: 0.0,
 	morph: 0.5,
 	mul: 0.5,
+	mute: 0,
+	phaseOffset: 0.0,
 	pitch: 49.0,
+	pitchMod: 0.0,
 	revDamp: 0.8,
 	revDrywet: 0.0,
 	revFreeze: 0.0,
@@ -76,9 +130,10 @@
 	timbMod: 0.0,
 	timbre: 0.5,
 	volume: 1.0,
+	volumeMod: 0.0,
 );
 
-// Default global FX settings for all presets
+// Default global FX settings for all patches
 ~defaultFX = (
 	clouds: (
 		blend: 0.5,
@@ -112,26 +167,34 @@
 	)
 );
 
-// Default sequence patterns for all plaits instances
-~defaultSequences = (
-	cloudsSend: Pseq([0.5], inf).asStream,
-	decay: Pseq([0.5], inf).asStream,
-	delaySend: Pseq([0.5], inf).asStream,
-	div: Pseq([1.0], inf).asStream,
-	distAmount: Pseq([0.5], inf).asStream,
-	distDrive: Pseq([0.5], inf).asStream,
-	duration: Pseq([0.25], inf).asStream,
+// Shared default sequences for both plaits and sample instances
+// Symbols reference ~sequenceLibrary entries: \hold=0.5 (modulation), \unit=1.0 (timing)
+~baseSequences = (
+	cloudsSend: \hold,
+	decay: \hold,
+	delaySend: \hold,
+	distAmount: \hold,
+	distDrive: \hold,
+	div: \unit,
+	duration: \unit,
+	revDamp: \hold,
+	revDrywet: \hold,
+	revHp: \hold,
+	revTime: \hold,
+	reverbSend: \hold,
+);
+
+// Plaits-specific sequences (merged with ~baseSequences)
+~defaultSequences = ~baseSequences ++ (
 	engine: Pseq(["e"], inf).asStream,
-	fmMod: Pseq([0.5], inf).asStream,
-	harm: Pseq([0.5], inf).asStream,
-	lpgColour: Pseq([0.5], inf).asStream,
-	morph: Pseq([0.5], inf).asStream,
-	revDrywet: Pseq([0.5], inf).asStream,
-	revTime: Pseq([0.5], inf).asStream,
-	reverbSend: Pseq([0.5], inf).asStream,
-	timbre: Pseq([0.5], inf).asStream,
-	volume: Pseq([0.5], inf).asStream,
-	mul: Pseq([0.5], inf).asStream
+	fmMod: \hold,
+	harm: \hold,
+	lpgColour: \hold,
+	morph: \hold,
+	mul: \hold,
+	pitch: Pseq([0], inf).asStream,  // additive semitone offset
+	timbre: \hold,
+	volume: \hold,
 );
 
 // Sample library storage (SuperDirt-style bank/variant structure)
@@ -140,6 +203,14 @@
 	paths: Dictionary.new,      // bankName (Symbol) -> Array of file paths
 	metadata: Dictionary.new    // bankName (Symbol) -> Array of metadata dicts
 );
+
+// Sequence pattern library loaded from separate file
+// See lib/sequence_library.scd for pattern definitions and tags
+
+// Sequence stream cache for lazy resolution
+// Stores runtime state: (symbol: \sparse, stream: <stream>)
+// Cache key format: "plaits_0_duration" or "samples_1_rate"
+~sequenceStreamCache = Dictionary.new;
 
 // Default scalar values for sample instances
 ~defaultSampleScalars = (
@@ -153,8 +224,11 @@
 	dur: 0.25,
 	legato: 0.7,
 	mul: 1.0,
+	mute: 0,
+	phaseOffset: 0.0,
 	panDur: 0.5,            // Normalized 0-1 (scaled to duration*2 in sequencer)
 	rate: 1.0,
+	rateMod: 0.0,
 	reverbSend: 0.0,
 	revDamp: 0.8,
 	revDrywet: 0.25,
@@ -165,24 +239,53 @@
 	startPos: 0,            // Normalized 0-1 (scaled to duration in sequencer)
 	tempo: 165.0,
 	variant: 0,             // Which variant of the bank to play (0-based index)
-	volume: 0.0
+	volume: 0.0,
+	volumeMod: 0.0,
 );
 
-// Default sequence patterns for sample instances
-~defaultSampleSequences = (
-	atk: Pseq([0.5], inf).asStream,         // 0-1 normalized
-	cloudsSend: Pseq([0.5], inf).asStream,
-	decay: Pseq([0.5], inf).asStream,       // 0-1 normalized (neutral at midpoint)
-	delaySend: Pseq([0.5], inf).asStream,
-	div: Pseq([1.0], inf).asStream,
-	duration: Pseq([1.0], inf).asStream,
-	mul: Pseq([1.0], inf).asStream,
-	panDur: Pseq([0.5], inf).asStream,      // 0-1 normalized
-	rate: Pseq([1.0], inf).asStream,        // Multiplier (uses ~multiply)
-	reverbSend: Pseq([0.5], inf).asStream,
-	revDrywet: Pseq([0.5], inf).asStream,
-	revTime: Pseq([0.5], inf).asStream,
-	startPos: Pseq([0.5], inf).asStream,    // 0-1 normalized (neutral at midpoint)
-	variant: Pseq([0], inf).asStream        // Variant index, additive (uses ~add)
+// Sample-specific sequences (merged with ~baseSequences)
+~defaultSampleSequences = ~baseSequences ++ (
+	atk: \hold,
+	mul: \unit,
+	panDur: \hold,
+	rate: \unit,
+	startPos: \hold,
+	variant: Pseq([0], inf).asStream,  // integer index, not a modulation param
 );
+
+// Default LFO source configs (24 sources: 18 plaits + 6 samples)
+// Source numbering follows reporter order:
+//   lfo1-6: plaits 0 (timbre, morph, decay, pitch, volume, harm)
+//   lfo7-12: plaits 1
+//   lfo13-18: plaits 2
+//   lfo19-20: samples 0 (rate, volume)
+//   lfo21-22: samples 1
+//   lfo23-24: samples 2
+// Global LFO base frequency (Hz). Sources in "×base" mode multiply this value.
+~base = 0.125;
+
+~defaultLFOSources = ();
+(1..24).do { |n|
+	~defaultLFOSources[("lfo" ++ n).asSymbol] = (freq: 0.125, shape: 0, width: 0.3, base: false);
+};
+
+// Per-instance LFO-modulatable params (order matches the reporter + LFO maps)
+~plaitsLFOParams = [\timbre, \morph, \decay, \pitch, \volume, \harm];
+~sampleLFOParams = [\rate, \volume];
+// Per-source LFO controls (mod is separate — a synth scalar, not a source param)
+~lfoSourceParams = [\freq, \shape, \width, \base];
+
+// Default 1:1 LFO mappings per plaits instance
+~defaultPlaitsLFOMap = [
+	(timbre: \lfo1, morph: \lfo2, decay: \lfo3, pitch: \lfo4, volume: \lfo5, harm: \lfo6),
+	(timbre: \lfo7, morph: \lfo8, decay: \lfo9, pitch: \lfo10, volume: \lfo11, harm: \lfo12),
+	(timbre: \lfo13, morph: \lfo14, decay: \lfo15, pitch: \lfo16, volume: \lfo17, harm: \lfo18),
+];
+
+// Default 1:1 LFO mappings per sample instance
+~defaultSampleLFOMap = [
+	(rate: \lfo19, volume: \lfo20),
+	(rate: \lfo21, volume: \lfo22),
+	(rate: \lfo23, volume: \lfo24),
+];
 )

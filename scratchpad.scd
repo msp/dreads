@@ -4,8 +4,12 @@
 s.meter
 
 
+NetAddr.langPort;
+NetAddr.localAddr
+
 Quarks.gui
 
+~tempoClock.tempo = 125/60;
 
 Safety
 
@@ -13,8 +17,72 @@ Platform.resourceDir
 
 ExampleFiles.sinedPink
 
+'foo-bar-baz'.class
+
+~pushStateToUI.()
+
+~sequenceLibrary[\eucl_4_7].pattern
+
+(
+var seqNames = ~sequenceLibrary.keys.asArray.sort.collect(_.asString);
+seqNames.postln;
+// ui.sendMsg('/seqModal/switch', 'values', seqNames);
+)
+////////////////////////////////////////
+// open stage control config
+//
+// send: 127.0.0.1:57120
+// port: 8080
+// load: /Users/Shared/GitHub/mutable-sc/open-stage-control/plaits.json
+// osc-port: 9000
+////////////////////////////////////////
+
+
+// PRESETS
+// /Users/Shared/GitHub/mutable-sc/patches/dreads
+
+// SAMPLES
+// /Users/Shared/GitHub/mutable-sc/samples/
+
+
+
 ~sampleLibrary.metadata
 
+(
+~dreads.synths[0].sequences.engine.postln;
+~dreads.synths[1].sequences.engine.postln;
+~dreads.synths[2].sequences.engine.postln;
+)
+
+(
+// Check what sequence is stored
+"Sequence value:".postln;
+~dreads.samples[0].sequences.rate.postln;
+
+// Check what ~getSequenceValue returns
+"Get sequence value result:".postln;
+~getSequenceValue.(~dreads.samples[0], 0, \samples, \rate).postln;
+
+// Check the base rate value
+"Base rate:".postln;
+~dreads.samples[0].rate.postln;
+
+// Check if sample is even playing
+"Sample dur:".postln;
+~dreads.samples[0].dur.postln;
+
+)
+
+//////////////
+// START_TEST_PATCH_MIGRATION
+
+// Reload and migrate all remaining patches
+(~basePath +/+ "scripts/migrate_patches.scd").load;
+
+~migrateAllPatches.(~basePath, dryRun: false);
+
+// END_TEST_PATCH_MIGRATION
+///////////////
 
 (
 var a, b;
@@ -25,28 +93,29 @@ b = a.asStream;
 
 (
 var a, b;
-a = Pseries(0.01, 0.1, 6);    // return 6 items
+// a = Pseries(0.01, 0.1, 6);    // return 6 items
+a = Pseries(0.0, 0.1, inf).fold(0, 1);
 b = a.asStream;
-7.do({ b.next.postln });
+30.do({ |i| [i, b.next].postln });
 )
 
 (
 // Check delay synth exists and its state
-// ~delayFX.postln;
+// ~fx.delay.postln;
 ~delayBus.index.postln;
 ~reverbBus.index.postln;
 ~cloudsBus.index.postln;
-// ~delayFX.query;  // Query its current parameter values
+// ~fx.delay.query;  // Query its current parameter values
 
 // Check for duplicate delay synths
 s.queryAllNodes;
 )
 
 (
-  s.options.numAudioBusChannels.postln;  // Total private buses
-  s.options.numOutputBusChannels.postln;  // Hardware outputs
-  // After server boots:
-  s.audioBusAllocator.blocks.postln;  // Shows allocated ranges
+s.options.numAudioBusChannels.postln;  // Total private buses
+s.options.numOutputBusChannels.postln;  // Hardware outputs
+// After server boots:
+s.audioBusAllocator.blocks.postln;  // Shows allocated ranges
 )
 
 (
@@ -59,18 +128,18 @@ s.queryAllNodes;
 )
 
 (
-  // Check what the delay synth is actually reading from
-  ~delayFX.postln;
-  s.queryAllNodes;
+// Check what the delay synth is actually reading from
+~fx.delay.postln;
+s.queryAllNodes;
 
-  // Also verify bus objects
-  ~delayBus.index.postln;  // Should be 100
-  ~reverbBus.index.postln;  // Should be 102
-  ~cloudsBus.index.postln;  // Should be 104
+// Also verify bus objects
+~delayBus.index.postln;  // Should be 100
+~reverbBus.index.postln;  // Should be 102
+~cloudsBus.index.postln;  // Should be 104
 )
 
-  ~delayFX.free;
-  ~delayFX = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
+~fx.delay.free;
+~fx.delay = Synth(\globalFilterDelay, [\out, 0], ~fxGroup, \addToTail);
 
 ([0.1, 0.1, 0.1] ++ (3 ! 5)).flatten
 
@@ -96,8 +165,8 @@ Env.asr(0.02, 0.5, 1, 'linear').test(2).plot; // linear segments
 (Document.current.dir +/+ "test_modulate_refactor.scd").load;
 
 (
-~plaits.samples.size.postln;
-~plaits.samples.do { |s, i| [i, s.notNil].postln };
+~dreads.samples.size.postln;
+~dreads.samples.do { |s, i| [i, s.notNil].postln };
 )
 
 // controlPeriod = blockSize / sampleRate
@@ -255,23 +324,23 @@ MiClouds
 // ~cloudsBus = Bus.audio(s, 2);
 // ~delayBus = Bus.audio(s, 2);
 
-// ~cloudsFX = Synth(\globalClouds, [\out, 0], addAction: \addToTail);
+// ~fx.clouds = Synth(\globalClouds, [\out, 0], addAction: \addToTail);
 // b = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
 //
-// ~delayFX = Synth(\globalFilterDelay, [\out, 0], addAction: \addToTail);
+// ~fx.delay = Synth(\globalFilterDelay, [\out, 0], addAction: \addToTail);
 
 (  // basic granulation
 x = {
 	var buffer = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
 	var input = PlayBuf.ar(1, buffer, 1, loop: 1)!2;
-
+	
 	var dens = LFNoise1.kr(0.3).range(0.3, 0.45);
-
+	
 	Out.ar(~cloudsBus, input);
 	// Out.ar(~delayBus, input);
 	// Out.ar(0, LeakDC.ar(input) * 0.2);
 	// MiClouds.ar(input, 0, 0, 0, dens, 0.5, drywet: 1, mode: 0);
-
+	
 }.play
 )
 )
@@ -279,40 +348,40 @@ x = {
 (
 [
 	"cloudsSends",
-	~plaits.synths[0].cloudsSend,
-	~plaits.synths[1].cloudsSend,
-	~plaits.synths[2].cloudsSend,
+	~dreads.synths[0].cloudsSend,
+	~dreads.synths[1].cloudsSend,
+	~dreads.synths[2].cloudsSend,
 ].postln;
 )
 
-~cloudsFX.set(\freeze, 1)   // freeze internal buffer
-~cloudsFX.set(\freeze, 0)
-~cloudsFX.set(\mode, 0)
-~cloudsFX.set(\mode, 1)
-~cloudsFX.set(\mode, 2)
-~cloudsFX.set(\mode, 3)
-~cloudsFX.set(\density, 1.0.rand)
-~cloudsFX.set(\position, 1.0.rand)
-~cloudsFX.set(\size, 1.0.rand)
-~cloudsFX.set(\blend, 1.0.rand)
-~cloudsFX.set(\spread, 1.0.rand)
+~fx.clouds.set(\freeze, 1)   // freeze internal buffer
+~fx.clouds.set(\freeze, 0)
+~fx.clouds.set(\mode, 0)
+~fx.clouds.set(\mode, 1)
+~fx.clouds.set(\mode, 2)
+~fx.clouds.set(\mode, 3)
+~fx.clouds.set(\density, 1.0.rand)
+~fx.clouds.set(\position, 1.0.rand)
+~fx.clouds.set(\size, 1.0.rand)
+~fx.clouds.set(\blend, 1.0.rand)
+~fx.clouds.set(\spread, 1.0.rand)
 
-~cloudsFX.set(\pitch, rrand(-48, 48))
+~fx.clouds.set(\pitch, rrand(-48, 48))
 
-~cloudsFX.set(\reverb, 1.0.rand)
-~cloudsFX.set(\feedback, 0.5.rand)
+~fx.clouds.set(\reverb, 1.0.rand)
+~fx.clouds.set(\feedback, 0.5.rand)
 
 1.0.rand
 
 x.free;
 
 // Test if the synth is actually running
-~cloudsFX.isPlaying  // should return true
+~fx.clouds.isPlaying  // should return true
 
 // Test with more obvious parameters
-~cloudsFX.set(\density, 0.8, \position, 0.8, \size, 0.8, \blend, 1.0);
+~fx.clouds.set(\density, 0.8, \position, 0.8, \size, 0.8, \blend, 1.0);
 
-~cloudsFX
+~fx.clouds
 
 ~cloudsBus
 
@@ -399,6 +468,7 @@ Pseq([1,2,3,4]).asStream
 Pdrop(3, ~sinePattern.(64, 0.1, 0.2)).asStream
 
 
+(0..19)
 
 (
 p = Pstutter(4, Pdrop(3, ~sinePattern.(64.0, 0.05, 0.5)));
@@ -431,22 +501,22 @@ q = p.asStream.nextN(20).postln;
 ).play;
 )
 
-  // Wait and listen - 4th beat should randomly rest ~30% of time
+// Wait and listen - 4th beat should randomly rest ~30% of time
 ~test1.stop;
 
 (
-	// Test: Nested Pseq
-	~test3 = Pbind(
-		\instrument, \default,
-		\dur, Pseq([
-			0.25,
-			0.25,
-			0.25,
-			Pseq([0.25, Rest(0.25)], inf)  // Should cycle values
-		], inf),
-		\note, Pseq([0, 2, 4, 7, 9], inf),
-		\amp, 0.3
-	).play;
+// Test: Nested Pseq
+~test3 = Pbind(
+	\instrument, \default,
+	\dur, Pseq([
+		0.25,
+		0.25,
+		0.25,
+		Pseq([0.25, Rest(0.25)], inf)  // Should cycle values
+	], inf),
+	\note, Pseq([0, 2, 4, 7, 9], inf),
+	\amp, 0.3
+).play;
 )
 
 ~test3.stop;
@@ -455,5 +525,19 @@ q = p.asStream.nextN(20).postln;
 
 Rotate2
 
+~drones[0].nodeID
 
 
+// Test 1: minimal \set Pbind (matches Reddit example exactly)                                                                                 
+Pdef(\droneTest, Pbind(\type, \set, \id, ~drones[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play;                        
+
+// Test 2: same but with TempoClock                                                                                                            
+Pdef(\droneTest, Pbind(\type, \set, \id, ~drones[0].nodeID, \pitch, Pseq([40, 50, 60, 70], inf), \dur, 0.5)).play(~tempoClock);
+
+Pdef(\p1,Pbind(\id, ~drones[0].nodeID, \type, \set, \pitch, 200+Pwhite(0,50)))
+
+Pdef(\p1).play
+
+// Stop                                                   
+Pdef(\droneTest).stop; 
+Pdef(\p).stop; 
