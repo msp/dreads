@@ -115,13 +115,17 @@ OSCdef.new(
 								// modulated value to visuals so live knob drags update VDMX
 								// smoothly (otherwise visuals are sequencer-tick rate).
 								// See docs/visualization-osc.md for full architecture discussion.
-								if ([\cloudsSend, \delaySend, \reverbSend, \revDrywet, \distAmount, \harm].includes(paramKey)) {
+								if ([\cloudsSend, \delaySend, \reverbSend, \revDrywet, \distAmount, \harm, \amDepth, \amRing].includes(paramKey)) {
 									cache = ~dreads.synths[instanceIndex].seqCache;
 									if (cache.notNil and: { cache[paramKey].notNil }) {
 										modVal = ~modulateBipolar.(cache[paramKey], value);
 										// Match sequencer's 0-based path convention (lib/sequencer.scd ~/vis bundle)
 										~vis.().sendMsg("/plaits/" ++ instanceIndex ++ "/" ++ paramKey.asString, modVal);
 									};
+								};
+								// amRatio is static (no sequence) — echo the normalised knob value
+								if (paramKey == \amRatio) {
+									~vis.().sendMsg("/plaits/" ++ instanceIndex ++ "/amRatio", value / 8.0);
 								};
 							};
 						};

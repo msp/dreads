@@ -58,7 +58,10 @@ x = Pdef(\plaitsSequence,
 						"delaySend",  (ev[\delaySend] ?? 0.0),
 						"reverbSend", (ev[\reverbSend] ?? 0.0),
 						"revDrywet",  (ev[\revDrywet] ?? 0.0),
-						"distAmount", (ev[\distAmount] ?? 0.0)
+						"distAmount", (ev[\distAmount] ?? 0.0),
+						"amRatio", (ev[\amRatio] ?? 1.0),
+						"amDepth", (ev[\amDepth] ?? 0.0),
+						"amRing", (ev[\amRing] ?? 0.0)
 					);
 
 					~vis.().sendBundle(nil,
@@ -76,7 +79,10 @@ x = Pdef(\plaitsSequence,
 						["/plaits/" ++ i ++ "/delaySend",  (ev[\delaySend] ?? 0.0)],
 						["/plaits/" ++ i ++ "/reverbSend", (ev[\reverbSend] ?? 0.0)],
 						["/plaits/" ++ i ++ "/revDrywet",  (ev[\revDrywet] ?? 0.0)],
-						["/plaits/" ++ i ++ "/distAmount", (ev[\distAmount] ?? 0.0)]
+						["/plaits/" ++ i ++ "/distAmount", (ev[\distAmount] ?? 0.0)],
+						["/plaits/" ++ i ++ "/amRatio", (ev[\amRatio] ?? 1.0) / 8.0],
+						["/plaits/" ++ i ++ "/amDepth", (ev[\amDepth] ?? 0.0)],
+						["/plaits/" ++ i ++ "/amRing", (ev[\amRing] ?? 0.0)]
 					);
 
 					if (~dreads.synths[i].sendToPhones == 1.0) {
@@ -95,7 +101,10 @@ x = Pdef(\plaitsSequence,
 							"delaySend",  (ev[\delaySend] ?? 0.0),
 							"reverbSend", (ev[\reverbSend] ?? 0.0),
 							"revDrywet",  (ev[\revDrywet] ?? 0.0),
-							"distAmount", (ev[\distAmount] ?? 0.0)
+							"distAmount", (ev[\distAmount] ?? 0.0),
+							"amRatio", (ev[\amRatio] ?? 1.0),
+							"amDepth", (ev[\amDepth] ?? 0.0),
+							"amRing", (ev[\amRing] ?? 0.0)
 						);
 					}
 				};
@@ -237,8 +246,22 @@ x = Pdef(\plaitsSequence,
 				// are sequenceable (modulateBipolar: the knob scales a 0-1 shape sequence).
 				\amRatio, Pfunc { |event| ~dreads.synths[i].amRatio },
 				\amWave, Pfunc { |event| ~dreads.synths[i].amWave },
-				\amDepth, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \amDepth), ~dreads.synths[i].amDepth) },
-				\amRing, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \amRing), ~dreads.synths[i].amRing) },
+				\amDepth, Pfunc { |event|
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \amDepth);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\amDepth] = seqVal;      // cached for the vis live-drag echo
+					~modulateBipolar.(seqVal, inst.amDepth)
+				},
+				\amRing, Pfunc { |event|
+					var inst, seqVal;
+					inst = ~dreads.synths[i];
+					seqVal = ~getSequenceValue.(inst, i, \plaits, \amRing);
+					inst.seqCache ?? { inst.seqCache = () };
+					inst.seqCache[\amRing] = seqVal;
+					~modulateBipolar.(seqVal, inst.amRing)
+				},
 				\amFixedHz, Pfunc { |event| ~dreads.synths[i].amFixedHz },
 				\delaySend, Pfunc { |event|
 					var inst, seqVal;
