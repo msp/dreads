@@ -114,7 +114,8 @@ x = Pdef(\plaitsSequence,
 							\revDrywet, ev[\revDrywet], \revTime, ev[\revTime],
 							\cloudsSend, ev[\cloudsSend], \delaySend, ev[\delaySend],
 							\reverbSend, ev[\reverbSend],
-							\distDrive, ev[\distDrive], \distAmount, ev[\distAmount]
+							\distDrive, ev[\distDrive], \distAmount, ev[\distAmount],
+							\amDepth, ev[\amDepth], \amRing, ev[\amRing]
 						);
 					};
 				};
@@ -232,6 +233,13 @@ x = Pdef(\plaitsSequence,
 				\revDamp, Pfunc { |event| ~dreads.synths[i].revDamp },
 				\revHp, Pfunc { |event| ~dreads.synths[i].revHp },
 				\revFreeze, Pfunc { |event| ~dreads.synths[i].revFreeze },
+				// AM / ring-mod — ratio/wave/fixedHz are static scalars; depth & am/rm
+				// are sequenceable (modulateBipolar: the knob scales a 0-1 shape sequence).
+				\amRatio, Pfunc { |event| ~dreads.synths[i].amRatio },
+				\amWave, Pfunc { |event| ~dreads.synths[i].amWave },
+				\amDepth, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \amDepth), ~dreads.synths[i].amDepth) },
+				\amRing, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \amRing), ~dreads.synths[i].amRing) },
+				\amFixedHz, Pfunc { |event| ~dreads.synths[i].amFixedHz },
 				\delaySend, Pfunc { |event|
 					var inst, seqVal;
 					inst = ~dreads.synths[i];
