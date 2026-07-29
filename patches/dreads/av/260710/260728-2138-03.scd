@@ -10,7 +10,7 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.35, amFixedHz: 0.0, amRatio: 2.0, amRing: 0.35, amWave: 0.0, cloudsSend: 0.1, decay: 0.85, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 0.5, engine: 0.0, fmMod: 0.0, harm: 0.5, harmMod: 0.0, legato: 4.0, lpgColour: 0.6, morph: 0.5, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 36.0, pitchMod: 0.0, revDamp: 0.8, revDrywet: 0.4, revFreeze: 0.0, revHp: 0.38, revTime: 0.95, reverbSend: 0.3, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 40.0, timbMod: 0.0, timbre: 0.4, volume: 1.0, volumeMod: 0.0),
+			(amDepth: 0.45, amFixedHz: 0.0, amRatio: 2.0, amRing: 0.35, amWave: 0.0, cloudsSend: 0.1, decay: 0.85, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 0.5, engine: 0.0, fmMod: 0.0, harm: 0.5, harmMod: 0.0, legato: 4.0, lpgColour: 0.6, morph: 0.5, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 36.0, pitchMod: 0.0, revDamp: 0.8, revDrywet: 0.4, revFreeze: 0.0, revHp: 0.38, revTime: 0.95, reverbSend: 0.3, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 40.0, timbMod: 0.21, timbre: 0.4, volume: 1.0, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -54,7 +54,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.84, decay: 0.75, decayMod: 0.0, delaySend: 0.66, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 1.0, engine: 23.0, fmMod: 0.0, harm: 0.38, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.31, morphMod: 0.73, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 52.0, pitchMod: 0.0, revDamp: 0.69, revDrywet: 1.0, revFreeze: 0.0, revHp: 0.94, revTime: 0.88, reverbSend: 0.0, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 165.0, timbMod: 0.42, timbre: 0.3, volume: 0.3, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.84, decay: 0.75, decayMod: 0.0, delaySend: 0.66, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.0), engine: 23.0, fmMod: 0.0, harm: 0.38, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.31, morphMod: 0.73, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 52.0, pitchMod: 0.0, revDamp: 0.69, revDrywet: 1.0, revFreeze: 0.0, revHp: 0.94, revTime: 0.88, reverbSend: 0.0, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 165.0, timbMod: 0.42, timbre: 0.3, volume: 0.3, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -157,7 +157,7 @@
 
 // $LFO_SOURCES_START
 ~dreads.lfoSources = (
-	lfo1: (freq: 4.389096736908, shape: 4, base: true), // plaits 0 timbre
+	lfo1: (freq: 0.10000000149012, base: true), // plaits 0 timbre
 	lfo2: (freq: 0.5, base: true), // plaits 0 morph
 	lfo3: (freq: 0.16666666666667), // plaits 0 decay
 	lfo4: (freq: 0.8305327296257, base: true), // plaits 0 pitch
@@ -173,7 +173,7 @@
 	lfo19: (freq: 0.083333333333333), // sample 0 rate
 	lfo21: (freq: 0.083333333333333), // sample 1 rate
 );
-~base = 4.9439997673035;
+~base = 1.0;
 // $LFO_SOURCES_END
 
 // ~base = 0.5;
