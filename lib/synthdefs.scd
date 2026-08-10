@@ -59,12 +59,46 @@
 	Out.ar(out, LeakDC.ar(sig.tanh));
 };
 
+// Per-voice AM / ring-mod stage: an audio-rate modulator multiplies the signal.
+// amRing morphs AM (0 = carrier present) <-> ring mod (1 = carrier suppressed);
+// amDepth is the amount (0 = bypass). The modulator tracks the carrier at amRatio,
+// or a fixed Hz when amFixedHz = 1. amWave: 0 sine, 1 tri, 2 saw, 3 square.
+// A small makeup gain (a function of amRing only) offsets the carrier-energy lost as
+// you morph toward ring mod, so an AM<->RM sweep stays roughly level-constant. It's
+// bounded (no blow-up at the silent corner) and static (no pumping), and leaves
+// amDepth as the level control.
+~plaitsAMStage = { |sig, carrierFreq, amRatio, amWave, amDepth, amRing, amFixedHz|
+	var modFreq, mod, ring, makeup;
+	ring = amRing.clip(0, 1);
+	modFreq = Select.kr(amFixedHz.clip(0, 1), [
+		carrierFreq * amRatio,
+		amRatio.linlin(0, 8, 20, 2000)   // fixed-Hz mapping (adjustable by ear)
+	]);
+	mod = Select.ar(amWave.clip(0, 3), [
+		SinOsc.ar(modFreq),
+		LFTri.ar(modFreq),
+		Saw.ar(modFreq),
+		Pulse.ar(modFreq)
+	]);
+	// makeup = 1 + (amRing * G). G is the boost reached at full RM (amRing = 1):
+	// 0.4 -> x1.4 -> ~+3 dB, chosen to offset the ~3 dB RMS the carrier-suppressed
+	// full-depth ring mod loses vs the dry carrier. Purely a function of amRing, so
+	// it's bounded (no divide-by-zero at depth 0) and static (no pumping). Raise G
+	// for more lift (hardware/VSTs often over-compensate so RM reads as present),
+	// lower for less. Baked at synthdef-build time, so reload to change it.
+	makeup = 1 + (ring * 0.4);
+	sig * ((1 - ring) + (amDepth * mod)) * makeup;
+};
+
 SynthDef(\plaits, {
 	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
 	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0, harmLFO=0,
-	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0, harmMod=0.0;
+	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0, harmMod=0.0,
+	amRatio=1.0, amWave=0, amDepth=0.0, amRing=0.0, amFixedHz=0;
 
-	var sig = MiPlaits.ar(
+	var sig, env, carrierFreq;
+
+	sig = MiPlaits.ar(
 		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
 		engine: engine.clip(0, 23),
 		harm: (harm + (harmLFO * harmMod)).clip(0, 1),
@@ -77,7 +111,11 @@ SynthDef(\plaits, {
 		mul: mul
 	);
 
-	var env = Linen.kr(gate, doneAction: Done.freeSelf);
+	// AM / ring-mod stage (modulator tracks the modulated carrier pitch)
+	carrierFreq = (pitch + (pitchLFO * pitchMod)).clip(0, 127).midicps;
+	sig = ~plaitsAMStage.(sig, carrierFreq, amRatio, amWave, amDepth, amRing, amFixedHz);
+
+	env = Linen.kr(gate, doneAction: Done.freeSelf);
 
 	~plaitsSigChain.(sig, env, out, stereoMode, distDrive, distAmount,
 		revTime, revDrywet, revDamp, revHp, revFreeze,
@@ -89,9 +127,12 @@ SynthDef(\plaits, {
 SynthDef(\plaitsDrone, {
 	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
 	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0, harmLFO=0,
-	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0, harmMod=0.0;
+	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0, harmMod=0.0,
+	amRatio=1.0, amWave=0, amDepth=0.0, amRing=0.0, amFixedHz=0;
 
-	var sig = MiPlaits.ar(
+	var sig, env, carrierFreq;
+
+	sig = MiPlaits.ar(
 		pitch: (pitch + (pitchLFO * pitchMod)).clip(0, 127),
 		engine: engine.clip(0, 23),
 		harm: (harm + (harmLFO * harmMod)).clip(0, 1),
@@ -104,7 +145,11 @@ SynthDef(\plaitsDrone, {
 		mul: mul
 	);
 
-	var env = EnvGen.kr(Env.asr(5, 1, 5), gate, doneAction: Done.freeSelf);
+	// AM / ring-mod stage (modulator tracks the modulated carrier pitch)
+	carrierFreq = (pitch + (pitchLFO * pitchMod)).clip(0, 127).midicps;
+	sig = ~plaitsAMStage.(sig, carrierFreq, amRatio, amWave, amDepth, amRing, amFixedHz);
+
+	env = EnvGen.kr(Env.asr(5, 1, 5), gate, doneAction: Done.freeSelf);
 
 	~plaitsSigChain.(sig, env, out, stereoMode, distDrive, distAmount,
 		revTime, revDrywet, revDamp, revHp, revFreeze,

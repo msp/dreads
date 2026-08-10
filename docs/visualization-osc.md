@@ -61,11 +61,29 @@ These values are **Tier 1 outputs** — the sequencer's Pfunc result, after `~mo
 ### From the LFO reporter (`lib/synthdefs.scd`, server-side, 60 Hz)
 
 - `\lfoReporter` SynthDef fires `SendReply.kr(Impulse.kr(60), '/lfoValues', [...])`
-- `~lfo.reporterFunc` (`lib/lfo.scd`) relays 21 buses to VDMX paths:
-  - `/plaits/<i>/lfo/<param>` — `bus_value * modDepth`, range −0.5..+0.5
-  - `/samples/<i>/lfo/<param>` — same shape
+- `~lfo.reporterFunc` (`lib/lfo.scd`) relays 24 buses to VDMX paths:
+  - `/plaits/<i>/lfo/<param>` for `timbre, morph, decay, pitch, volume, harm` (6 params × 3 instances = 18)
+  - `/samples/<i>/lfo/<param>` for `rate, volume` (2 × 3 = 6)
+  - Each value = `bus_value * modDepth`, range **−0.5 .. +0.5** (signed)
 
 These values are the **LFO contribution alone** (not added to the scalar) — they represent Tier 2 modulation.
+
+### Consuming the bipolar LFO stream in VDMX
+
+VDMX standard slider receivers **will not accept a negative `MIN`** — the field silently snaps back to 0. Feeding `/plaits/<i>/lfo/<param>` directly into an FX slider therefore clips the negative half of the LFO to the slider's floor. Visible symptom: the value "hangs" at the minimum for roughly half each cycle.
+
+Two ways to bridge the mismatch:
+
+1. **Per-receiver "Do Math?" expression** — VDMX slider receivers support a math expression using `$VAL`, `$MIN`, `$MAX` (DDMathParser syntax). Example to remap −0.5..+0.5 into the slider's envelope: `$VAL + 0.5` with "Scale val to fit in envelope" enabled. Downside: needs remembering per mapping, spreads the translation across the project.
+
+2. **Control Surface adapter (recommended)** — a one-time-setup pattern. Build a Control Surface plugin containing one **custom fader per LFO channel** (24 total). Each fader:
+   - has `MIN: -0.5, MAX: 0.5` — custom faders *do* accept a negative min
+   - has **Publish Normalised** enabled — republishes the fader position as `0.0..1.0` under the fader's name
+   - receives its OSC path directly (e.g. fader "plaits0_volume" listens on `/plaits/0/lfo/volume`)
+
+   Downstream FX subscribe to the Publish Normalised value from the adapter fader, not the raw OSC. Range translation lives in one place, the fader labels are self-documenting, and the fader UI (or the Comm Display plugin) gives a live debug view of every LFO channel. Save the Control Surface as a plugin preset for reuse across projects.
+
+The bipolar range is deliberate on Dreads' side — shaders that add the LFO to a base value (`finalTimbre = timbre + LFO * mod`) need a signed input, matching the server-side SynthDef maths. The adapter pattern lets both audiences — shaders that want bipolar, VDMX FX that want unipolar — get what they need without changing the Dreads OSC taxonomy.
 
 ## Known gaps and discussion
 

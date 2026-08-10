@@ -96,6 +96,11 @@
 
 // Default scalar values for all plaits instances
 ~defaultScalars = (
+	amDepth: 0.0,      // AM/ring-mod amount (0 = bypass)
+	amFixedHz: 0,      // 0 = modulator tracks carrier ratio, 1 = fixed Hz (inharmonic)
+	amRing: 0.0,       // AM<->RM morph (0 = AM/carrier present, 1 = ring mod/carrier suppressed)
+	amRatio: 1.0,      // modulator freq as a ratio of the carrier pitch
+	amWave: 0,         // modulator waveform: 0 sine, 1 tri, 2 saw, 3 square
 	cloudsSend: 1.0,
 	decay: 0.5,
 	decayMod: 0.3,  // legacy default — was hardcoded in sequencer before bus-based LFOs
@@ -186,6 +191,8 @@
 
 // Plaits-specific sequences (merged with ~baseSequences)
 ~defaultSequences = ~baseSequences ++ (
+	amDepth: \hold,
+	amRing: \hold,
 	engine: Pseq(["e"], inf).asStream,
 	fmMod: \hold,
 	harm: \hold,

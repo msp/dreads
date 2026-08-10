@@ -757,6 +757,11 @@
 		\pitchMod, instance.pitchMod,
 		\volumeMod, instance.volumeMod,
 		\harmMod, instance.harmMod,
+		\amRatio, instance.amRatio,
+		\amWave, instance.amWave,
+		\amDepth, instance.amDepth,
+		\amRing, instance.amRing,
+		\amFixedHz, instance.amFixedHz,
 	], ~voiceGroup, \addToHead);
 
 	// Map LFO buses to drone control args — instance.lfo is already hydrated
