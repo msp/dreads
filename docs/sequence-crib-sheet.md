@@ -178,3 +178,55 @@ Full list + definitions: `lib/sequence_library.scd`. Euclidean rhythms of any
   different across module types.
 - A modulation param sitting at **`\hold`** (0.5) plus its **knob at 0.5** = no
   audible movement; nudge the knob up to reveal the sequence.
+
+---
+
+## 9. Period, speed and smoothness (how a stepped sequence "moves")
+
+These are **step-based, not time-based**: one value is pulled per sequencer
+event (`.next` per tick). So the wall-clock behaviour has two independent axes.
+
+### Period — how long one cycle takes
+```
+period  = (steps per cycle) × (seconds per step)
+sec/step = duration / div × (60 / tempo)        // ~setDuration = duration/div, in beats
+```
+- **steps per cycle** is baked into the pattern (e.g. `sweep_slow` ≈ 100, `sine_slow`
+  ≈ 49). **sec/step** is set by that param's `duration`/`div` sequences and the
+  global tempo — *not* by a rate knob.
+- To slow a drift without touching tempo, **lengthen `duration`** (bigger = slower,
+  smaller = faster). A handy idiom is a global `~dur = [1/16]` fed to
+  `duration: Pseq(~dur, inf).asStream` on several voices.
+- It's tempo/rhythm-locked — you can't decouple drift speed from note rate. That
+  decoupling is the one thing a continuous LFO gives that a grid sequence can't.
+
+### Smoothness — whether you hear "stepping"
+Audible stepping depends on the **value jump per step, NOT the seconds per step.**
+A fine sequence sounds smooth even held for seconds; a coarse one clunks even fast.
+
+```
+granularity = value range ÷ steps per cycle      // smaller Δ = smoother
+```
+
+Per-step Δ of the shape sequences (for `amRing`/any 0–1 gain-morph param):
+
+| sequence | steps/cycle | Δ per step | feel |
+|---|---|---|---|
+| `sine_slow` | 49 | ~0.02–0.065 | glassy — no perceptible steps at any speed |
+| `sine` | 25 | ~0.08–0.13 | mild stepping visible on a gain morph |
+| `saw` | 10 | 0.125 rising **+ 1.0 jump at wrap** | coarse; the reset is an audible click/thump |
+| `steps_4` | 4 | 0.25 | obvious 4-state stepping |
+
+- A **0.02** change in a gain-like param (`amRing`, sends) is ~**0.18 dB** — below
+  the threshold to hear as a discrete step. That's why `sweep_slow`/`sine_slow`
+  read as continuous even slow and dry.
+- Watch for **built-in discontinuities**: `saw` snaps 1.0→0 at the wrap (sines turn
+  around smoothly and never do), and a `Pseq` with a big gap between its last and
+  first value will click at the loop point.
+- **Want stepping?** Use a coarse sequence (`steps_4`, `steps_8`, or a custom `Pseq`
+  with big gaps). **Want smooth?** Use a fine one (`*_slow`). Speed and smoothness
+  are separate dials.
+- **CPU note:** very small `duration` (e.g. `1/256`) fires hundreds of events/sec
+  per voice, each also emitting `~vis`/`~td`/`~ws` OSC bundles. Past ~30–50
+  updates/sec a gain morph is already perceptually smooth, so faster just burns
+  cycles for no audible gain. `1/16`–`1/32` is a good smooth-but-cheap zone.
