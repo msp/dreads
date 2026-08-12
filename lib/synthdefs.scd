@@ -236,18 +236,31 @@ SynthDef(\globalFilterDelay, {
 // Global MiVerb Send Effect
 SynthDef(\globalReverb, {
 	arg out=0, time=0.5, damp=0.5, hp=0.25, diffuse=0.625, freeze=0,
-	mix=1.0, gate=1;
+	mix=1.0, gate=1, unfreezeGlide=5.0;
 
 	var input = In.ar(~reverbBus, 2);
 	var env = EnvGen.kr(Env.asr(0.01, 1, 2), gate, doneAction: 2);
+	var frz = freeze.clip(0, 1);
+	var targetTime = time.clip(0, 1.25);
+
+	// Unfreeze glide: while frozen MiVerb pins its internal reverb time to 1.0. On
+	// unfreeze it slams set_time(time) in one block, so a lowered time makes the
+	// feedback coefficient drop abruptly -> glitch/swell. Ramp the time we feed it
+	// from 1.0 down to the target so the frozen swell eases into a decaying tail.
+	// freezeHold is derived from the same freeze signal (LagUD: engages instantly on
+	// freeze, eases to 0 over unfreezeGlide after unfreeze) — so at the unfreeze
+	// block it's still ~1.0, avoiding the trigger/EnvGen latency race that let the
+	// set_time jump through.
+	var freezeHold = LagUD.kr(frz, 0, unfreezeGlide.max(0.001));
+	var effTime = (targetTime * (1 - freezeHold)) + freezeHold;  // 1.0 frozen -> targetTime
 
 	var reverb = MiVerb.ar(
 		input,
-		time: time.clip(0, 1.25),
+		time: effTime,
 		drywet: 1.0, // Always 100% wet for send effect
 		damp: damp.clip(0, 1),
 		hp: hp.clip(0, 1),
-		freeze: freeze.clip(0, 1),
+		freeze: frz,
 		diff: diffuse.clip(0, 1),
 		mul: mix.clip(0, 2.0)
 	);
