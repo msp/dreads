@@ -15,6 +15,13 @@ x.stop;
 ~dreads.synths[0].seqCache;
 
 
+//////////////// EUCL PRINT TEST ///////////////////////////////////
+
+~euclidean.(3, 8).postln;
+
+~euclideanSeq.(5, 16).asStream.nextN(8, ()).postln;
+
+
 //////////////// DELAYS TEST ///////////////////////////////////
 ~tempoDelay.(\eighth);                       // -> seconds for 1/8 at current tempo
 ~tempoDelayLR.(\eighth, \dottedEighth);      // -> [time, spread]
