@@ -793,6 +793,33 @@
 	result.join("\n");
 };
 
+// List patch names (basename, no .scd) in the current patch's folder, sorted.
+// Same glob prev/next uses (~loadAdjacentPatch); the folder is implicit in
+// ~currentPatchTemplate.dirname.
+~listPerfPatches = {
+	var dir;
+	if (~currentPatchTemplate.isNil) { [] } {
+		dir = ~currentPatchTemplate.standardizePath.dirname;
+		(dir +/+ "*.scd").pathMatch.sort.collect { |p| p.basename.splitext[0] };
+	};
+};
+
+// Push the Perf-tab patch grid to the UI: rebuild the button cells from the
+// current folder (via O-S-C /EDIT), then highlight the active patch. The guard
+// var (/perf/loaded) is set BEFORE the highlight so the programmatic selection
+// doesn't trigger a reload (see the grid's onValue guard in plaits.json).
+~pushPerfGrid = {
+	var names, current, valuesJson;
+	names = ~listPerfPatches.();
+	current = if (~currentPatchTemplate.notNil) {
+		~currentPatchTemplate.basename.splitext[0]
+	} { "" };
+	valuesJson = "{\"values\":[" ++ names.collect(_.quote).join(",") ++ "]}";
+	~ui.().sendMsg('/EDIT', 'perfGrid', valuesJson);
+	~ui.().sendMsg('/perf/loaded', current);   // guard var first
+	~ui.().sendMsg('/perfGrid', current);       // then highlight active cell
+};
+
 // Update UI patch selector to reflect current patch
 ~updatePatchUI = {
 	var patchName;
@@ -802,6 +829,7 @@
 		~ui.().sendMsg("/dreads/loadPatch", patchName);
 		("UI patch selector updated to: " ++ patchName).postln;
 	};
+	~pushPerfGrid.();   // keep the Perf grid + highlight in sync on load/save
 };
 
 // Save patch with new name (creates new file)

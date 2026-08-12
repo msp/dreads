@@ -464,6 +464,22 @@ OSCdef.new(
 	"/dreads/loadPatch"
 );
 
+// Perf grid: load a patch by filename within the current patch's folder.
+OSCdef.new(
+	\loadFolderPatch.asSymbol,
+	{
+		arg msg, time, addr, port;
+		var name = msg[1].asString;
+		var path;
+		if (~currentPatchTemplate.notNil) {
+			path = ~currentPatchTemplate.standardizePath.dirname +/+ (name ++ ".scd");
+			["loadFolderPatch", name, "->", path].postln;
+			~loadPatch.(path);
+		};
+	},
+	"/dreads/loadFolderPatch"
+);
+
 OSCdef.new(
 	\globalTempo.asSymbol,
 	{
@@ -720,6 +736,10 @@ OSCdef.new(
 	};
 	ui.sendMsg("/dreads/lfoBase", ~base);
 
+
+	// Populate the Perf-tab patch grid (also refreshed on every load/save via
+	// ~updatePatchUI; this covers boot / full state pushes). nil-safe no-op.
+	~pushPerfGrid.();
 
 	"Plaits state pushed to UI!".postln;
 };
