@@ -9,7 +9,25 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(cloudsSend: 0.0, decay: 0.12, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.33, engine: 19.0, fmMod: 0.27, harm: 0.34, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.66, morphMod: 0.9, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 60.0, pitchMod: 0.0, revDamp: 0.88, revDrywet: 0.84, revFreeze: 0.0, revHp: 0.83, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.5, stereoMode: 1.0, tempo: 114.01, timbMod: 0.2, timbre: 0.0, volume: 0.2, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.16, decayMod: 0.0, delaySend: 0.37, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.33, engine: 19.0, fmMod: 0.0, harm: 0.64, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.4, morphMod: 0.34, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 42.0, pitchMod: 0.0, revDamp: 0.69, revDrywet: 0.12, revFreeze: 0.0, revHp: 0.94, revTime: 0.72, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.5, stereoMode: 1.0, tempo: 114.01, timbMod: 0.57, timbre: 0.3, volume: 0.68, volumeMod: 0.0),
+			// $PRESET_SCALARS_END
+			// $PRESET_SEQUENCES_START
+			(
+				div: \unit,
+				duration: \hold,
+				pitch: \triad_min_inv,
+				delaySend: \gate_every16,
+				revDrywet: \sine_slow,
+			),
+			// $PRESET_SEQUENCES_END
+			// $PRESET_LFO_START
+			()
+			// $PRESET_LFO_END
+		),
+		// $PLAITS2
+		~plaitsFactory.(
+			// $PRESET_SCALARS_START
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.12, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.33, engine: 19.0, fmMod: 0.27, harm: 0.34, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.66, morphMod: 0.33, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 60.0, pitchMod: 0.0, revDamp: 0.53, revDrywet: 0.84, revFreeze: 0.0, revHp: 0.91, revTime: 0.59, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.5, stereoMode: 1.0, tempo: 114.01, timbMod: 0.24, timbre: 0.0, volume: 0.23, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -29,35 +47,16 @@
 			// $PRESET_LFO_END
 		),
 
-		// $PLAITS2
+		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(cloudsSend: 0.28, decay: 0.04, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.67, engine: 19.0, fmMod: -0.02, harm: 0.48, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.05, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 40.0, pitchMod: 0.0, revDamp: 0.04, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.47, revTime: 0.84, reverbSend: 0.42, sendToPhones: 0.0, speed: 1.5, stereoMode: 1.0, tempo: 114.01, timbMod: 0.0, timbre: 0.18, volume: 0.6, volumeMod: 0.5),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.28, decay: 0.04, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.67, engine: 19.0, fmMod: -0.02, harm: 0.48, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.05, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 40.0, pitchMod: 0.0, revDamp: 0.04, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.47, revTime: 0.84, reverbSend: 0.42, sendToPhones: 0.0, speed: 1.5, stereoMode: 1.0, tempo: 114.01, timbMod: 0.0, timbre: 0.18, volume: 0.69, volumeMod: 0.5),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
 				div: \unit,
 				duration: \four_floor,
 				pitch: \hold,
-			),
-			// $PRESET_SEQUENCES_END
-			// $PRESET_LFO_START
-			()
-			// $PRESET_LFO_END
-		),
-
-		// $PLAITS3
-		~plaitsFactory.(
-			// $PRESET_SCALARS_START
-			(cloudsSend: 0.0, decay: 0.47, decayMod: 0.0, delaySend: 0.25, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.33, engine: 19.0, fmMod: 0.0, harm: 0.64, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.64, morphMod: 0.34, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 42.0, pitchMod: 0.0, revDamp: 0.69, revDrywet: 0.17, revFreeze: 0.0, revHp: 0.94, revTime: 0.88, reverbSend: 0.15, sendToPhones: 0.0, speed: 1.5, stereoMode: 1.0, tempo: 114.01, timbMod: 0.77, timbre: 0.53, volume: 0.68, volumeMod: 0.0),
-			// $PRESET_SCALARS_END
-			// $PRESET_SEQUENCES_START
-			(
-				div: \unit,
-				duration: \hold,
-				pitch: \triad_min_inv,
-				delaySend: \gate_every16,
-				revDrywet: \sine_slow,
 			),
 			// $PRESET_SEQUENCES_END
 			// $PRESET_LFO_START
@@ -128,8 +127,8 @@
 	// $PRESET_FX_START
 (
 	clouds: (blend: 0.26, density: 0.93, feedback: 0.41, freeze: 0.0, inGain: 1.0, lofi: 0.0, mix: 1.0, mode: 3.0, pitch: 1.92, position: 0.69, reverb: 0.55, size: 0.27, spread: 0.5, texture: 0.59, volume: 0.73),
-	delay: (feedback: 0.74, filterFreq: 5762.02, spread: 1.5, time: 0.55),
-	reverb: (damp: 0.86, diffuse: 0.44, freeze: 1.0, hp: 0.3, time: 0.41)
+	delay: (feedback: 0.56, filterFreq: 2198.64, spread: 1.5, time: 0.55),
+	reverb: (damp: 0.26, diffuse: 0.63, freeze: 1.0, hp: 0.49, time: 0.51)
 ),
 	// $PRESET_FX_END
 );
@@ -154,31 +153,25 @@
 
 // $LFO_SOURCES_START
 ~dreads.lfoSources = (
-	lfo1: (freq: 1.2, shape: 2), // plaits 0 timbre
-	lfo2: (freq: 1.56), // plaits 0 morph
-	lfo3: (freq: 0.16666666666667), // plaits 0 decay
-	lfo4: (freq: 1.2, shape: 3), // plaits 0 pitch
-	lfo5: (freq: 1.2), // plaits 0 volume
-	lfo6: (freq: 1.0), // plaits 0 harm
-	lfo8: (freq: 0.16666666666667), // plaits 1 morph
-	lfo11: (freq: 0.2), // plaits 1 volume
-	lfo13: (freq: 0.93332344293594), // plaits 2 timbre
-	lfo14: (freq: 1), // plaits 2 morph
-	lfo15: (freq: 6), // plaits 2 decay
-	lfo16: (freq: 0.33333333333333, shape: 4), // plaits 2 pitch
-	lfo17: (freq: 1), // plaits 2 volume
+	lfo1: (freq: 0.16666666666667), // plaits 0 timbre
+	lfo2: (freq: 1), // plaits 0 morph
+	lfo3: (freq: 6), // plaits 0 decay
+	lfo4: (freq: 0.33333333333333, shape: 4), // plaits 0 pitch
+	lfo5: (freq: 1), // plaits 0 volume
+	lfo7: (freq: 1.2, shape: 2), // plaits 1 timbre
+	lfo8: (freq: 1.56), // plaits 1 morph
+	lfo9: (freq: 0.16666666666667), // plaits 1 decay
+	lfo10: (freq: 1.2, shape: 3), // plaits 1 pitch
+	lfo11: (freq: 1.2), // plaits 1 volume
+	lfo12: (freq: 1.0), // plaits 1 harm
+	lfo14: (freq: 0.16666666666667), // plaits 2 morph
+	lfo17: (freq: 0.2), // plaits 2 volume
 	lfo19: (freq: 0.083333333333333), // sample 0 rate
 	lfo21: (freq: 0.083333333333333), // sample 1 rate
 );
+~base = 1.2;
 // $LFO_SOURCES_END
 
-// ~base = 0.5;
-// ~dreads.lfoSources[\lfo1].freq = ~base + 0.04;
-// ~dreads.lfoSources[\lfo4].freq = ~base + 0.03;
-// ~dreads.lfoSources[\lfo5].freq = ~base;
-// ~dreads.lfoSources[\lfo5].freq = ~base/5;
-
 ~applyPatch.();
-
 )
 
