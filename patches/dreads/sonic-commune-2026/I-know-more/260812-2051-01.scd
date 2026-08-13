@@ -50,7 +50,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.51, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.8, amWave: 0.0, cloudsSend: 0.27, decay: 0.0, decayMod: 0.0, delaySend: 0.66, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 18.0, fmMod: 0.01, harm: 0.2, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.17, morphMod: 0.1, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 42.0, pitchMod: 0.0, revDamp: 0.76, revDrywet: 0.11, revFreeze: 0.0, revHp: 0.72, revTime: 0.88, reverbSend: 0.15, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 130.0, timbMod: 0.84, timbre: 0.75, volume: 1.26, volumeMod: 0.0),
+			(amDepth: 0.51, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.8, amWave: 0.0, cloudsSend: 0.27, decay: 0.01, decayMod: 0.0, delaySend: 0.66, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 18.0, fmMod: 0.01, harm: 0.2, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.17, morphMod: 0.1, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 42.0, pitchMod: 0.0, revDamp: 0.76, revDrywet: 0.11, revFreeze: 0.0, revHp: 0.72, revTime: 0.88, reverbSend: 0.15, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 130.0, timbMod: 0.84, timbre: 0.75, volume: 1.26, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
