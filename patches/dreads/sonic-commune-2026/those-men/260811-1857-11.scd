@@ -164,7 +164,7 @@
 	// Global FX settings
 	// $PRESET_FX_START
 (
-	clouds: (blend: 0.26, density: 0.93, feedback: 0.53, freeze: 0.0, inGain: 1.0, lofi: 0.0, mix: 1.0, mode: 3.0, pitch: 1.92, position: 0.69, reverb: 0.55, size: 0.27, spread: 0.5, texture: 0.59, volume: 0.68),
+	clouds: (blend: 0.26, density: 0.93, feedback: 0.53, freeze: 0.0, inGain: 1.0, lofi: 0.0, mix: 1.0, mode: 3.0, pitch: 1.92, position: 0.69, reverb: 0.55, size: 0.27, spread: 0.5, texture: 0.59, volume: 0.4),
 	delay: (feedback: 0.74, filterFreq: 3251.58, spread: 1.5, time: 0.46),
 	reverb: (damp: 0.0, diffuse: 0.28, freeze: 1.0, hp: 0.23, time: 0.31)
 ),
