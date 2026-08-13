@@ -15,6 +15,11 @@ x.stop;
 ~dreads.synths[0].seqCache;
 
 
+//////////////// REVERB UNFREEZE ///////////////////////////////////
+
+~fx.reverb.set(\unfreezeGlide, 5.5);
+
+
 //////////////// EUCL PRINT TEST ///////////////////////////////////
 
 ~euclidean.(3, 8).postln;
