@@ -209,13 +209,17 @@ x = Pdef(\plaitsSequence,
 				},
 				\legato, Pfunc { |event|
 					var eng = ~dreads.synths[i].engine.asInteger;
-					if (eng >= 18 and: { eng <= 20 }) {
+					var leg;
+					leg = if (eng >= 18 and: { eng <= 20 }) {
 						// FM engines bypass LPG/decay, so remap decay knob to legato
 						// decay 0-1 → legato 0.01-15
 						~dreads.synths[i].decay.linlin(0, 1, 0.01, 15);
 					} {
 						~dreads.synths[i].legato;
 					};
+					// Floor so a near-zero legato can't leave note synths un-freed
+					// (short gate -> Linen release never completes -> node leak -> server death).
+					leg.max(0.05);
 				},
 				\engine, Pfunc { |event|
 					~setEngine.(~dreads.synths[i].sequences.engine.next, ~dreads.synths[i].engine);
