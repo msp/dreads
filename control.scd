@@ -14,6 +14,8 @@ x.stop;
 
 ~dreads.synths[0].seqCache;
 
+~dreads.synths[2].relTime = 1.0
+
 
 //////////////// REVERB UNFREEZE ///////////////////////////////////
 
@@ -24,7 +26,7 @@ x.stop;
 
 ~euclidean.(3, 8).postln;
 
-~euclideanSeq.(5, 16).asStream.nextN(8, ()).postln;
+~euclideanSeq.(7, 16).asStream.nextN(8, ()).postln;
 
 
 //////////////// DELAYS TEST ///////////////////////////////////
