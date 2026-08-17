@@ -221,6 +221,8 @@ x = Pdef(\plaitsSequence,
 					// (short gate -> Linen release never completes -> node leak -> server death).
 					leg.max(0.05);
 				},
+				// Note release/tail (Linen release, seconds) — per-voice scalar.
+				\releaseTime, Pfunc { ~dreads.synths[i].releaseTime },
 				\engine, Pfunc { |event|
 					~setEngine.(~dreads.synths[i].sequences.engine.next, ~dreads.synths[i].engine);
 				},

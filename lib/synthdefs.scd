@@ -94,7 +94,7 @@ SynthDef(\plaits, {
 	arg out=0, pitch=40, engine=1, harm=0.5, timbre=0.5, morph=0.5, speed=6, level=1.0, decay=0.5, fmMod=0.0, lpgColour=0.5, mul=0.5, gate=1.0, revDrywet=0.25, revTime=0.3, revDamp=0.8, revHp=0.7, revFreeze=0, volume=0.7, cloudsSend=0.0, delaySend=0.0, reverbSend=0.0, distDrive=0.0, distAmount=0.0, stereoMode=1,
 	timbreLFO=0, morphLFO=0, decayLFO=0, pitchLFO=0, volumeLFO=0, harmLFO=0,
 	timbMod=0.0, morphMod=0.0, decayMod=0.0, pitchMod=0.0, volumeMod=0.0, harmMod=0.0,
-	amRatio=1.0, amWave=0, amDepth=0.0, amRing=0.0, amFixedHz=0;
+	amRatio=1.0, amWave=0, amDepth=0.0, amRing=0.0, amFixedHz=0, releaseTime=1.0;
 
 	var sig, env, carrierFreq;
 
@@ -115,7 +115,9 @@ SynthDef(\plaits, {
 	carrierFreq = (pitch + (pitchLFO * pitchMod)).clip(0, 127).midicps;
 	sig = ~plaitsAMStage.(sig, carrierFreq, amRatio, amWave, amDepth, amRing, amFixedHz);
 
-	env = Linen.kr(gate, doneAction: Done.freeSelf);
+	// releaseTime = note release/tail (was hardcoded 1.0). Attack/sustain kept as Linen
+	// defaults (0.01 / 1.0). Frees the synth when the release completes.
+	env = Linen.kr(gate, 0.01, 1.0, releaseTime.max(0.001), doneAction: Done.freeSelf);
 
 	~plaitsSigChain.(sig, env, out, stereoMode, distDrive, distAmount,
 		revTime, revDrywet, revDamp, revHp, revFreeze,

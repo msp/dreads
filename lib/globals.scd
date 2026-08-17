@@ -122,6 +122,7 @@
 	phaseOffset: 0.0,
 	pitch: 49.0,
 	pitchMod: 0.0,
+	releaseTime: 1.0,          // note release/tail (Linen release, seconds); per-voice, overridable
 	revDamp: 0.8,
 	revDrywet: 0.0,
 	revFreeze: 0.0,
