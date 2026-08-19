@@ -9,7 +9,7 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.28, decay: 0.44, decayMod: 0.3, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 0.5, engine: 2.0, fmMod: -0.02, harm: 0.33, harmMod: 0.0, legato: 4.0, lpgColour: 0.5, morph: 0.66, morphMod: 0.19, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 48.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.68, revDrywet: 0.31, revFreeze: 0.0, revHp: 0.41, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 165.0, timbMod: 0.22, timbre: 0.33, volume: 1.23, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.28, decay: 0.44, decayMod: 0.3, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 0.5, engine: 2.0, fmMod: -0.02, harm: 0.33, harmMod: 0.0, legato: 4.0, lpgColour: 0.5, morph: 0.66, morphMod: 0.19, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 48.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.68, revDrywet: 0.31, revFreeze: 0.0, revHp: 0.41, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 165.0, timbMod: 0.22, timbre: 0.33, volume: 1.35, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -25,7 +25,7 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.73, decay: 0.42, decayMod: 0.0, delaySend: 0.27, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 1.0, engine: 20.0, fmMod: -0.02, harm: 0.11, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.73, morphMod: 0.39, mul: 0.5, mute: 1.0, phaseOffset: -0.5, pitch: 60.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.48, revDrywet: 0.7, revFreeze: 0.0, revHp: 0.64, revTime: 1.08, reverbSend: 0.7, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 165.0, timbMod: 0.68, timbre: 0.73, volume: 0.05, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.73, decay: 0.42, decayMod: 0.0, delaySend: 0.27, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 1.0, engine: 20.0, fmMod: -0.02, harm: 0.11, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.73, morphMod: 0.39, mul: 0.5, mute: 0.0, phaseOffset: -0.5, pitch: 60.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.72, revDrywet: 0.87, revFreeze: 0.0, revHp: 0.75, revTime: 1.01, reverbSend: 0.7, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 165.0, timbMod: 0.68, timbre: 0.73, volume: 0.05, volumeMod: 0.1),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -42,7 +42,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.84, decay: 0.19, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: Rest(1.0), engine: 16.0, fmMod: 0.0, harm: 0.38, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.66, morphMod: 0.02, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 64.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.69, revDrywet: 0.74, revFreeze: 0.0, revHp: 0.94, revTime: 0.88, reverbSend: 0.0, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 165.0, timbMod: 0.0, timbre: 0.34, volume: 0.15, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.84, decay: 0.19, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 1.0, engine: 16.0, fmMod: 0.0, harm: 0.38, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.66, morphMod: 0.02, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 64.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.69, revDrywet: 0.74, revFreeze: 0.0, revHp: 0.94, revTime: 0.88, reverbSend: 0.0, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 165.0, timbMod: 0.0, timbre: 0.34, volume: 0.15, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -137,7 +137,7 @@
 	lfo6: (freq: 3), // plaits 0 harm
 	lfo7: (freq: 2.2), // plaits 1 timbre
 	lfo8: (freq: 8.1), // plaits 1 morph
-	lfo11: (freq: 3), // plaits 1 volume
+	lfo11: (freq: 1.1016540527344, base: true), // plaits 1 volume
 	lfo12: (freq: 2.2), // plaits 1 harm
 	lfo13: (freq: 8.1), // plaits 2 timbre
 );
