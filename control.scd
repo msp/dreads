@@ -12,6 +12,9 @@ x.stop;
 (1-5)
 (1-5).mod(16)
 
+(1 ! 4) ++ (2 ! 4)      // -> [ 1, 1, 1, 1, 2, 2, 2, 2 ]
+[1, 2, 3].stutter(4)
+
 ~dreads.synths[0].seqCache;
 
 ~dreads.synths[2].relTime = 1.0
@@ -26,7 +29,7 @@ x.stop;
 
 ~euclidean.(3, 8).postln;
 
-~euclideanSeq.(7, 16).asStream.nextN(8, ()).postln;
+~euclideanSeq.(7, 16).asStream.nextN(16, ()).postln;
 
 
 //////////////// DELAYS TEST ///////////////////////////////////
