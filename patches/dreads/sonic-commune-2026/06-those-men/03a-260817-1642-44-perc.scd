@@ -13,13 +13,13 @@
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
-				// duration: \eucl_3_8,
-				duration: Pseq([
-					0.5,          Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.8, 0.2].normalizeSum),       Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.8, 0.2].normalizeSum), Rest(0.5),
-					// Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5),                                               Rest(0.5), Rest(0.5), Rest(0.5),                                         Rest(0.5),
-					// 0.5,       Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.7, 0.3].normalizeSum),       Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.5, 0.5].normalizeSum), Rest(0.5),
- 					// Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5),                                               Rest(0.5), Rest(0.5), Rest(0.5),                                         Rest(0.5)
-				], inf).asStream,
+				duration: \eucl_3_8,
+				// duration: Pseq([
+				// 	0.5,       Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.8, 0.2].normalizeSum),       Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.5, 0.5].normalizeSum), Rest(0.5),
+				// 	Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5),                                               Rest(0.5), Rest(0.5), Rest(0.5),                                         Rest(0.5),
+				// 	0.5,       Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.7, 0.3].normalizeSum),       Rest(0.5), Rest(0.5), Pwrand([0.5, Rest(0.5)], [0.5, 0.5].normalizeSum), Rest(0.5),
+				// 	Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5),                                               Rest(0.5), Rest(0.5), Rest(0.5),                                         Rest(0.5)
+				// ], inf).asStream,
 				div: \unit,
 				delaySend: \gate_every8,
 				cloudsSend: \gate_prob20,
@@ -39,18 +39,20 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.04, decay: 0.37, decayMod: 0.46, delaySend: 0.19, distAmount: 0.1, distDrive: 0.0, droneMode: 0.0, dur: Rest(0.5), engine: 19.0, fmMod: 0.11, harm: 0.79, harmMod: 0.0, legato: 1.0, lpgColour: 0.21, morph: 0.5, morphMod: 0.41, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.41, revDrywet: 0.18, revFreeze: 0.0, revHp: 0.0, revTime: 0.64, reverbSend: 0.3, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.83, timbre: 0.16, volume: 0.36, volumeMod: 0.27),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.04, decay: 0.37, decayMod: 0.46, delaySend: 0.19, distAmount: 0.1, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 19.0, fmMod: 0.11, harm: 0.81, harmMod: 0.0, legato: 1.0, lpgColour: 0.21, morph: 0.65, morphMod: 0.48, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.41, revDrywet: 0.16, revFreeze: 0.0, revHp: 0.0, revTime: 0.64, reverbSend: 0.31, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.33, timbre: 0.53, volume: 0.35, volumeMod: 0.4),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
 				div: \unit,
-				// duration: \eucl_7_16,
-				duration: Pseq([
-				   0.25, Rest(0.25), Rest(0.25), 0.25, Rest(0.25), 0.25, Rest(0.25), 0.25, Rest(0.25), Rest(0.25), 0.25, Rest(0.25), 0.25, Rest(0.25), 0.25, Rest(0.25),
-					Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5),
+				// duration: \eucl_3_8,
+				duration: \eucl_7_16,
+
+				// duration: Pseq([
+				// 0.5, Rest(0.5), Rest(0.5), 0.5, Rest(0.5), Rest(0.5), 0.5, Rest(0.5),
+				// Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5),
 				// Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5),
 				// Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5), Rest(0.5)
-					], inf).asStream,
+				// ], inf).asStream,
 				pitch: \hold,
 				delaySend: \gate_every8,
 			),
@@ -63,7 +65,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.4, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.38, amWave: 0.0, cloudsSend: 0.0, decay: 0.07, decayMod: 0.4, delaySend: 0.26, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.5, engine: 18.0, fmMod: 1.0, harm: 0.36, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.21, morphMod: 0.72, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 42.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.76, revDrywet: 0.11, revFreeze: 0.0, revHp: 0.72, revTime: 0.88, reverbSend: 0.15, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.71, timbre: 0.66, volume: 0.25, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.08, decayMod: 0.35, delaySend: 0.12, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.5, engine: 18.0, fmMod: 0.01, harm: 0.13, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.32, morphMod: 0.05, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 42.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.76, revDrywet: 0.11, revFreeze: 0.0, revHp: 0.72, revTime: 0.88, reverbSend: 0.15, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.1, timbre: 0.71, volume: 0.91, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -150,7 +152,7 @@
 (
 	clouds: (blend: 0.26, density: 0.93, feedback: 0.55, freeze: 0.0, inGain: 1.0, lofi: 0.0, mix: 1.0, mode: 3.0, pitch: 1.92, position: 0.69, reverb: 0.55, size: 0.27, spread: 0.5, texture: 0.59, volume: 0.23),
 	delay: (feedback: 0.74, filterFreq: 3034.7, spread: 1.5, time: 0.43),
-	reverb: (damp: 0.0, diffuse: 0.28, freeze: 0.0, hp: 0.53, time: 0.56)
+	reverb: (damp: 0.0, diffuse: 0.28, freeze: 1.0, hp: 0.53, time: 0.56)
 ),
 	// $PRESET_FX_END
 );
@@ -181,11 +183,11 @@
 	lfo4: (freq: 1.2, shape: 3), // plaits 0 pitch
 	lfo5: (freq: 1.2), // plaits 0 volume
 	lfo6: (freq: 1.0), // plaits 0 harm
-	lfo7: (freq: 1.0, shape: 1, base: true), // plaits 1 timbre
-	lfo8: (freq: 1.0, shape: 4, base: true), // plaits 1 morph
+	lfo7: (freq: 1.0, shape: 1), // plaits 1 timbre
+	lfo8: (freq: 1.0, shape: 4), // plaits 1 morph
 	lfo9: (base: true), // plaits 1 decay
 	lfo11: (freq: 0.2), // plaits 1 volume
-	lfo13: (freq: 1.3849486112595, base: true), // plaits 2 timbre
+	lfo13: (freq: 0.20000000298023, base: true), // plaits 2 timbre
 	lfo14: (freq: 1), // plaits 2 morph
 	lfo15: (freq: 1.4277410507202, base: true), // plaits 2 decay
 	lfo16: (freq: 0.33333333333333, shape: 4), // plaits 2 pitch

@@ -9,7 +9,7 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.85, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(0.25), engine: 13.0, fmMod: 0.47, harm: 0.34, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.73, morphMod: 0.13, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 30.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.0, revTime: 0.76, reverbSend: 0.0, sendToPhones: 0.0, speed: 2.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.2, timbre: 0.85, volume: 1.4, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.85, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 13.0, fmMod: 0.47, harm: 0.34, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.73, morphMod: 0.13, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 30.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.0, revTime: 0.76, reverbSend: 0.0, sendToPhones: 0.0, speed: 2.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.2, timbre: 0.85, volume: 1.4, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -39,7 +39,7 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.04, decay: 0.37, decayMod: 0.46, delaySend: 0.19, distAmount: 0.1, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 19.0, fmMod: 0.11, harm: 0.79, harmMod: 0.0, legato: 1.0, lpgColour: 0.21, morph: 0.65, morphMod: 0.49, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.41, revDrywet: 0.18, revFreeze: 0.0, revHp: 0.0, revTime: 0.64, reverbSend: 0.3, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.33, timbre: 0.27, volume: 0.29, volumeMod: 0.27),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.04, decay: 0.37, decayMod: 0.46, delaySend: 0.19, distAmount: 0.1, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 19.0, fmMod: 0.11, harm: 0.79, harmMod: 0.0, legato: 1.0, lpgColour: 0.21, morph: 0.65, morphMod: 0.49, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.41, revDrywet: 0.18, revFreeze: 0.0, revHp: 0.0, revTime: 0.64, reverbSend: 0.3, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.33, timbre: 0.27, volume: 0.14, volumeMod: 0.27),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -63,7 +63,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.07, decayMod: 0.4, delaySend: 0.26, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(0.5), engine: 18.0, fmMod: 0.01, harm: 0.13, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.32, morphMod: 0.05, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 42.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.76, revDrywet: 0.11, revFreeze: 0.0, revHp: 0.72, revTime: 0.88, reverbSend: 0.15, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.1, timbre: 0.8, volume: 1.49, volumeMod: 0.0),
+			(amDepth: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRing: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.07, decayMod: 0.4, delaySend: 0.26, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.5, engine: 18.0, fmMod: 0.01, harm: 0.13, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.32, morphMod: 0.05, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 42.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.76, revDrywet: 0.11, revFreeze: 0.0, revHp: 0.72, revTime: 0.88, reverbSend: 0.15, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 140.0, timbMod: 0.1, timbre: 0.8, volume: 1.49, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
