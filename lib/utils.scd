@@ -499,6 +499,15 @@
 	};
 };
 
+// Named wrapper for ADDITIVE params (pitch, sample variant — combined via ~add). Calls
+// ~getSequenceValue normally (so the stream cache stays consistent), then coerces \hold → 0:
+// \hold ("no sequence") stores 0.5, the no-op only for bipolar params; additive params need 0.
+// Point future additive params here. See docs/sequence-hold-neutral.md.
+~getSequenceValueAdditive = { |instance, instanceIdx, instanceType, paramKey|
+	var value = ~getSequenceValue.(instance, instanceIdx, instanceType, paramKey);
+	if(instance.sequences[paramKey] == \hold) { 0 } { value };
+};
+
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|
 	// plaits insert reverbs

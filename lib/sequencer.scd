@@ -170,7 +170,7 @@ x = Pdef(\plaitsSequence,
 						};
 					};
 
-					~add.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \pitch), ~dreads.synths[i].pitch);
+					~add.(~getSequenceValueAdditive.(~dreads.synths[i], i, \plaits, \pitch), ~dreads.synths[i].pitch);
 				},
 				\dur, Pfunc { |event|
 
@@ -341,7 +341,7 @@ x = Pdef(\plaitsSequence,
 			// Numeric: additive offset from base — Pseq([0, 2, -3], inf) with base 6 → 6, 8, 3
 			// String:  "v" expression syntax  — Pseq(["v", "v+2", "v-3"], inf) with base 6 → 6, 8, 3
 				\sampleVariant, Pfunc {
-					var variantSeq = ~getSequenceValue.(~dreads.samples[i], i, \samples, \variant);
+					var variantSeq = ~getSequenceValueAdditive.(~dreads.samples[i], i, \samples, \variant);
 					var variantBase = ~dreads.samples[i].variant;
 					var bankName = ~dreads.samples[i].bankName;
 					var numVariants = (~sampleLibrary.banks[bankName] ? []).size.max(1);
