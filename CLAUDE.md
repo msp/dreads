@@ -14,6 +14,12 @@ list. Design detail lives in `docs/`; longer-horizon visions in memory (`project
   `behaviour`, etc. E.g. `~randomise` (not `~randomize`), `/dreads/randomiseAll`,
   `serialised`, `~randomiseRanges`. Match this when extending existing code.
 
+- **Keep comments succinct; prefer self-documenting names.** A one-line comment on the
+  *why* or a non-obvious gotcha is welcome; don't narrate what the code plainly says, and
+  never justify a choice in-code (no "no hand-maintained list, so…", no cross-refs to this
+  file). Rationale belongs in the commit message or `docs/`, not stacked above every
+  function. Favour a clear name over a comment.
+
 - **Derive, don't hardcode — avoid magic numbers and fixed lists where a value can be
   computed from a single source of truth.** Prefer `~numPlaits * ~plaitsLFOParams.size`
   over a literal `33`; iterate the actual data (`~plaitsLFOParams`, a map's keys,

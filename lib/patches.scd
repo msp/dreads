@@ -905,7 +905,7 @@
 };
 
 ~loadPatch = { |nameOrPath|
-	var filepath, wasPlaying;
+	var filepath, wasPlaying, oldEngines;
 
 	// Check if it's already a full path
 	if (nameOrPath.contains("/")) {
@@ -924,6 +924,9 @@
 	wasPlaying = Pdef(\plaitsSequence).isPlaying;
 	Pdef(\plaitsSequence).stop;
 
+	// Capture engines before executeFile overwrites them (drone reuse-vs-recreate, below).
+	oldEngines = ~dreads.synths.collect { |inst| inst.engine };
+
 	this.executeFile(filepath);
 
 	// Reload sequencer to rebuild pattern with new patch structure
@@ -938,7 +941,12 @@
 	~dreads.synths.do { |instance, i|
 		if (wasPlaying) {
 			if (instance.droneMode == 1) {
-				~startDrone.(i);
+				// Same engine still running → reuse (seamless); else (re)create (crossfade).
+				if ((~drones.notNil && ~drones[i].notNil) and: { oldEngines[i] == instance.engine }) {
+					~updateDrone.(i);
+				} {
+					~startDrone.(i);
+				};
 			} {
 				~stopDrone.(i);
 			};
