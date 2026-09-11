@@ -47,16 +47,16 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pat
 
 ## Running Dreads
 
-1. **Open** `plaits.scd` in Supercollider
+1. **Open** `dreads.scd` in Supercollider
 
-2. **Execute setup block** (section 1) - boots server and loads dependencies
+2. **Execute the SETUP block** (section 1) - boots server and loads dependencies. **Wait for it to finish** (server booted, dependencies loaded) before continuing.
 
-3. **Execute play block** (section 2) - starts effects and sequencer
+3. **Execute the RUN block** (section 2) - starts effects and sequencer
 
 4. **Launch UI**:
    - Start Open Stage Control
    - Configure launch settings:
-     - **send**: `127.0.0.1:57120` (check `NetAddr.langPort` in SC or the `diagnostic.scd` output)
+     - **send**: `127.0.0.1:57120` (check `NetAddr.langPort` in SC or the `diagnostics.scd` output)
      - **port**: `8080`
      - **load**: Path to `open-stage-control/plaits.json` in your project directory
    - Click the play button (▶) to start
@@ -66,18 +66,18 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pat
 ## Usage
 
 **UI Controls:**
-1. **Load preset** - Select from dropdown to load a saved preset
+1. **Load patch** - Select from dropdown to load a saved patch
 2. **Play/Stop** - Start/stop pattern playback
-3. **Snapshot** - Capture current state to a new preset
-4. **Save** - Overwrite _current_ preset with current state
-5. **Reload** - Reload preset from last saved version
+3. **Snapshot** - Capture current state to a new patch
+4. **Save** - Overwrite _current_ patch with current state
+5. **Reload** - Reload patch from last saved version
 
 ## Architecture
 
 - **3 Plaits instances** with independent sequencing and modulation
 - **Global send effects**: MiClouds, MiVerb, filtered ping-pong delay
 - **Pattern-based sequencing** with per-instance duration/pitch/timbre control
-- **Preset system** with auto-save and templating
+- **Patch system** with auto-save and templating
 
 ## Troubleshooting
 
@@ -86,13 +86,13 @@ Open `diagnostics.scd` in SuperCollider and execute the block to check your syst
 
 **No sound:**
 - Check `s.meter` - are levels showing?
-- Verify `~using6_1` matches your audio hardware (line 18 in `plaits.scd`)
+- In the SETUP block of `dreads.scd`, check `s.options.device` matches your audio interface, `~numSpeakers` matches your setup (2 = stereo, 6 = multichannel), and `~recordingMode` (defaults on — routes voices to separate buses for capture)
 - Run `~voiceGroup.freeAll` to clear stuck synths
 
 **UI not responding:**
 - Enable `OSCFunc.trace(true)` in SC to see incoming OSC messages
 - Check Open Stage Control send port matches `NetAddr.langPort` shown in diagnostics
-- Verify OSCdefs are loaded (run play block in `plaits.scd`)
+- Verify OSCdefs are loaded (run the RUN block in `dreads.scd`)
 
 **Extensions not loading:**
 - Ensure extensions match your SC version (3.13, 3.14, etc.)
@@ -110,15 +110,18 @@ Open `diagnostics.scd` in SuperCollider and execute the block to check your syst
 ## Project Structure
 
 ```
-plaits.scd              # Main entry point
+dreads.scd              # Main entry point
 diagnostics.scd         # System diagnostics and troubleshooting
 lib/
   globals.scd           # Configuration and defaults
   synthdefs.scd         # Audio engine definitions
   sequencer.scd         # Pattern sequencer
-  osc.scd              # OSC handlers and UI sync
-  patches.scd          # Patch management
-  utils.scd            # Helper functions
-patches/dreads/        # Patch library
-open-stage-control/    # UI definition
+  lfo.scd               # LFO sources and modulation
+  fx.scd                # Global send effects
+  sequence_library.scd  # Named sequence patterns
+  osc.scd               # OSC handlers and UI sync
+  patches.scd           # Patch management
+  utils.scd             # Helper functions
+patches/dreads/         # Patch library
+open-stage-control/     # UI definition
 ```

@@ -90,10 +90,11 @@ if (missingUGens.size > 0) {
 };
 
 "=== Dreads Configuration (if loaded) ===".postln;
-if (~using6_1.notNil) {
-	("Audio mode: " ++ if(~using6_1, "Multichannel (8ch)", "Stereo (2ch)")).postln;
+if (~numSpeakers.notNil) {
+	("Speakers: " ++ ~numSpeakers ++ (if (~numSpeakers > 2) { " (multichannel)" } { " (stereo)" })).postln;
+	("Recording mode: " ++ (~recordingMode ? false)).postln;
 } {
-	"~using6_1 not set - run setup block first".postln;
+	"~numSpeakers not set - run SETUP block first".postln;
 };
 
 if (~dreads.notNil) {
