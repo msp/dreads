@@ -196,6 +196,7 @@
 // Plaits-specific sequences (merged with ~baseSequences)
 ~defaultSequences = ~baseSequences ++ (
 	amDepth: \hold,
+	amRatio: \hold,   // additive offset (\hold → 0)
 	amRing: \hold,
 	engine: Pseq(["e"], inf).asStream,
 	fmMod: \hold,

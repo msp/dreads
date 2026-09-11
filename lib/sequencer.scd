@@ -246,12 +246,11 @@ x = Pdef(\plaitsSequence,
 
 					out
 				},
-				\revDamp, Pfunc { |event| ~dreads.synths[i].revDamp },
-				\revHp, Pfunc { |event| ~dreads.synths[i].revHp },
+				\revDamp, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \revDamp), ~dreads.synths[i].revDamp) },
+				\revHp, Pfunc { |event| ~modulateBipolar.(~getSequenceValue.(~dreads.synths[i], i, \plaits, \revHp), ~dreads.synths[i].revHp) },
 				\revFreeze, Pfunc { |event| ~dreads.synths[i].revFreeze },
-				// AM / ring-mod — ratio/wave/fixedHz are static scalars; depth & am/rm
-				// are sequenceable (modulateBipolar: the knob scales a 0-1 shape sequence).
-				\amRatio, Pfunc { |event| ~dreads.synths[i].amRatio },
+				// amRatio: additive offset (like pitch). amWave/amFixedHz stay raw (toggles).
+				\amRatio, Pfunc { |event| ~add.(~getSequenceValueAdditive.(~dreads.synths[i], i, \plaits, \amRatio), ~dreads.synths[i].amRatio) },
 				\amWave, Pfunc { |event| ~dreads.synths[i].amWave },
 				\amDepth, Pfunc { |event|
 					var inst, seqVal;
