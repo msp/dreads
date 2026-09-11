@@ -25,6 +25,7 @@
 	cloudsSend, delaySend, reverbSend|
 
 	var cleanSig, distSig;
+	var revLag = 0.1;   // de-click smoothing for swept/sequenced reverb params
 
 	// Stereo mode selection: 0=mono (left only), 1=stereo
 	sig = Select.ar(stereoMode.clip(0, 1), [
@@ -42,10 +43,10 @@
 
 	sig = MiVerb.ar(
 		(sig * env).tanh,
-		time: revTime.clip(0, 1.25),
-		drywet: revDrywet.clip(0, 1),
-		damp: revDamp.clip(0, 1),
-		hp: revHp.clip(0, 1),
+		time: Lag.kr(revTime, revLag).clip(0, 1.25),
+		drywet: Lag.kr(revDrywet, revLag).clip(0, 1),
+		damp: Lag.kr(revDamp, revLag).clip(0, 1),
+		hp: Lag.kr(revHp, revLag).clip(0, 1),
 		freeze: revFreeze.clip(0, 1),
 		diff: 0.625,
 		mul: volume.clip(0, 2.0),
@@ -346,6 +347,7 @@ SynthDef(\panningSamplePlayer, {
 	volumeLFO=0, volumeMod=0.0|
 
 	var sig, env, pan, monoPlay, cleanSig, distSig;
+	var revLag = 0.1;   // de-click smoothing for swept/sequenced reverb params
 	var finalRate = rate + (rateLFO * Lag.kr(rateMod, ~modGlide));
 	var finalVolume = (volume + (volumeLFO * Lag.kr(volumeMod, ~modGlide))).clip(0, 2);
 
@@ -378,10 +380,10 @@ SynthDef(\panningSamplePlayer, {
 	// MiVerb insert effect (same as plaits - apply env at input)
 	sig = MiVerb.ar(
 		(sig * env).tanh,
-		time: revTime.clip(0, 1.25),
-		drywet: revDrywet.clip(0, 1),
-		damp: revDamp.clip(0, 1),
-		hp: revHp.clip(0, 1),
+		time: Lag.kr(revTime, revLag).clip(0, 1.25),
+		drywet: Lag.kr(revDrywet, revLag).clip(0, 1),
+		damp: Lag.kr(revDamp, revLag).clip(0, 1),
+		hp: Lag.kr(revHp, revLag).clip(0, 1),
 		freeze: revFreeze.clip(0, 1),
 		diff: 0.625,
 		mul: finalVolume,
