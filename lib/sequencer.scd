@@ -23,6 +23,10 @@
 
 ~noteCounter = Array.fill(~dreads.synths.size, 0);
 
+// Drone control names to push each beat — every \plaitsDrone control except the routing/
+// envelope specials and the bus-mapped *LFO controls. Derived, so no param can be stranded.
+~droneControlKeys = SynthDescLib.global.at(\plaitsDrone).controls.collect { |c| c.name }
+	.reject { |k| [\out, \gate].includes(k) or: { k.asString.endsWith("LFO") } };
 
 
 // Clear stream cache so all sequence patterns start at position 0 on reload
@@ -109,24 +113,13 @@ x = Pdef(\plaitsSequence,
 					}
 				};
 
-				// Forward sequencer modulation to drone synth.
-				// SC's \type \set event only sends default keys (freq, amp, pan) so we
-				// forward \plaitsDrone control names explicitly via .set here instead.
-				if (~dreads.synths[i].droneMode == 1) {
-					if (~drones[i].notNil) {
-						~drones[i].set(
-							\pitch, ev[\pitch], \engine, ev[\engine],
-							\harm, ev[\harm], \timbre, ev[\timbre],
-							\morph, ev[\morph], \decay, ev[\decay],
-							\fmMod, ev[\fmMod], \lpgColour, ev[\lpgColour],
-							\mul, ev[\mul], \volume, ev[\volume],
-							\revDrywet, ev[\revDrywet], \revTime, ev[\revTime],
-							\cloudsSend, ev[\cloudsSend], \delaySend, ev[\delaySend],
-							\reverbSend, ev[\reverbSend],
-							\distDrive, ev[\distDrive], \distAmount, ev[\distAmount],
-							\amDepth, ev[\amDepth], \amRing, ev[\amRing]
-						);
+				// A drone is one continuous synth, so copy the current sequenced values onto it each beat.
+				if (~dreads.synths[i].droneMode == 1 and: { ~drones[i].notNil }) {
+					var args = [];
+					~droneControlKeys.do { |k|
+						if (ev[k].notNil) { args = args ++ [k, ev[k]] };
 					};
+					~drones[i].set(*args);
 				};
 
 				ev
