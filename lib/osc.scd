@@ -95,6 +95,7 @@ OSCdef.new(
 						} {
 							if (paramKey == 'mute') {
 								~dreads.synths[instanceIndex][paramKey] = value;
+								~pushMuteToVis.(instanceIndex);
 								// Forward mute to drone synth
 								if (~drones.notNil && ~drones[instanceIndex].notNil) {
 									if (value == 1) {

@@ -780,6 +780,10 @@
 	};
 };
 
+// Broadcast a plaits voice's mute state to the visualiser (0-based, visual-out convention),
+// so VDMX can clear/gate FX for a muted voice (the LFO reporter freezes muted voices).
+~pushMuteToVis = { |i| ~vis.().sendMsg("/plaits/" ++ i ++ "/mute", ~dreads.synths[i].mute ? 0) };
+
 // Custom event type for one-shot sample playback
 // Never sends gate=0, synth is expected to free itself via doneAction
 Event.addEventType(\oneShotSample, {

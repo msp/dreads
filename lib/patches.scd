@@ -960,6 +960,9 @@
 	~dreads.fx.reverb.keysValuesDo { |param, value| ~fx.reverb.set(param, value) };
 	~dreads.fx.clouds.keysValuesDo { |param, value| ~fx.clouds.set(param, value) };
 
+	// Broadcast mute state so VDMX reflects a variant that mutes a voice
+	~dreads.synths.size.do { |i| ~pushMuteToVis.(i) };
+
 	// Resume playback if it was running — causes a brief timing gap
 	if (wasPlaying) { Pdef(\plaitsSequence).play(~tempoClock) };
 
