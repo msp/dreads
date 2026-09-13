@@ -20,6 +20,31 @@ x.stop;
 ~dreads.synths[2].relTime = 1.0
 
 
+~dreads.oscCues
+// 1. Fire the loaded patch's cues manually:supercollider
+(~dreads.oscCues ? []).do { |cue| ~vis.().sendMsg(*cue) };
+
+// 2. Bypass the cue list — send the raw message directly:
+(
+Routine {
+    20.do { |i|
+		~vis.().sendMsg("/vdmx/preset", "No FX");
+        0.5.wait;   // 100ms between sends
+    };
+}.play;
+)
+
+// 3. Check where ~vis is actually pointing:
+
+~vis.();   // posts the NetAddr — should be 127.0.0.1:1234
+
+
+~vis.().sendMsg("/vdmx/layer/2/fx/preset/0", 1.0);
+
+~vis.().sendMsg("/vdmx/layer/2/fx/preset/1", 1.0);
+
+~vis.().sendMsg("/vdmx/layer/2/fx/preset/2", 1.0);
+
 //////////////// REVERB UNFREEZE ///////////////////////////////////
 
 ~fx.reverb.set(\unfreezeGlide, 5.5);
