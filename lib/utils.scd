@@ -722,6 +722,9 @@
 ~applyPatch = {
 	~applyLFOState.();
 	~pushStateToUI.();
+	// Fire the patch's declared OSC cues to VDMX (preset/scene switches not mapped to a
+	// Dreads param). Runs on both UI load and file-execute since both call ~applyPatch.
+	(~dreads.oscCues ? []).do { |cue| ~vis.().sendMsg(*cue) };
 };
 
 // Settable [key, val, …] args for a drone: instance scalars that are \plaitsDrone controls,
