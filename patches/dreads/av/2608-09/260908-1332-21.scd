@@ -174,10 +174,10 @@
 	lfo19: (freq: 0.083333333333333), // sample 0 rate
 	lfo21: (freq: 0.083333333333333), // sample 1 rate
 	lfo25: (base: true), // plaits 0 amRing
-	lfo26: (freq: 0.050000000745058, base: true), // plaits 1 amRing
+	lfo26: (freq: 1.7161039113998, base: true), // plaits 1 amRing
 	lfo30: (freq: 2.0613362789154, base: true), // plaits 2 amDepth
 );
-~base = 0.60000002384186;
+~base = 7.103000164032;
 // $LFO_SOURCES_END
 
 // ~base = 0.5;
