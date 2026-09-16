@@ -28,8 +28,8 @@ x.stop;
 (
 Routine {
     20.do { |i|
-		~vis.().sendMsg("/vdmx/preset", "No FX");
-        0.5.wait;   // 100ms between sends
+		~vis.().sendMsg("/vdmx/preset/26-09-12--1259", 1.0);
+        0.1.wait;   // 100ms between sends
     };
 }.play;
 )
@@ -39,11 +39,13 @@ Routine {
 ~vis.();   // posts the NetAddr — should be 127.0.0.1:1234
 
 
-~vis.().sendMsg("/vdmx/layer/2/fx/preset/0", 1.0);
+~vis.().sendMsg("/vdmx/preset/26-09-12--1259", 1.0);
+
+~vis.().sendMsg("/vdmx/preset/26-09-11--2027", 1.0);
 
 ~vis.().sendMsg("/vdmx/layer/2/fx/preset/1", 1.0);
 
-~vis.().sendMsg("/vdmx/layer/2/fx/preset/2", 1.0);
+~vis.().sendMsg("/vdmx/layer/2/fx/preset/3", 1.0);
 
 //////////////// REVERB UNFREEZE ///////////////////////////////////
 

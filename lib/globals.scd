@@ -6,7 +6,7 @@
 // Note: Plaits outputs stereo, so last speaker won't be used in rotation
 // numSpeakers=4 → [0, 1, 2, 3] (but \out=3 writes to buses 3-4, which is out of range)
 // that's fine for now :)
-~outputBuses = (0..(~numSpeakers - 1)); 
+~outputBuses = (0..(~numSpeakers - 1));
 
 // Recording mode: route each voice to its own stereo bus
 // Plaits 0-2 → buses 0,2,4 | Samples 0-2 → buses 6,8,10
@@ -52,6 +52,7 @@
 ~tempoClock = TempoClock.new(120/60);
 ~sendToPhones = false;
 ~nudgeAmount = 0.25; // Per-module nudge step size in beats
+~fxWait = 0.2;
 
 ~ui = {
 	if (~uiAddr.isNil) {

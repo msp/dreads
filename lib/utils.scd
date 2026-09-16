@@ -724,7 +724,13 @@
 	~pushStateToUI.();
 	// Fire the patch's declared OSC cues to VDMX (preset/scene switches not mapped to a
 	// Dreads param). Runs on both UI load and file-execute since both call ~applyPatch.
-	(~dreads.oscCues ? []).do { |cue| ~vis.().sendMsg(*cue) };
+	// A [\wait, seconds] entry pauses before the next cue — a dev-time workaround for VDMX
+	// global-preset load latency; for a show, prefer baking full state into one preset.
+	Routine({
+		(~dreads.oscCues ? []).do { |cue|
+			if (cue[0] == \wait) { cue[1].wait } { ~vis.().sendMsg(*cue) };
+		};
+	}).play;
 };
 
 // Settable [key, val, …] args for a drone: instance scalars that are \plaitsDrone controls,
