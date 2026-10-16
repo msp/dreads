@@ -172,6 +172,12 @@
 ~base = 3.1979999542236;
 // $LFO_SOURCES_END
 
+~dreads.oscCues = [
+	["/vdmx/preset/26-09-12--1259", 1.0],
+	[\wait, ~fxWait],
+	["/vdmx/layer/1/fx/preset/2", 1.0],
+];
+
 ~applyPatch.();
 
 )

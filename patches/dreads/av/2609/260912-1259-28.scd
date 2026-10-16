@@ -138,18 +138,6 @@
 ~tempoClock.tempo = ~dreads.synths[0].tempo/60;
 
 
-// ~drones[0].set(\volumeMod, 0.0);
-// ~drones[0].set(\pitchMod, 0.6);
-
-
-// ~dreads.samples[0].volume = 0.9;
-// ~dreads.samples[0][\volumeMod] = 0.9;
-// ~dreads.samples[0][\rateMod] = 0.9;
-//
-// ~dreads.synths[0][\volume] = 0.8;
-// ~dreads.synths[0].volume = 0.3;
-
-
 // $LFO_SOURCES_START
 ~dreads.lfoSources = (
 	lfo1: (freq: 1.2, shape: 2, base: true), // plaits 0 timbre
@@ -171,6 +159,13 @@
 );
 ~base = 1.2;
 // $LFO_SOURCES_END
+
+~dreads.oscCues = [
+	["/vdmx/preset/26-09-12--1259", 1.0],
+	[\wait, ~fxWait],
+	["/vdmx/layer/1/fx/preset/2", 1.0],
+	["/vdmx/layer/2/comp/preset/1", 1.0],
+];
 
 ~applyPatch.();
 )

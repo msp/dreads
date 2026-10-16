@@ -202,6 +202,9 @@
 // $LFO_SOURCES_END
 
 ~dreads.oscCues = [
+	["/vdmx/preset/26-09-12--1259", 1.0],
+	[\wait, ~fxWait],
+	["/vdmx/layer/2/comp/preset/2", 1.0],
 	["/vdmx/layer/2/src/preset/3", 1.0],
 	["/vdmx/layer/2/fx/preset/1", 1.0],
 ];

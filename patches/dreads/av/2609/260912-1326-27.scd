@@ -176,6 +176,12 @@
 
 ~applyPatch.();
 
+~dreads.oscCues = [
+	["/vdmx/preset/26-09-12--1259", 1.0],
+	[\wait, ~fxWait],
+	["/vdmx/layer/1/fx/preset/3", 1.0],
+];
+
 )
 
    

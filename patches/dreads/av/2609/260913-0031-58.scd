@@ -32,7 +32,7 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.2, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.42, decayMod: 0.0, delaySend: 0.58, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 1.0, engine: 20.0, fmMod: -0.02, harm: 0.12, harmMod: 0.75, legato: 15.0, lpgColour: 0.5, morph: 0.54, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: -0.5, pitch: 51.0, pitchMod: 1.0, releaseTime: 1.0, revDamp: 0.86, revDrywet: 1.0, revFreeze: 0.0, revHp: 0.38, revTime: 0.67, reverbSend: 0.57, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 366.0, timbMod: 0.0, timbre: 0.6, volume: 1.02, volumeMod: 0.15),
+			(amDepth: 0.2, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.42, decayMod: 0.0, delaySend: 0.58, distAmount: 0.0, distDrive: 0.0, droneMode: 1.0, dur: 2.0, engine: 20.0, fmMod: -0.02, harm: 0.12, harmMod: 0.75, legato: 15.0, lpgColour: 0.5, morph: 0.54, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: -0.5, pitch: 51.0, pitchMod: 1.0, releaseTime: 1.0, revDamp: 0.86, revDrywet: 1.0, revFreeze: 0.0, revHp: 0.41, revTime: 0.67, reverbSend: 0.57, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 366.0, timbMod: 0.0, timbre: 0.6, volume: 1.02, volumeMod: 0.15),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -49,7 +49,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.09, decay: 0.5, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.18, droneMode: 1.0, dur: Rest(1.0), engine: 20.0, fmMod: 0.24, harm: 0.12, harmMod: 0.46, legato: 9.0, lpgColour: 0.27, morph: 0.09, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 42.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.69, revDrywet: 0.05, revFreeze: 0.0, revHp: 0.94, revTime: 0.42, reverbSend: 0.29, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 366.0, timbMod: 0.56, timbre: 0.3, volume: 1.23, volumeMod: 0.45),
+			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.09, decay: 0.5, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.18, droneMode: 1.0, dur: Rest(1.0), engine: 20.0, fmMod: 0.24, harm: 0.12, harmMod: 0.46, legato: 9.0, lpgColour: 0.27, morph: 0.09, morphMod: 0.0, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 42.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.69, revDrywet: 0.05, revFreeze: 0.0, revHp: 0.94, revTime: 0.42, reverbSend: 0.29, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 366.0, timbMod: 0.74, timbre: 0.75, volume: 1.32, volumeMod: 0.45),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -182,10 +182,10 @@
 	lfo6: (freq: 1.0), // plaits 0 harm
 	lfo7: (freq: 2.382776260376, shape: 2, base: true), // plaits 1 timbre
 	lfo8: (freq: 0.2285420447588), // plaits 1 morph
-	lfo10: (freq: 1.0, shape: 3, base: true), // plaits 1 pitch
+	lfo10: (freq: 1.0, shape: 4, base: true), // plaits 1 pitch
 	lfo11: (freq: 0.10000000149012, base: true), // plaits 1 volume
 	lfo12: (freq: 1.0, shape: 3, base: true), // plaits 1 harm
-	lfo13: (freq: 1.0002888441086, base: true), // plaits 2 timbre
+	lfo13: (freq: 1.0002888441086, shape: 4, base: true), // plaits 2 timbre
 	lfo14: (freq: 1.3347273647785, shape: 4), // plaits 2 morph
 	lfo15: (freq: 3.1148696839809, base: true), // plaits 2 decay
 	lfo16: (freq: 2.6335329711437, shape: 3, base: true), // plaits 2 pitch
@@ -204,12 +204,15 @@
 // OSC cues fired to VDMX on load (addr + args). Not mapped to any Dreads param.
 // Must be set before ~applyPatch (which fires them).
 ~dreads.oscCues = [
+	["/vdmx/preset/26-09-12--1259", 1.0],
+	[\wait, ~fxWait],
 	["/vdmx/layer/2/src/preset/1", 1.0],
-	["/vdmx/layer/2/fx/preset/2", 1.0],
+	["/vdmx/layer/2/fx/preset/4", 1.0],
 ];
 
 ~applyPatch.();
 
 )
 
+/*~fxWait = 0.4*/
    
