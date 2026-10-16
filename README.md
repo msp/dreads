@@ -12,6 +12,13 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pat
 - [MI-UGens](https://github.com/v7b1/mi-UGens/releases) (MiPlaits, MiVerb, MiClouds)
 - [sc3-plugins](https://github.com/supercollider/sc3-plugins/releases) (CrossoverDistortion)
 
+**SuperCollider Quark:**
+- **SafetyNet** (provides the `Safety` class used by recording mode). Install in SC:
+  ```supercollider
+  Quarks.install("SafetyNet");
+  ```
+  then recompile the class library (Language → Recompile Class Library).
+
 **Standalone applications:**
 - [Open Stage Control](https://openstagecontrol.ammd.net/) (UI control interface)
 
@@ -55,10 +62,15 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pat
 
 4. **Launch UI**:
    - Start Open Stage Control
-   - Configure launch settings:
-     - **send**: `127.0.0.1:57120` (check `NetAddr.langPort` in SC or the `diagnostics.scd` output)
-     - **port**: `8080`
+   - Configure launch settings (three distinct ports — all must be set):
+     - **send**: `127.0.0.1:57120` — where O-S-C sends control to SC (SC's `NetAddr.langPort`; check `diagnostics.scd`)
+     - **osc-port**: `9000` — where O-S-C **receives** state from SC (must match `~ui` in `lib/globals.scd`). **Without this, controls work but the UI never updates from Dreads.**
+     - **port**: `8080` — HTTP port the browser/iPad client connects to
      - **load**: Path to `open-stage-control/plaits.json` in your project directory
+   - Or from the CLI:
+     ```
+     node app --send 127.0.0.1:57120 --osc-port 9000 --load <path>/open-stage-control/plaits.json
+     ```
    - Click the play button (▶) to start
 
    <img src="images/open-stage-control-setup.png" alt="Open Stage Control Setup" width="400px">
@@ -93,6 +105,9 @@ Open `diagnostics.scd` in SuperCollider and execute the block to check your syst
 - Enable `OSCFunc.trace(true)` in SC to see incoming OSC messages
 - Check Open Stage Control send port matches `NetAddr.langPort` shown in diagnostics
 - Verify OSCdefs are loaded (run the RUN block in `dreads.scd`)
+
+**Controls work but the UI doesn't update from Dreads:**
+- Open Stage Control's **osc-port** must be `9000` (matches `~ui` in `lib/globals.scd`). SC pushes state there; if it's unset/wrong, control still works but nothing reflects back.
 
 **Extensions not loading:**
 - Ensure extensions match your SC version (3.13, 3.14, etc.)
