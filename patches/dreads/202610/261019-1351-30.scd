@@ -3,7 +3,7 @@
 // PLAITS1 configured for clean FM auditioning — load this, then run fm-patches.scd
 ////////////////////////////////////////////////////////////////////////////////
 (
-~p1cycle = 256;   // PLAITS1 stumble period in steps; PLAITS1's div and PLAITS2's harm window both derive from this
+~p1cycle = 32;   // PLAITS1 stumble period in steps; PLAITS1's div and PLAITS2's harm window both derive from this
 
 ~dreads = ~patchFactory.(
 	// Synth instances array
