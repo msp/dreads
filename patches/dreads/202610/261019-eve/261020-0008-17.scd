@@ -11,7 +11,7 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.53, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(0.5), engine: 13.0, fmMod: 1.0, harm: 0.83, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.61, morphMod: 0.45, mul: 0.5, mute: 1.0, phaseOffset: 0.75, pitch: 30.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.83, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 0.0, tempo: 85.0, timbMod: 0.03, timbre: 0.96, volume: 1.26, volumeMod: 0.0),
+			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.53, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.5, engine: 13.0, fmMod: 1.0, harm: 0.83, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.61, morphMod: 0.45, mul: 0.5, mute: 1.0, phaseOffset: 0.75, pitch: 30.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.83, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 0.0, tempo: 85.0, timbMod: 0.03, timbre: 0.96, volume: 1.26, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -52,7 +52,7 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.09, decayMod: 0.0, delaySend: 0.1, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 19.0, fmMod: -0.02, harm: 0.56, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.0, morphMod: 0.0, mul: 0.5, mute: 1.0, phaseOffset: 0.75, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.82, revDrywet: 0.21, revFreeze: 0.0, revHp: 0.84, revTime: 1.11, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.54, timbre: 0.69, volume: 0.98, volumeMod: 1.0),
+			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.09, decayMod: 0.0, delaySend: 0.1, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.5, engine: 19.0, fmMod: -0.02, harm: 0.56, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.0, morphMod: 0.0, mul: 0.5, mute: 1.0, phaseOffset: 0.75, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.82, revDrywet: 0.21, revFreeze: 0.0, revHp: 0.84, revTime: 1.11, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.54, timbre: 0.69, volume: 0.98, volumeMod: 1.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -73,7 +73,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.07, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.07, amRingMod: 0.0, amWave: 2.0, cloudsSend: 0.0, decay: 0.87, decayMod: 0.67, delaySend: 0.23, distAmount: 0.09, distDrive: 0.0, droneMode: 0.0, dur: Rest(2.0), engine: 6.0, fmMod: 0.0, harm: 0.14, harmMod: 0.0, legato: 9.0, lpgColour: 0.26, morph: 0.59, morphMod: 0.09, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 43.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.48, revDrywet: 0.33, revFreeze: 0.0, revHp: 0.53, revTime: 0.77, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.16, timbre: 0.48, volume: 0.96, volumeMod: 0.09),
+			(amDepth: 0.07, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.07, amRingMod: 0.0, amWave: 2.0, cloudsSend: 0.0, decay: 0.87, decayMod: 0.67, delaySend: 0.23, distAmount: 0.09, distDrive: 0.0, droneMode: 0.0, dur: Rest(0.5), engine: 6.0, fmMod: 0.0, harm: 0.14, harmMod: 0.0, legato: 9.0, lpgColour: 0.26, morph: 0.59, morphMod: 0.09, mul: 0.5, mute: 0.0, phaseOffset: -0.25, pitch: 43.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.48, revDrywet: 0.33, revFreeze: 0.0, revHp: 0.53, revTime: 0.77, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.16, timbre: 0.48, volume: 1.16, volumeMod: 0.09),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
