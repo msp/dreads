@@ -11,7 +11,7 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.53, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 1.0, engine: 13.0, fmMod: 1.0, harm: 0.8, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.49, morphMod: 0.45, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 25.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.83, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 0.0, tempo: 119.0, timbMod: 0.03, timbre: 0.22, volume: 1.09, volumeMod: 0.0),
+			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.53, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.75, engine: 13.0, fmMod: 1.0, harm: 0.8, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.49, morphMod: 0.45, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 25.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.83, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 0.0, tempo: 119.0, timbMod: 0.03, timbre: 0.22, volume: 1.09, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -51,7 +51,7 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.35, amDepthMod: 0.74, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.47, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.77, decay: 0.18, decayMod: 0.0, delaySend: 0.35, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.5, engine: 2.0, fmMod: -0.18, harm: 0.2, harmMod: 0.0, legato: 15.0, lpgColour: 0.07, morph: 0.81, morphMod: 0.04, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 74.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.75, revDrywet: 0.23, revFreeze: 0.0, revHp: 0.73, revTime: 1.02, reverbSend: 0.0, sendToPhones: 0.0, speed: 0.5, stereoMode: 1.0, tempo: 119.0, timbMod: 0.18, timbre: 0.96, volume: 0.28, volumeMod: 1.0),
+			(amDepth: 0.35, amDepthMod: 0.74, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.47, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.77, decay: 0.18, decayMod: 0.0, delaySend: 0.35, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 2.0, fmMod: -0.18, harm: 0.2, harmMod: 0.0, legato: 15.0, lpgColour: 0.07, morph: 0.81, morphMod: 0.04, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 74.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.75, revDrywet: 0.23, revFreeze: 0.0, revHp: 0.73, revTime: 1.02, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 119.0, timbMod: 0.18, timbre: 0.96, volume: 0.31, volumeMod: 1.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -59,12 +59,9 @@
 				div: Pseq((1 ! 15) ++ [1/4] ++ (1 ! 15) ++ [1/2], inf).asStream,
 				duration: \dense_burst,
 				pitch: \hold,
-				delaySend: \gate_every5,
-				// harm rises for the last 4 steps before PLAITS1's stumble, then drops back — reads
-				// PLAITS1's recorded phase and derives the period from ~p1cycle, so PLAITS2's own rhythm
-				// stays straight and the two never need hand-syncing. (Change the 4 for a longer/shorter lift.)
+				// delaySend: \gate_every5,
+				delaySend: Pseq([1] ++ (0 ! 7), inf).asStream,
 				harm: \hold,
-
 				// harm: Pfunc { if ((~dreads.synths[0].divStep ? 0) % ~p1cycle >= (~p1cycle - 4)) { 0.87 } { 0.64 } }.asStream,
 				// 0.64 for 8 beats, then 0.87 for 4 beats, repeating (12-beat loop)
 				// harm: Pfunc {
@@ -157,7 +154,7 @@
 		// $SAMPLE3
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(atk: 0.0, bankName: 'msp-amencutup', cloudsSend: 0.0, decay: 0.5, delaySend: 0.0, distAmount: 0.38, distDrive: 0.0, dur: 0.5, legato: 30.7, mul: 1.0, mute: 0.0, panDur: 0.03, phaseOffset: 0.0, rate: 3.0, rateMod: 0.0, revDamp: 0.72, revDrywet: 0.16, revFreeze: 0.0, revHp: 0.5, revTime: 0.43, reverbSend: 0.0, speed: 2.0, startPos: 0.0, tempo: 119.0, variant: 0.0, volume: 1.08, volumeMod: 0.0),
+			(atk: 0.0, bankName: 'msp-amencutup', cloudsSend: 0.0, decay: 0.5, delaySend: 0.0, distAmount: 0.38, distDrive: 0.0, dur: Rest(0.5), legato: 30.7, mul: 1.0, mute: 0.0, panDur: 0.03, phaseOffset: 0.0, rate: 3.0, rateMod: 0.0, revDamp: 0.72, revDrywet: 0.16, revFreeze: 0.0, revHp: 0.5, revTime: 0.43, reverbSend: 0.0, speed: 2.0, startPos: 0.0, tempo: 119.0, variant: 0.0, volume: 1.08, volumeMod: 0.0),
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
