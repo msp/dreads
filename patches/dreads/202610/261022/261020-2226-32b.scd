@@ -62,7 +62,7 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.03, decayMod: 0.0, delaySend: 0.33, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.13, engine: 19.0, fmMod: -0.02, harm: 0.73, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.5, morphMod: 0.27, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.82, revDrywet: 0.21, revFreeze: 0.0, revHp: 0.84, revTime: 0.25, reverbSend: 0.0, sendToPhones: 0.0, speed: 2.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.74, timbre: 0.77, volume: 1.17, volumeMod: 1.0),
+			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.03, decayMod: 0.0, delaySend: 0.33, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(2.0), engine: 19.0, fmMod: -0.02, harm: 0.73, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.5, morphMod: 0.27, mul: 0.5, mute: 0.0, phaseOffset: 0.75, pitch: 40.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.82, revDrywet: 0.21, revFreeze: 0.0, revHp: 0.84, revTime: 0.25, reverbSend: 0.0, sendToPhones: 0.0, speed: 2.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.74, timbre: 0.77, volume: 1.17, volumeMod: 1.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -89,7 +89,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.07, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.07, amRingMod: 0.0, amWave: 2.0, cloudsSend: 0.15, decay: 0.0, decayMod: 0.1, delaySend: 0.48, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: 0.25, engine: 0.0, fmMod: 0.0, harm: 0.29, harmMod: 0.0, legato: 9.0, lpgColour: 0.26, morph: 0.01, morphMod: 0.03, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 43.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.71, revDrywet: 0.17, revFreeze: 0.0, revHp: 0.55, revTime: 0.8, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.19, timbre: 0.03, volume: 1.0, volumeMod: 0.34),
+			(amDepth: 0.07, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.07, amRingMod: 0.0, amWave: 2.0, cloudsSend: 0.15, decay: 0.0, decayMod: 0.1, delaySend: 0.48, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.0), engine: 0.0, fmMod: 0.0, harm: 0.29, harmMod: 0.0, legato: 9.0, lpgColour: 0.26, morph: 0.01, morphMod: 0.03, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 43.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.71, revDrywet: 0.17, revFreeze: 0.0, revHp: 0.55, revTime: 0.8, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 85.0, timbMod: 0.19, timbre: 0.03, volume: 1.0, volumeMod: 0.34),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -171,7 +171,7 @@
 		// $SAMPLE1
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(atk: 0.0, bankName: 'HATS', cloudsSend: 0.0, decay: 0.82, delaySend: 0.0, distAmount: 0.21, distDrive: 0.0, dur: 0.25, legato: 0.7, mul: 1.0, mute: 0.0, panDur: 0.09, phaseOffset: 0.0, rate: 3.19, rateMod: 0.78, revDamp: 0.8, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.0, revTime: 0.92, reverbSend: 0.0, speed: 1.0, startPos: 0.0, tempo: 85.0, variant: 0.0, volume: 0.92, volumeMod: 1.0),
+			(atk: 0.0, bankName: 'HATS', cloudsSend: 0.0, decay: 0.82, delaySend: 0.0, distAmount: 0.21, distDrive: 0.0, dur: Rest(1.0), legato: 0.7, mul: 1.0, mute: 0.0, panDur: 0.09, phaseOffset: 0.0, rate: 3.19, rateMod: 0.78, revDamp: 0.8, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.0, revTime: 0.92, reverbSend: 0.0, speed: 1.0, startPos: 0.0, tempo: 85.0, variant: 0.0, volume: 0.92, volumeMod: 1.0),
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
@@ -217,7 +217,7 @@
 		// $SAMPLE3
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(atk: 0.14, bankName: 'msp-pad', cloudsSend: 0.0, decay: 0.31, delaySend: 0.32, distAmount: 0.14, distDrive: 0.0, dur: Rest(1.0), legato: 0.7, mul: 1.0, mute: 0.0, panDur: 0.34, phaseOffset: 0.0, rate: 1.0, rateMod: 0.0, revDamp: 0.8, revDrywet: 0.73, revFreeze: 0.0, revHp: 0.65, revTime: 0.76, reverbSend: 0.0, speed: 1.0, startPos: 0.0, tempo: 85.0, variant: 0.0, volume: 0.15, volumeMod: 0.0),
+			(atk: 0.14, bankName: 'msp-pad', cloudsSend: 0.0, decay: 0.35, delaySend: 0.32, distAmount: 0.14, distDrive: 0.0, dur: 2.0, legato: 0.7, mul: 1.0, mute: 0.0, panDur: 0.34, phaseOffset: 0.0, rate: 1.0, rateMod: 0.0, revDamp: 0.8, revDrywet: 0.73, revFreeze: 0.0, revHp: 0.65, revTime: 0.76, reverbSend: 0.0, speed: 0.5, startPos: 0.0, tempo: 85.0, variant: 0.0, volume: 0.15, volumeMod: 0.0),
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
