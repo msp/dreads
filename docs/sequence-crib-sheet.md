@@ -6,6 +6,19 @@ Quick reference for hand-writing sequences in patch files (the
 
 ---
 
+## TL;DR (the six that bite)
+
+- **Knob at 0.5 → the sequence plays its exact numbers;** any other knob re-centres them (§6).
+- **1 value = 1 step = 1 event** (rests count); `duration`/`div` set a step's *length*, not the *count* (§10).
+- **Steps ↔ beats only holds while that voice's `div` is constant** (§10).
+- **To hit a feature, match the length of the pattern carrying it** — the `div` stumble, not the rhythm (§11).
+- **Sequencing `div` = movement at the cost of grid-lock** — anchors keep `div` constant, textures let it float (§11).
+- **One voice reacting to another → read its step counter, not the clock** (§11).
+
+Everything below is the long version. Jump by the section number.
+
+---
+
 ## 1. Anatomy
 
 Sequences live in a per-instance Event, one key per parameter:
@@ -230,3 +243,145 @@ Per-step Δ of the shape sequences (for `amRing`/any 0–1 gain-morph param):
   per voice, each also emitting `~vis`/`~td`/`~ws` OSC bundles. Past ~30–50
   updates/sec a gain morph is already perceptually smooth, so faster just burns
   cycles for no audible gain. `1/16`–`1/32` is a good smooth-but-cheap zone.
+
+---
+
+## 10. Holding a value for N beats/bars (steps vs beats)
+
+**Everything is counted in steps, not beats.** Every per-note pattern — `harm`,
+`timbre`, `duration`, `div` … — advances one `.next` per sequencer event, in
+lockstep. They share a single invisible step counter. The `duration`/`div`
+sequence is the only thing that maps steps → time; it never changes *how many*
+steps there are. **Rests are steps too** — a `Rest` in `duration` still pulls one
+value off every other sequence.
+
+So a rhythm has a fixed **steps-per-cycle**, independent of its length in beats:
+
+| rhythm | pattern | steps/cycle | beats/cycle (div `\unit`) |
+|---|---|---|---|
+| `\dense_burst` | `[¼, ¼, ¼, ¼, Rest(1)]` | **5** | 2 |
+| `\eucl_3_8` | 8-slot euclidean | 8 | varies by div |
+
+### Two ways to switch a value on a schedule
+
+**A — step-locked (ties the change to the phrase).** Count in whole multiples of
+the rhythm's steps-per-cycle. `\dense_burst` = 5 steps/cycle, so to hold 0.64 for
+two cycles (4 beats) then 0.87 for one (2 beats):
+
+```supercollider
+harm: Pseq((0.64 ! 10) ++ (0.87 ! 5), inf).asStream,   // 10 = 2×5 steps, 5 = 1×5
+```
+
+Whole multiples of 5 mean every cycle starts on a fresh value and the rest step
+just repeats the current one (inaudible). Fragile: change the rhythm and the
+counts no longer line up.
+
+**B — beat-locked (ties the change to the clock).** Read the beat directly off
+`~tempoClock.beats` and pick by time window. Immune to the rhythm, rests, *and*
+`div`. The exact equivalent of the step example above (a 6-beat loop):
+
+```supercollider
+harm: Pfunc {
+    var pos = ~tempoClock.beats % 6;    // position in a repeating 6-beat window
+    if (pos < 4) { 0.64 } { 0.87 };     // first 4 beats → 0.64, last 2 → 0.87
+}.asStream,
+```
+
+- `~tempoClock.beats` counts up forever, one per beat (0, 1, 2 …).
+- `% 6` = loop length in beats; `< 4` = how long the first value holds.
+- Edit those two numbers to retime — no step arithmetic.
+
+Use **A** when the change should feel welded to the groove; use **B** for absolute
+beat/bar timing. (The two only coincide while the rhythm's beats-per-cycle is
+constant — that divergence is the whole point.)
+
+### For exact absolute values
+
+Both forms above feed the value through the knob blend (§6), so park the param's
+**knob at 0.5** to hear the sequenced numbers verbatim (e.g. `harm: 0.5` in the
+scalars). Any other knob value re-centres them.
+
+### When `div` is sequenced
+
+Step-counting *between* sequences on the **same voice** still works (they all
+advance together), but the step → beat conversion breaks: a varying `div` stretches
+each step differently, so "5 steps = 2 beats" stops holding. Reach for **B**
+(beat-locked) once a voice's own `div` moves.
+
+---
+
+## 11. Reasoning across voices (anchors vs textures)
+
+Each voice is its own independent `Pbind` with its own step counter. **Sequencing
+`div` on one voice has zero effect on another's** timing — they share nothing but
+the wall clock. So:
+
+- **One voice in isolation** → count steps freely (safe as long as *its* `div` is
+  constant).
+- **One voice relative to another** → steps don't help (different grids) and, if
+  either voice sequences `div`, beats don't fully help either (that voice floats
+  against the clock). There's no clean lock to reason about — by design.
+
+So decide per voice what job it's doing:
+
+- **Anchor** — a voice you or the listener count against, or that a change must line
+  up with. **Keep `div` constant.** These hold the grid.
+- **Texture** — a voice meant to feel loose and evolving. **Sequence `div` freely.**
+  The drift is the point.
+
+A patch usually wants a couple of anchors and a couple of textures. If everything
+sequences `div`, nothing feels locked.
+
+### The re-sync point — how floaty a texture feels
+
+Two patterns of different lengths only line back up when enough steps pass that both
+fit in evenly. Count it on your fingers — rhythm every 5 steps, `div` every 3:
+
+```
+rhythm lands on:  5, 10, 15 …
+div lands on:     3, 6, 9, 12, 15 …
+                              ↑ first shared number = 15  → re-syncs every 15 steps
+```
+
+- **`div` length shares a factor with the rhythm (or equals it)** → re-syncs fast →
+  tight and locked.
+- **`div` length is big and shares nothing with the rhythm** → re-syncs slowly →
+  floaty and evolving.
+
+Worked from a real patch (rhythm = `\dense_burst` = 5 steps, tempo 119, 1 cycle ≈ 1 s):
+
+| `div` pattern | length | re-syncs every | feel |
+|---|---|---|---|
+| `Pseq([1,1,1,1,1/2], inf)` | 5 | 1 cycle (~1 s) | fixed groove with a set limp |
+| `Pseq([1,1/4,1], inf)` | 3 | 15 steps = 3 cycles (~6 s) | catchy, loops in memory |
+| `Pseq((1 ! 63) ++ [1/4], inf)` | 64 | 320 steps ≈ 134 beats (~68 s) | floating, evolving |
+
+The sweet spot is a re-sync point **just past** how many bars the ear can hold at
+once: shorter and you've memorised it, much longer and it feels through-composed.
+Stacking a few voices whose re-sync points differ keeps something familiar while
+something else is always shifting.
+
+### Tying a change to a feature on another voice
+
+Two rules, learned the hard way:
+
+1. **Match the length of the pattern that *carries the feature*, not the rhythm.**
+   A voice can run several sequences at once, each its own length. PLAITS1's
+   "stumble" lives in its `div` (`(1 ! 63) ++ [1/4]` = 64 steps), *not* its
+   `duration` (`\dense_burst` = 5). So a harm accent meant to hit the stumble uses a
+   **64**-step loop; a 5-step loop would track the pulse and ignore the trip. Tie to
+   whichever pattern holds the thing you care about.
+
+2. **If the feature sits on a drifting voice, couple to *that voice's* step count —
+   not the clock, and not by copying its rhythm.** Two ways to react to PLAITS1's
+   stumble:
+   - *Copy its grid* (same `div`) → the voices lock and **both** stumble. Use when
+     you want them welded into one gesture.
+   - *Keep your own steady rhythm but read its counter* → expose a global step count
+     from the drifting voice (a `Pfunc` div that bumps `~p1step`) and have the
+     reacting param read `~p1step % 64`. The anchor stays straight; only the chosen
+     param responds. Alignment is "nearest event," which is musically exact enough.
+
+   A fixed beat window (`~tempoClock.beats % n`) will *not* track a feature on a
+   drifting voice — the voice slides against the clock, so the window slowly falls
+   off it.
