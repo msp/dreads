@@ -102,6 +102,7 @@
 	~currentPatchTemplate = (~app.root ++ "/patches/dreads/default.scd").standardizePath;
 	~applog.("load globals", \debug);           (lib ++ "/globals.scd").load;
 	~applog.("load sequence_library", \debug);  (lib ++ "/sequence_library.scd").load;
+	~applog.("load chords", \debug);            (lib ++ "/chords.scd").load;
 	~applog.("load utils", \debug);             (lib ++ "/utils.scd").load;
 	if (File.exists((lib ++ "/user_sequence_library.scd").standardizePath)) {
 		~applog.("load user_sequence_library", \debug);
