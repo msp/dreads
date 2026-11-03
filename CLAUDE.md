@@ -14,6 +14,11 @@ list. Design detail lives in `docs/`; longer-horizon visions in memory (`project
   `behaviour`, etc. E.g. `~randomise` (not `~randomize`), `/dreads/randomiseAll`,
   `serialised`, `~randomiseRanges`. Match this when extending existing code.
 
+- **Keep responses high-level and concise.** Lead with the conclusion or the one thing that
+  matters, pitched at a technical product-owner level, and stop. Don't volunteer extra caveats,
+  alternatives, or "things worth knowing" unless asked. Same framing for commit messages (the
+  *what/why* for a product owner, not implementation detail). Expand only on request.
+
 - **Keep comments succinct; prefer self-documenting names.** A one-line comment on the
   *why* or a non-obvious gotcha is welcome; don't narrate what the code plainly says, and
   never justify a choice in-code (no "no hand-maintained list, so…", no cross-refs to this
