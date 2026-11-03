@@ -1034,20 +1034,26 @@
 ~selectSequence = { |instanceType, instanceIdx, paramKey, seqName|
 	var instance, ui, path;
 
-	instance = if(instanceType == \plaits) {
-		~dreads.synths[instanceIdx]
-	} { ~dreads.samples[instanceIdx] };
-
-	if(~sequenceLibrary[seqName].notNil) {
-		instance.sequences[paramKey] = seqName;
-
-		ui = ~ui.();
-		path = "/" ++ instanceType ++ "/" ++ (instanceIdx + 1) ++ "/" ++ paramKey ++ "/seq";
-		ui.sendMsg(path, seqName.asString);
-
-		("Selected " ++ instanceType ++ "[" ++ instanceIdx ++ "]." ++ paramKey ++ " → " ++ seqName).postln;
+	// Ignore stray messages before the patch is loaded (e.g. UI echo during boot).
+	// Plain if/else (no ^ early-return — avoids a non-local return out of a load block).
+	if (~dreads.isNil or: { instanceType.isNil or: { instanceIdx.isNil } }) {
+		"selectSequence: ignoring early/empty message (~dreads not ready)".postln;
 	} {
-		("Sequence '" ++ seqName ++ "' not found in library").warn;
+		instance = if(instanceType == \plaits) {
+			~dreads.synths[instanceIdx]
+		} { ~dreads.samples[instanceIdx] };
+
+		if(~sequenceLibrary[seqName].notNil) {
+			instance.sequences[paramKey] = seqName;
+
+			ui = ~ui.();
+			path = "/" ++ instanceType ++ "/" ++ (instanceIdx + 1) ++ "/" ++ paramKey ++ "/seq";
+			ui.sendMsg(path, seqName.asString);
+
+			("Selected " ++ instanceType ++ "[" ++ instanceIdx ++ "]." ++ paramKey ++ " → " ++ seqName).postln;
+		} {
+			("Sequence '" ++ seqName ++ "' not found in library").warn;
+		};
 	};
 };
 

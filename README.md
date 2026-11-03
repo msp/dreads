@@ -12,13 +12,6 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pat
 - [MI-UGens](https://github.com/v7b1/mi-UGens/releases) (MiPlaits, MiVerb, MiClouds)
 - [sc3-plugins](https://github.com/supercollider/sc3-plugins/releases) (CrossoverDistortion)
 
-**SuperCollider Quark:**
-- **SafetyNet** (provides the `Safety` class used by recording mode). Install in SC:
-  ```supercollider
-  Quarks.install("SafetyNet");
-  ```
-  then recompile the class library (Language → Recompile Class Library).
-
 **Standalone applications:**
 - [Open Stage Control](https://openstagecontrol.ammd.net/) (UI control interface)
 
@@ -98,7 +91,7 @@ Open `diagnostics.scd` in SuperCollider and execute the block to check your syst
 
 **No sound:**
 - Check `s.meter` - are levels showing?
-- In the SETUP block of `dreads.scd`, check `s.options.device` matches your audio interface, `~numSpeakers` matches your setup (2 = stereo, 6 = multichannel), and `~recordingMode` (defaults on — routes voices to separate buses for capture)
+- In `config.scd` (copied from `config.scd.example` on first run), check `s.options.device` matches your audio interface, `~numSpeakers` matches your setup (2 = stereo, 6 = multichannel), and `~recordingMode` (defaults off — stereo mix; on routes each voice to its own bus for capture)
 - Run `~voiceGroup.freeAll` to clear stuck synths
 
 **UI not responding:**

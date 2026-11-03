@@ -1,0 +1,24 @@
+// config.scd.example
+//
+// Copy to config.scd (gitignored) and uncomment lines to override the defaults.
+// ~app.install.() / ~app.start.() create config.scd from this file automatically
+// on first run. Dreads boots with safe stereo defaults; everything here is optional.
+
+// --- Audio output ---------------------------------------------------------
+
+// ~recordingMode = true;                  // route each voice/FX to its own bus (12–18)
+                                           // for multitrack capture; default false = stereo mix
+
+// ~numSpeakers = 6;                       // multichannel speaker count (default 2 = stereo)
+
+// s.options.device = "Loopback Audio";    // pin a specific interface (default: system default)
+
+// --- Logging --------------------------------------------------------------
+
+// ~app.logLevel = \debug;                 // \debug | \info | \warn | \off
+                                           // \info (default) = milestones; \debug = per-step boot
+
+// --- Patches --------------------------------------------------------------
+
+// ~patchesDir = "/path/to/dreads-patches"; // shared patch library location
+                                            // (default: <project>/patches/repo)

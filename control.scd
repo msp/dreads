@@ -178,9 +178,9 @@ n.sendMsg("/dreads/lfoBase", 0.3);
 ~loadAdjacentPatch.(-1);
 )
 
-Safety.disable
-
-Safety.enable
+// SafetyNet dropped — per-voice LeakDC + tanh handle DC/full-scale protection.
+// Safety.disable
+// Safety.enable
 
 s.sampleRate
 

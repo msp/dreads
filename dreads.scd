@@ -2,72 +2,26 @@
 //
 // DREADS - Mutable Instruments Plaits playground for Supercollider
 //
-// 1. Execute the SETUP block
-// 2. Execute the RUN block
+// Run each line below: put the cursor in the line and press Cmd+Enter.
 //
-// You can then manipulate and re-execute most of the dependent files
-// e.g. state.scd or sequences.scd whilst the patterns are playing
-// or load the Open Stage Control UI.
+//   1. ~app.install.()   first run only — place the SC extensions, then
+//                        recompile the class library (Cmd+Shift+L) and re-run it
+//   2. ~app.start.()     boot the server and load everything (waits internally)
+//
+// Once started, launch the Open Stage Control UI (see README) and you can
+// re-execute dependent files (e.g. lib/sequencer.scd) while patterns play.
 ////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////
-// (1) SETUP
-////////////////////////////////////////////////////////////////////////////////
-(
-~numSpeakers = 2;
-// ~numSpeakers = 6;
-~recordingMode = true;
+(Document.current.dir ++ "/lib/commands.scd").load;
+
+~app.install.()
+
+~app.start.()
+
+// Safety.disable
+// Quarks.gui
 
 
+// s.options.device.postln;   // should print nil (system default)
+// s.boot;
 
-// Increase buffer size to reduce late messages
-s.options.device = "Loopback Audio";
-s.options.blockSize = 128;
-s.options.numBuffers = 2048;
-s.options.memSize = 8192 * 16;
-s.options.numInputBusChannels = 0;
-s.options.numOutputBusChannels = if (~recordingMode) { 18 } { ~numSpeakers };
-s.options.recChannels = if (~recordingMode) { 18 } { ~numSpeakers };
-if (~recordingMode) { Safety.disable };
-s.freeAll;
-
-// Capture base path for reliable preset operations
-~basePath = Document.current.dir;
-~currentPatchTemplate = (~basePath ++ "/patches/dreads/default.scd").standardizePath;
-
-(Document.current.dir ++ "/lib/globals.scd").load;
-(Document.current.dir ++ "/lib/sequence_library.scd").load;
-(Document.current.dir ++ "/lib/utils.scd").load;
-if (File.exists((Document.current.dir ++ "/lib/user_sequence_library.scd").standardizePath)) {
-	(Document.current.dir ++ "/lib/user_sequence_library.scd").load;
-};
-(Document.current.dir ++ "/lib/patches.scd").load;
-
-s.waitForBoot {
-	// allocate this after server boot with known indicies, away from likely synthdef/hardware outputs
-	~delayBus = Bus(\audio, 100, 2, s);
-	~reverbBus = Bus(\audio, 102, 2, s);
-	~cloudsBus = Bus(\audio, 104, 2, s);
-
-	~loadSampleLibrary.();
-	(Document.current.dir ++ "/patches/dreads/default.scd").load;
-	(Document.current.dir ++ "/lib/synthdefs.scd").load;
-	(Document.current.dir ++ "/lib/osc.scd").load;
-};
-)
-
-////////////////////////////////////////////////////////////////////////////////
-// (2) RUN
-////////////////////////////////////////////////////////////////////////////////
-(
-	// Node order: lfoGroup → voiceGroup → fxGroup
-	// (LFOs write buses before voices read them; voices write FX sends before FX read them)
-	~lfoGroup   = Group.new(s);
-	~voiceGroup = Group.new(~lfoGroup, \addAfter);
-	~drones = Array.fill(~dreads.synths.size, { nil });
-	~fxGroup = Group.new(~voiceGroup, \addAfter);
-
-	(Document.current.dir ++ "/lib/lfo.scd").load;
-	(Document.current.dir ++ "/lib/fx.scd").load;
-	(Document.current.dir ++ "/lib/sequencer.scd").load;
-)
