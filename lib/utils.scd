@@ -508,6 +508,26 @@
 	if(instance.sequences[paramKey] == \hold) { 0 } { value };
 };
 
+// Share one live stream across voices locked to the same timing: the first voice to
+// fire each beat advances it, the rest mirror — so they read one sequence, not N drifting.
+// Wrap any random pattern (Prand, Pwhite, Pbrown…) you want ganged; use it via `.asStream`.
+~gang = { |pattern|
+	var stream = pattern.asStream, at = -1e9, now = 0;
+	Pfunc {
+		var b = thisThread.beats;
+		if (b != at) { at = b; now = stream.next };
+		now;
+	};
+};
+
+// Rest a duration stream wherever a parallel 0/1 mask yields non-zero (1 = rest, 0 = play).
+// Both advance in step, so mask position aligns with the voice's other sequences; the rest
+// keeps its duration (silent step) so timing holds. Any pattern works as the mask.
+~mask = { |pattern, pMask|
+    var s = pattern.asStream, m = pMask.asStream;
+    Pfunc { var v = s.next; if (m.next > 0) { Rest(v) } { v } };
+};
+
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|
 	// plaits insert reverbs
