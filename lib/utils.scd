@@ -528,6 +528,11 @@
     Pfunc { var v = s.next; if (m.next > 0) { Rest(v) } { v } };
 };
 
+// Repeating rest-mask for ~mask: `play` sounding steps then `rest` silent ones, forever
+// (1=rest 0=play). Rest block first, so at load index 0 is silent; resize the two counts
+// live to change the on/off window.
+~gate = { |play = 12, rest = 12| Pseq((1 ! rest) ++ (0 ! play), inf) };
+
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|
 	// plaits insert reverbs
