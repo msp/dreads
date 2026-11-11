@@ -528,10 +528,21 @@
     Pfunc { var v = s.next; if (m.next > 0) { Rest(v) } { v } };
 };
 
-// Repeating rest-mask for ~mask: `play` sounding steps then `rest` silent ones, forever
-// (1=rest 0=play). Rest block first, so at load index 0 is silent; resize the two counts
-// live to change the on/off window.
-~gate = { |play = 12, rest = 12| Pseq((1 ! rest) ++ (0 ! play), inf) };
+// Emit runs: values[i] held for lengths[i] steps, cycling forever. Each length may be a scalar
+// (fixed run) or a list (the run resizes one lap at a time); values can be anything, arrays
+// included (chords). Drives any per-cycle structure — gates, one-shots, chord cadences — that
+// must stay locked to one period. e.g. ~runs.([23, 1], [0, 1]) = a hit every 24 steps.
+~runs = { |lengths, values|
+    Pdup(
+        Ppatlace(lengths.collect { |l| Pseq(l.asArray, inf) }, inf),
+        Pseq(values, inf)
+    )
+};
+
+// Repeating rest-mask for ~mask (1=rest 0=play): `rest` silent steps then `play` sounding ones,
+// forever. Rest block first, so at load index 0 is silent. play/rest take scalars or lists —
+// a list makes that run breathe cycle to cycle. Resize live to change the on/off window.
+~gate = { |play = 12, rest = 12| ~runs.([rest, play], [1, 0]) };
 
 // Fade out by reducing reverb time to kill MiVerb internal feedback
 ~fadeOutReverb = { |fadeTime = 2|
