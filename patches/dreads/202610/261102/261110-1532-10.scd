@@ -12,7 +12,7 @@
 	Pselect(
 		// { 0.6.coin }, // keep each with N% chance → thinned
 		{ 1.0.coin },
-		// Pseq((1/8 ! 5) ++ [ Pxrand([1], 15) ], inf)
+		// Pseq((1/8 ! 15) ++ [ Pxrand([1/2, 1, 2], 15) ], inf)
 		Pseq((1/2 ! 15) ++ [ Pxrand([1/2, 1, 2], 5) ], inf)
     )
 );
@@ -22,15 +22,15 @@
 // PLAITS2's FX bloom fires on the last step of each ~period-step cycle. Everything that must stay
 // locked to it derives from ~period: the beat's rest-gate, the swell one-shots, and the chord/root
 // lift that leads into the swell over the last ~lead steps.
-~rest = 12;     // bloom gap: steps the beat rests right after each swell
-~period = ~rest + 12;   // cycle length in plaits steps — how often the swell gesture recurs
+~rest = [6, 12, 18];     // bloom gap: steps the beat rests right after each swell
+~period = ~rest + [12, 24, 48];   // cycle length in plaits steps — how often the swell gesture recurs
 ~lead = 2;      // steps of harmonic lift into each swell (minor7 + root up a 4th)
 // PLAITS1/2/3 all rest right after the swell (the last played step) so its bloom is exposed; only
 // the samples stay unmasked. PLAITS2 can share the mask because its FX one-shots fire on that last
 // played step, so they still sound. Applied per-voice below, NOT ganged (that would let the speed-4
 // samples advance it off-grid and drift). play fills the remainder of the period, so it stays locked.
 ~restMask = ~gate.(play: ~period - ~rest, rest: ~rest);
-~swellTrig = Pseq((0 ! (~period - 1)) ++ [1], inf);   // one-shot on the cycle's last step
+~swellTrig = ~runs.([~period - 1, 1], [0, 1]);   // one-shot on the cycle's last step
 
 // ~duration = ~gang.(
 // 	~mask.(
@@ -44,7 +44,7 @@
 		// $PLAITS1
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.48, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.2135538101196), engine: 13.0, fmMod: 0.89, harm: 0.84, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.79, morphMod: 0.88, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 28.87, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.83, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 0.0, tempo: 170.0, timbMod: 0.03, timbre: 0.96, volume: 0.98, volumeMod: 0.0),
+			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.48, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.2398259878159), engine: 13.0, fmMod: 0.89, harm: 0.84, harmMod: 0.0, legato: 8.0, lpgColour: 0.5, morph: 0.79, morphMod: 0.88, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 28.87, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.88, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.83, revTime: 0.82, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 0.0, tempo: 170.0, timbMod: 0.03, timbre: 0.96, volume: 0.98, volumeMod: 0.0),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -86,7 +86,7 @@
 		// $PLAITS2
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.47, decayMod: 0.68, delaySend: 0.51, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.2135538101196), engine: 19.0, fmMod: -0.02, harm: 0.14, harmMod: 0.0, legato: 15.0, lpgColour: 0.5, morph: 0.11, morphMod: 0.8, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 53.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.5, revDrywet: 0.5, revFreeze: 0.0, revHp: 0.84, revTime: 1.11, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 170.0, timbMod: 0.1, timbre: 0.46, volume: 0.51, volumeMod: 0.1),
+			(amDepth: 0.0, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.0, amRingMod: 0.0, amWave: 0.0, cloudsSend: 0.0, decay: 0.47, decayMod: 0.68, delaySend: 0.51, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.2398259878159), engine: 19.0, fmMod: -0.02, harm: 0.14, harmMod: 0.25, legato: 15.0, lpgColour: 0.5, morph: 0.11, morphMod: 0.8, mul: 0.5, mute: 0.0, phaseOffset: 0.0, pitch: 53.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.5, revDrywet: 0.5, revFreeze: 0.0, revHp: 0.84, revTime: 1.11, reverbSend: 0.0, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 170.0, timbMod: 0.1, timbre: 0.46, volume: 0.51, volumeMod: 0.1),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -95,12 +95,12 @@
 				duration: ~mask.(~duration, ~restMask).asStream,
 				// pitch: \hold,
 				pitch: (
-					Pseq((0 ! (~period - ~lead)) ++ (5 ! ~lead), inf)
+					~runs.([~period - ~lead - ~lead, ~lead], [0, 5])
 					// Pseq([0], inf) // root walk underneath
 					// Pseq([0, 3, 5, 7], inf) // root walk underneath
 					// Pbrown(0, 12, 6, inf).round(1) // root walk underneath
 					// Pbrown(0, 6, 6, inf).round(1) // root walk underneath
-					+ Pseq((~chords[\major7] ! (~period - ~lead)) ++ (~chords[\minor7] ! ~lead), inf)
+					+ ~runs.([~period - ~lead, ~lead], [~chords[\major7], ~chords[\minor7]])
 				).asStream,
 				delaySend: ~swellTrig.asStream,
 				distAmount: ~swellTrig.asStream,
@@ -122,7 +122,7 @@
 		// $PLAITS3
 		~plaitsFactory.(
 			// $PRESET_SCALARS_START
-			(amDepth: 0.07, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.07, amRingMod: 0.0, amWave: 2.0, cloudsSend: 0.0, decay: 0.13, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.2135538101196), engine: 19.0, fmMod: -0.02, harm: 0.7, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.19, morphMod: 0.54, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 41.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.5, revDrywet: 0.05, revFreeze: 0.0, revHp: 0.53, revTime: 0.59, reverbSend: 0.09, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 170.0, timbMod: 0.29, timbre: 0.58, volume: 0.46, volumeMod: 0.88),
+			(amDepth: 0.07, amDepthMod: 0.0, amFixedHz: 0.0, amRatio: 1.0, amRatioMod: 0.0, amRing: 0.07, amRingMod: 0.0, amWave: 2.0, cloudsSend: 0.0, decay: 0.13, decayMod: 0.0, delaySend: 0.0, distAmount: 0.0, distDrive: 0.0, droneMode: 0.0, dur: Rest(1.2398259878159), engine: 19.0, fmMod: -0.02, harm: 0.7, harmMod: 0.0, legato: 9.0, lpgColour: 0.5, morph: 0.19, morphMod: 0.54, mul: 0.5, mute: 1.0, phaseOffset: 0.0, pitch: 41.0, pitchMod: 0.0, releaseTime: 1.0, revDamp: 0.5, revDrywet: 0.05, revFreeze: 0.0, revHp: 0.53, revTime: 0.59, reverbSend: 0.09, sendToPhones: 0.0, speed: 1.0, stereoMode: 1.0, tempo: 170.0, timbMod: 0.29, timbre: 0.58, volume: 0.46, volumeMod: 0.88),
 			// $PRESET_SCALARS_END
 			// $PRESET_SEQUENCES_START
 			(
@@ -152,7 +152,7 @@
 		// $SAMPLE1
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(atk: 0.0, bankName: 'CLAPS', cloudsSend: 0.0, decay: 0.18, delaySend: 0.0, distAmount: 0.21, distDrive: 0.0, dur: Rest(1.2135538101196), legato: 0.7, mul: 1.0, mute: 0.0, panDur: 0.02, phaseOffset: 0.0, rate: 1.59, rateMod: 0.0, revDamp: 0.8, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.0, revTime: 0.5, reverbSend: 0.0, speed: 1.0, startPos: 0.0, tempo: 170.0, variant: 2.0, volume: 0.08, volumeMod: 0.48),
+			(atk: 0.0, bankName: 'CLAPS', cloudsSend: 0.0, decay: 0.18, delaySend: 0.0, distAmount: 0.21, distDrive: 0.0, dur: Rest(1.2398259878159), legato: 0.7, mul: 1.0, mute: 0.0, panDur: 0.02, phaseOffset: 0.0, rate: 1.59, rateMod: 0.0, revDamp: 0.8, revDrywet: 0.0, revFreeze: 0.0, revHp: 0.0, revTime: 0.5, reverbSend: 0.0, speed: 1.0, startPos: 0.0, tempo: 170.0, variant: 2.0, volume: 0.08, volumeMod: 0.48),
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
@@ -174,7 +174,7 @@
 		// $SAMPLE2
 		~sampleFactory.(
 			// $PRESET_SAMPLE_SCALARS_START
-			(atk: 0.0, bankName: 'CLAPS', cloudsSend: 0.0, decay: 0.16, delaySend: 0.37, distAmount: 0.0, distDrive: 0.0, dur: 0.3, legato: 0.7, mul: 1.0, mute: 1.0, panDur: 0.01, phaseOffset: 0.75, rate: 2.07, rateMod: 0.0, revDamp: 0.8, revDrywet: 0.31, revFreeze: 0.0, revHp: 0.19, revTime: 0.63, reverbSend: 0.0, speed: 1.0, startPos: 0.0, tempo: 170.0, variant: 2.0, volume: 0.48, volumeMod: 1.0),
+			(atk: 0.0, bankName: 'CLAPS', cloudsSend: 0.0, decay: 0.16, delaySend: 0.37, distAmount: 0.0, distDrive: 0.0, dur: 1.22, legato: 0.7, mul: 1.0, mute: 1.0, panDur: 0.01, phaseOffset: 0.75, rate: 2.07, rateMod: 0.0, revDamp: 0.8, revDrywet: 0.31, revFreeze: 0.0, revHp: 0.19, revTime: 0.63, reverbSend: 0.0, speed: 1.0, startPos: 0.0, tempo: 170.0, variant: 2.0, volume: 0.48, volumeMod: 1.0),
 			// $PRESET_SAMPLE_SCALARS_END
 			// $PRESET_SAMPLE_SEQUENCES_START
 			(
@@ -267,6 +267,7 @@
 	lfo8: (freq: 0.16666666666667, shape: 4, base: true), // plaits 1 morph
 	lfo9: (freq: 3.6820259094238, shape: 4, base: true), // plaits 1 decay
 	lfo11: (freq: 2.8699998855591, shape: 1), // plaits 1 volume
+	lfo12: (freq: 7.1907896995544, shape: 4), // plaits 1 harm
 	lfo13: (freq: 0.82041555643082, shape: 1), // plaits 2 timbre
 	lfo14: (freq: 1), // plaits 2 morph
 	lfo15: (freq: 1.1282004117966), // plaits 2 decay
