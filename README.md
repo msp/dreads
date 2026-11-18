@@ -8,74 +8,65 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pat
 
 ## Requirements
 
-**SuperCollider 3.13+** with these extensions:
-- [MI-UGens](https://github.com/v7b1/mi-UGens/releases) (MiPlaits, MiVerb, MiClouds)
-- [sc3-plugins](https://github.com/supercollider/sc3-plugins/releases) (CrossoverDistortion)
+- **SuperCollider 3.13+**
+- **[Open Stage Control](https://openstagecontrol.ammd.net/)** — the UI control interface
 
-**Standalone applications:**
-- [Open Stage Control](https://openstagecontrol.ammd.net/) (UI control interface)
+The required SuperCollider extensions (MI-UGens — MiPlaits, MiVerb, MiClouds; and sc3-plugins — CrossoverDistortion) are **downloaded and installed automatically** on first run by the quick start below. No manual extension install needed.
 
-## Installation
+## Quick start
 
-1. **Get the project**:
+1. **Get the project**
    - Install [GitHub Desktop](https://desktop.github.com/)
-   - On the [Dreads repository page](https://github.com/msp/dreads), click "Code" → "Open with GitHub Desktop"
-   - Choose a location to save the project
+   - On the [Dreads repository page](https://github.com/msp/dreads), click **Code → Open with GitHub Desktop**, and choose where to save it
 
    <img src="images/github-desktop.png" alt="GitHub Desktop Clone" width="200px">
 
-2. **Install SuperCollider extensions** to `/Library/Application Support/SuperCollider/Extensions/`. More info about [installing extensions here](https://doc.sccode.org/Guides/UsingExtensions.html).
-   - Download correct versions for your SC version and architecture (Intel/Apple Silicon)
-   - Extract `mi-UGens/` and `sc3-plugins/` folders to Extensions directory
+2. **Install the extensions** *(first run only)* — open `dreads.scd` in SuperCollider and run each line in turn (put the cursor in the line, press **Cmd+Enter**):
 
-3. **Allow extensions through macOS Gatekeeper** (first time / after updates):
-   ```bash
-   xattr -dr com.apple.quarantine "/Library/Application Support/SuperCollider/Extensions/mi-UGens"
-   xattr -dr com.apple.quarantine "/Library/Application Support/SuperCollider/Extensions/sc3-plugins"
+   ```supercollider
+   (Document.current.dir ++ "/lib/commands.scd").load;   // brings ~app into scope — run this first
+   ~app.install.();                                        // downloads + installs the SC extensions
    ```
 
-4. **Install [Open Stage Control](https://openstagecontrol.ammd.net/docs/getting-started/introduction/#installation)**
-   - macOS: If blocked by Gatekeeper or "damaged and can't be opened" error, run: `xattr -dr com.apple.quarantine /Applications/open-stage-control.app` ([source](https://disable-gatekeeper.github.io))
+   Then **restart SuperCollider** so it picks up the new extensions.
 
-5. Restart SuperCollider
+   > A restart clears everything, so re-run the `commands.scd` load line to bring `~app` back before starting.
 
-6. **Verify installation**:
-   - Open `diagnostics.scd` in SuperCollider
-   - Place cursor inside the code block and press **Cmd+Enter** to execute
-   - Check that all required UGens show ✓ marks
-   - If any show ✗, reinstall the missing extension
+3. **Start Dreads**
 
-## Running Dreads
+   ```supercollider
+   (Document.current.dir ++ "/lib/commands.scd").load;   // ~app was cleared by the restart
+   ~app.start.();                                          // boots the server, loads everything
+   ```
 
-1. **Open** `dreads.scd` in Supercollider
+   On later runs you only need these two lines — `~app.install` is for first run and after an extension update.
 
-2. **Execute the SETUP block** (section 1) - boots server and loads dependencies. **Wait for it to finish** (server booted, dependencies loaded) before continuing.
+4. **Verify** — open `diagnostics.scd`, place the cursor inside the block, press **Cmd+Enter**, and check every UGen shows a ✓. If any show ✗, see [manual setup](docs/manual-setup.md).
 
-3. **Execute the RUN block** (section 2) - starts effects and sequencer
+5. **Launch the UI** — start Open Stage Control and configure the launch settings (three distinct ports — all must be set):
+   - **send**: `127.0.0.1:57120` — where O-S-C sends control to SC (SC's `NetAddr.langPort`; check `diagnostics.scd`)
+   - **osc-port**: `9000` — where O-S-C **receives** state from SC (must match `~ui` in `lib/globals.scd`). **Without this, controls work but the UI never updates from Dreads.**
+   - **port**: `8080` — HTTP port the browser/iPad client connects to
+   - **load**: path to `open-stage-control/plaits.json` in your project directory
 
-4. **Launch UI**:
-   - Start Open Stage Control
-   - Configure launch settings (three distinct ports — all must be set):
-     - **send**: `127.0.0.1:57120` — where O-S-C sends control to SC (SC's `NetAddr.langPort`; check `diagnostics.scd`)
-     - **osc-port**: `9000` — where O-S-C **receives** state from SC (must match `~ui` in `lib/globals.scd`). **Without this, controls work but the UI never updates from Dreads.**
-     - **port**: `8080` — HTTP port the browser/iPad client connects to
-     - **load**: Path to `open-stage-control/plaits.json` in your project directory
-   - Or from the CLI:
-     ```
-     node app --send 127.0.0.1:57120 --osc-port 9000 --load <path>/open-stage-control/plaits.json
-     ```
-   - Click the play button (▶) to start
+   Or from the CLI:
+   ```
+   node app --send 127.0.0.1:57120 --osc-port 9000 --load <path>/open-stage-control/plaits.json
+   ```
+   Click the play button (▶) to start.
 
    <img src="images/open-stage-control-setup.png" alt="Open Stage Control Setup" width="400px">
+
+> **Something not working?** The auto-download, Gatekeeper warnings, audio device setup and all troubleshooting live in **[manual setup](docs/manual-setup.md)**.
 
 ## Usage
 
 **UI Controls:**
-1. **Load patch** - Select from dropdown to load a saved patch
-2. **Play/Stop** - Start/stop pattern playback
-3. **Snapshot** - Capture current state to a new patch
-4. **Save** - Overwrite _current_ patch with current state
-5. **Reload** - Reload patch from last saved version
+1. **Load patch** — select from dropdown to load a saved patch
+2. **Play/Stop** — start/stop pattern playback
+3. **Snapshot** — capture current state to a new patch
+4. **Save** — overwrite _current_ patch with current state
+5. **Reload** — reload patch from last saved version
 
 ## Architecture
 
@@ -84,43 +75,13 @@ Multi-instance Mutable Instruments Plaits synthesizer for Supercollider with pat
 - **Pattern-based sequencing** with per-instance duration/pitch/timbre control
 - **Patch system** with auto-save and templating
 
-## Troubleshooting
-
-**Run diagnostics first:**
-Open `diagnostics.scd` in SuperCollider and execute the block to check your system configuration. This will verify all extensions are installed correctly and show your current setup.
-
-**No sound:**
-- Check `s.meter` - are levels showing?
-- In `config.scd` (copied from `config.scd.example` on first run), check `s.options.device` matches your audio interface, `~numSpeakers` matches your setup (2 = stereo, 6 = multichannel), and `~recordingMode` (defaults off — stereo mix; on routes each voice to its own bus for capture)
-- Run `~voiceGroup.freeAll` to clear stuck synths
-
-**UI not responding:**
-- Enable `OSCFunc.trace(true)` in SC to see incoming OSC messages
-- Check Open Stage Control send port matches `NetAddr.langPort` shown in diagnostics
-- Verify OSCdefs are loaded (run the RUN block in `dreads.scd`)
-
-**Controls work but the UI doesn't update from Dreads:**
-- Open Stage Control's **osc-port** must be `9000` (matches `~ui` in `lib/globals.scd`). SC pushes state there; if it's unset/wrong, control still works but nothing reflects back.
-
-**Extensions not loading:**
-- Ensure extensions match your SC version (3.13, 3.14, etc.)
-- Check architecture (Intel vs Apple Silicon builds)
-- Restart SC after installing extensions
-- Run `diagnostics.scd` to verify installation
-
-**macOS security warnings for MI-UGens:**
-- Re-run the `xattr` commands from step 3 (required after each extension update)
-- Alternatively, go to **System Settings → Privacy & Security**, scroll down and click **"Allow Anyway"** for each blocked plugin, then restart SuperCollider
-- More info: [Tidal Cycles forum thread](https://club.tidalcycles.org/t/mutable-instruments-ugens/2730/106)
-
-<img src="images/mi-ugens-security-warning.jpeg" alt="MI-UGens Security Warning" width="200px">
-
 ## Project Structure
 
 ```
 dreads.scd              # Main entry point
 diagnostics.scd         # System diagnostics and troubleshooting
 lib/
+  commands.scd          # Install + start lifecycle (~app.install / ~app.start)
   globals.scd           # Configuration and defaults
   synthdefs.scd         # Audio engine definitions
   sequencer.scd         # Pattern sequencer
@@ -132,4 +93,5 @@ lib/
   utils.scd             # Helper functions
 patches/dreads/         # Patch library
 open-stage-control/     # UI definition
+docs/manual-setup.md    # Manual install + troubleshooting
 ```

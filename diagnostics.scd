@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 (
 var missingUGens = [];
+var projectDir;
+projectDir = if (Document.current.notNil) { Document.current.dir } { "<project root>" };
 
 "=== SuperCollider Version ===".postln;
 Main.version.postln;
@@ -82,7 +84,8 @@ if (missingUGens.size > 0) {
 	("Missing UGens: " ++ missingUGens.join(", ")).postln;
 	"".postln;
 	"ACTION REQUIRED:".postln;
-	"1. Download and install the missing extensions".postln;
+	("1. Run ~app.install.() in dreads.scd (or install manually — see "
+		++ (projectDir +/+ "docs/manual-setup.md") ++ ")").postln;
 	"2. Restart SuperCollider".postln;
 	"3. Run diagnostics.scd again to verify".postln;
 	"═══════════════════════════════════════════════════════".postln;
@@ -94,25 +97,25 @@ if (~numSpeakers.notNil) {
 	("Speakers: " ++ ~numSpeakers ++ (if (~numSpeakers > 2) { " (multichannel)" } { " (stereo)" })).postln;
 	("Recording mode: " ++ (~recordingMode ? false)).postln;
 } {
-	"~numSpeakers not set - run SETUP block first".postln;
+	"~numSpeakers not set - run ~app.start.() first".postln;
 };
 
 if (~dreads.notNil) {
 	("Plaits instances loaded: " ++ ~dreads.synths.size).postln;
 } {
-	"~dreads not loaded - run setup block first".postln;
+	"~dreads not loaded - run ~app.start.() first".postln;
 };
 
 if (~voiceGroup.notNil) {
 	"✓ Voice group exists".postln;
 } {
-	"~voiceGroup not created - run play block first".postln;
+	"~voiceGroup not created - run ~app.start.() first".postln;
 };
 
 if (~fxGroup.notNil) {
 	"✓ FX group exists".postln;
 } {
-	"~fxGroup not created - run play block first".postln;
+	"~fxGroup not created - run ~app.start.() first".postln;
 };
 
 "".postln;
