@@ -363,11 +363,6 @@ x = Pdef(\plaitsSequence,
 					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
 					buffer;  // default sample when bank missing; nil (no default) -> event rests
 				},
-				\numChannels, Pfunc { |event|
-					var bankName = ~dreads.samples[i].bankName;
-					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
-					if (buffer.notNil) { buffer.numChannels } { 1 };
-				},
 				\dur, Pfunc {
 					var durSeq = ~getSequenceValue.(~dreads.samples[i], i, \samples, \duration);
 					var divSeq = ~getSequenceValue.(~dreads.samples[i], i, \samples, \div);

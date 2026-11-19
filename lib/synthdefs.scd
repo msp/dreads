@@ -338,7 +338,7 @@ SynthDef(\globalClouds, {
 }).add;
 
 SynthDef(\panningSamplePlayer, {
-	|out=0, bufnum=0, numChannels=1, mul=1, rate=1, startPos=0, panDur=5,
+	|out=0, bufnum=0, mul=1, rate=1, startPos=0, panDur=5,
 	atk=0.01, decay=0.1, gate=1, volume=0.7,
 	cloudsSend=0.0, delaySend=0.0, reverbSend=0.0,
 	distDrive=0.0, distAmount=0.0,
@@ -346,7 +346,7 @@ SynthDef(\panningSamplePlayer, {
 	rateLFO=0, rateMod=0.0,
 	volumeLFO=0, volumeMod=0.0|
 
-	var sig, env, pan, monoPlay, cleanSig, distSig;
+	var sig, env, pan, stereoPlay, cleanSig, distSig;
 	var revLag = 0.1;   // de-click smoothing for swept/sequenced reverb params
 	var finalRate = rate + (rateLFO * Lag.kr(rateMod, ~modGlide));
 	var finalVolume = (volume + (volumeLFO * Lag.kr(volumeMod, ~modGlide))).clip(0, 2);
@@ -355,17 +355,18 @@ SynthDef(\panningSamplePlayer, {
 	pan = Line.kr(-1, 1, panDur);
 	env = EnvGen.kr(Env.perc(atk, decay), gate, doneAction: Done.freeSelf);
 
-	// Always read as mono (works for both mono and stereo buffers)
-	monoPlay = PlayBuf.ar(
-		numChannels: 1,
+	// Buffers are normalised to 2ch at load (~loadSampleLibrary): mono duplicated L=R, stereo
+	// native. PlayBuf(2) matches either, so no channel-mismatch warnings.
+	stereoPlay = PlayBuf.ar(
+		numChannels: 2,
 		bufnum: bufnum,
 		rate: finalRate * BufRateScale.kr(bufnum),
 		startPos: startPos,
 		doneAction: 0
 	);
 
-	// Pan and convert to stereo
-	sig = Pan2.ar(monoPlay, pan);
+	// Balance2 is the stereo Pan2: sweeps/places the stereo signal across L-R (the panDur ring move)
+	sig = Balance2.ar(stereoPlay[0], stereoPlay[1], pan);
 
 	sig = sig * mul;
 
@@ -396,25 +397,6 @@ SynthDef(\panningSamplePlayer, {
 	Out.ar(~reverbBus, sig * reverbSend);
 
 	Out.ar(out, LeakDC.ar(sig.tanh));
-}).add;
-
-SynthDef(\samplePlayer, {
-    |out=0, bufnum=0, amp=1, rate=1, startPos=0, atk=0.01, rel=0.1, gate=1|
-
-    var sig, env;
-
-    env = EnvGen.kr(Env.asr(atk, 1, rel), gate, doneAction: 2);
-
-    sig = PlayBuf.ar(
-        numChannels: 1,
-        bufnum: bufnum,
-        rate: rate * BufRateScale.kr(bufnum),
-		startPos: startPos,
-        doneAction: 0
-    );
-
-    sig = sig * env * amp;
-    Out.ar(out, sig);
 }).add;
 
 )

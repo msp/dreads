@@ -607,19 +607,24 @@
 				var buf;
 
 				if (isValid) {
-					buf = Buffer.read(s, file.fullPath, action: { |buffer|
-						if (buffer.notNil) {
-							var meta = (
-								path: file.fullPath,
-								filename: file.fileName,
-								numChannels: buffer.numChannels,
-								numFrames: buffer.numFrames,
-								sampleRate: buffer.sampleRate,
-								duration: buffer.numFrames / buffer.sampleRate
-							);
-							metadata.add(meta);
-						};
-					});
+					// Normalise to 2ch via a cheap header peek: mono -> duplicate L=R, stereo -> native.
+					// The sample player reads PlayBuf(2), so this ends the channel-mismatch warnings.
+					var nc = SoundFile.use(file.fullPath, { |sf| sf.numChannels });
+					buf = Buffer.readChannel(s, file.fullPath,
+						channels: (nc == 1).if({ [0, 0] }, { [0, 1] }),
+						action: { |buffer|
+							if (buffer.notNil) {
+								var meta = (
+									path: file.fullPath,
+									filename: file.fileName,
+									numChannels: buffer.numChannels,
+									numFrames: buffer.numFrames,
+									sampleRate: buffer.sampleRate,
+									duration: buffer.numFrames / buffer.sampleRate
+								);
+								metadata.add(meta);
+							};
+						});
 
 					buffers.add(buf);
 					paths.add(file.fullPath);
@@ -845,7 +850,6 @@ Event.addEventType(\oneShotSample, {
 				[
 					\out, ~out,
 					\bufnum, ~bufnum,
-					\numChannels, ~numChannels,
 					\mul, ~mul,
 					\rate, ~rate,
 					\startPos, ~startPos,
