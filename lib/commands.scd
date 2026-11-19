@@ -55,15 +55,19 @@
 
 // --- internal steps -------------------------------------------------------
 
-// Copy config.scd.example -> config.scd (gitignored) on first run; never clobbers.
-~app.ensureConfig = {
-	var path, example;
-	path    = ~app.root ++ "/config.scd";
-	example = ~app.root ++ "/config.scd.example";
+// Seed a gitignored user file from its tracked .example on first run; never clobbers.
+~app.ensureFromExample = { |relPath|
+	var path = ~app.root +/+ relPath;
+	var example = path ++ ".example";
 	if (File.exists(path).not and: { File.exists(example) }) {
 		File.copy(example, path);
-		~applog.("created config.scd from example — edit it to override defaults");
+		~applog.("created " ++ relPath ++ " from example — edit to customise");
 	};
+};
+
+~app.ensureConfig = {
+	~app[\ensureFromExample].value("config.scd");
+	~app[\ensureFromExample].value("lib/user_sequence_library.scd");
 };
 
 ~app.loadConfig = {
@@ -181,7 +185,7 @@
 	results = ~app.components.collect { |c| c.name -> ~app[\installComponent].value(c) };
 	results.do { |a| ~applog.("install: " ++ a.key ++ " -> " ++ a.value) };
 	if (results.any { |a| a.value == \installed }) {
-		~applog.("extensions placed — recompile the class library (Cmd+Shift+L), then ~app.start.()", \warn);
+		~applog.("extensions installed in " ++ extDir ++ " — restart SuperCollider, then ~app.start.()", \warn);
 	};
 	( ok: results.every { |a| [\present, \installed, \placed].includes(a.value) }, components: results )
 };
