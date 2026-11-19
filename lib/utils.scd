@@ -483,7 +483,7 @@
 				stream = pattern.pattern.asStream;
 				~sequenceStreamCache[cacheKey] = (symbol: value, stream: stream);
 			} {
-				("WARNING: Sequence '" ++ value ++ "' not found in library").warn;
+				("Sequence '" ++ value ++ "' not found in library").warn;
 				^0.5;  // Return neutral value
 			};
 		};
@@ -648,7 +648,7 @@
 	("Loading sample library from: " ++ basePath).postln;
 
 	if (PathName(basePath).isFolder.not) {
-		("WARNING: Sample library folder not found: " ++ basePath).warn;
+		("Sample library folder not found: " ++ basePath).warn;
 		("Please create the folder and add sample banks").postln;
 	} {
 		// Recursively load banks from samples/ folder (subfolders become bankName-subName)
@@ -723,12 +723,12 @@
 	bank = ~sampleLibrary.banks[bankName];
 
 	if (bank.isNil) {
-		("WARNING: Sample bank not found: " ++ bankName).warn;
-		^nil;
+		("Sample bank not found: " ++ bankName ++ " — playing default sample").warn;
+		bank = ~sampleLibrary.banks[\default];   // audible placeholder beats silence
 	};
 
-	// Use wrapAt for safe indexing (SuperDirt style)
-	bank.wrapAt(variant);
+	// Use wrapAt for safe indexing (SuperDirt style); nil-safe if no default bank
+	bank !? { bank.wrapAt(variant) };
 };
 
 // Lookup bank and variant by file path
@@ -746,7 +746,7 @@
 	};
 
 	if (result.isNil) {
-		("WARNING: Sample not found in library: " ++ filepath).warn;
+		("Sample not found in library: " ++ filepath).warn;
 	};
 
 	result;
@@ -791,7 +791,7 @@
 
 // Create a drone, releasing any existing one (→ Env.asr crossfade on an engine change).
 ~startDrone = { |i|
-	if (~drones.notNil && ~drones[i].notNil) {
+	if (~drones.notNil and: { ~drones[i].notNil }) {
 		~drones[i].release;
 		~drones[i] = nil;
 	};
@@ -807,7 +807,7 @@
 // Reapply params to a running drone in place — no re-trigger, so a same-engine variation
 // switches seamlessly. Falls back to ~startDrone if none is running.
 ~updateDrone = { |i|
-	if (~drones.notNil && ~drones[i].notNil) {
+	if (~drones.notNil and: { ~drones[i].notNil }) {
 		~drones[i].set(*~droneArgs.(i));
 		~mapDroneLFOBuses.(i);
 		["Drone updated (reused) for plaits", i].postln;
@@ -818,7 +818,7 @@
 
 // Stop a persistent drone synth for a plaits instance
 ~stopDrone = { |i|
-	if (~drones.notNil && ~drones[i].notNil) {
+	if (~drones.notNil and: { ~drones[i].notNil }) {
 		~drones[i].release;
 		~drones[i] = nil;
 		["Drone stopped for plaits", i].postln;

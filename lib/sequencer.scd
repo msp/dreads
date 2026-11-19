@@ -351,7 +351,7 @@ x = Pdef(\plaitsSequence,
 
 					if (bankName.notNil) {
 						metadata = ~sampleLibrary.metadata[bankName];
-						if (metadata.notNil && metadata[variant].notNil) {
+						if (metadata.notNil and: { metadata[variant].notNil }) {
 							duration = metadata[variant].duration;
 						};
 					};
@@ -361,7 +361,7 @@ x = Pdef(\plaitsSequence,
 				\bufnum, Pfunc { |event|
 					var bankName = ~dreads.samples[i].bankName;
 					var buffer = ~getSampleBuffer.(bankName, event[\sampleVariant]);
-					buffer ?? 0;
+					buffer;  // default sample when bank missing; nil (no default) -> event rests
 				},
 				\numChannels, Pfunc { |event|
 					var bankName = ~dreads.samples[i].bankName;
@@ -407,7 +407,8 @@ x = Pdef(\plaitsSequence,
 						~dreads.samples[i].startPos
 					);
 					var seconds = normalized * duration;  // Scale to actual sample length
-					var frames = ~secondsToFrames.(seconds, buffer);
+					var frames = 0;
+					if (buffer.notNil) { frames = ~secondsToFrames.(seconds, buffer) };  // skip when bank missing
 					// if (i == 0) { ["Sample startPos - norm:", normalized, "seconds:", seconds, "frames:", frames].postln; };
 					frames;
 				},

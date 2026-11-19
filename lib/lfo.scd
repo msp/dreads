@@ -110,7 +110,7 @@ if (~lfo.notNil) {
 			};
 			synth.set(\freq, ~resolveLFOFreq.(src), \shape, src[\shape], \width, src[\width]);
 		} {
-			("WARNING: LFO source " ++ key ++ " not found").warn;
+			("LFO source " ++ key ++ " not found").warn;
 		};
 	};
 
@@ -126,13 +126,13 @@ if (~lfo.notNil) {
 				hydratedMap[param] = ~lfo.sources[key];
 			};
 			// Map LFO bus to drone synth if running
-			if (~drones.notNil && ~drones[i].notNil) {
+			if (~drones.notNil and: { ~drones[i].notNil }) {
 				~drones[i].map((param ++ "LFO").asSymbol, hydratedMap[param].bus);
 			};
 		};
 		inst.lfo = hydratedMap;
 		// Push mod depth scalars to running drone
-		if (~drones.notNil && ~drones[i].notNil) {
+		if (~drones.notNil and: { ~drones[i].notNil }) {
 			~drones[i].set(
 				\timbMod, inst[\timbMod], \morphMod, inst[\morphMod],
 				\decayMod, inst[\decayMod], \pitchMod, inst[\pitchMod],
@@ -182,7 +182,7 @@ if (~lfo.notNil) {
 		lfoParamOrEvent.keysValuesDo { |param, v|
 			if (param == \mod) {
 				inst.put(modKey, v);
-				if (instType == \plaits && ~drones.notNil && ~drones[instIndex].notNil) {
+				if (instType == \plaits and: { ~drones.notNil } and: { ~drones[instIndex].notNil }) {
 					~drones[instIndex].set(modKey, v);
 				};
 			} {
@@ -192,7 +192,7 @@ if (~lfo.notNil) {
 	} {
 		if (lfoParamOrEvent == \mod) {
 			inst.put(modKey, val);
-			if (instType == \plaits && ~drones.notNil && ~drones[instIndex].notNil) {
+			if (instType == \plaits and: { ~drones.notNil } and: { ~drones[instIndex].notNil }) {
 				~drones[instIndex].set(modKey, val);
 			};
 		} {

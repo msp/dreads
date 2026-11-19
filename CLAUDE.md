@@ -68,6 +68,7 @@ When writing SC code, follow these rules strictly to avoid silent failures and i
 - `while { testFunc } { bodyFunc }` — test is a **function** that gets re-evaluated each iteration
 - `switch(value) { test1 } { body1 } { test2 } { body2 }` — alternating test/body pairs
 - Never use `if` inline to initialise a `var` on the same line
+- **`&&` and `||` do NOT short-circuit** — both operands are always evaluated. `x.notNil && x[0].notNil` still runs `x[0]` when `x` is nil → `nil.at` crash. Use the function-arg forms `and: { }` / `or: { }` when the right side depends on the left: `x.notNil and: { x[0].notNil }`. (Bit us across sample-bank lookups in `sequencer.scd`/`osc.scd`/`globals.scd` — a missing bank returns nil and the guard dereferenced it.)
 
 ### Arrays
 - `Array.new(n)` creates capacity but size 0 — prefer `Array.fill(n, { |i| ... })`

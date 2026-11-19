@@ -103,7 +103,7 @@
 
 ~readPatchTemplate = { |basePath|
 	var stateFile = (basePath +/+ "patches/dreads/default.scd").standardizePath;
-	var sourceFile = if (~currentPatchTemplate.notNil && File.exists(~currentPatchTemplate.standardizePath)) {
+	var sourceFile = if (~currentPatchTemplate.notNil and: { File.exists(~currentPatchTemplate.standardizePath) }) {
 		~currentPatchTemplate.standardizePath;
 	} {
 		stateFile;
@@ -305,7 +305,7 @@
 	} { ~dreads.samples[instanceIdx] };
 
 	if (runtimeInstance.isNil) {
-		("WARNING: Instance " ++ instanceType ++ "[" ++ instanceIdx ++ "] not found in runtime").warn;
+		("Instance " ++ instanceType ++ "[" ++ instanceIdx ++ "] not found in runtime").warn;
 		^lines;  // Return lines unchanged
 	};
 
@@ -942,7 +942,7 @@
 		if (wasPlaying) {
 			if (instance.droneMode == 1) {
 				// Same engine still running → reuse (seamless); else (re)create (crossfade).
-				if ((~drones.notNil && ~drones[i].notNil) and: { oldEngines[i] == instance.engine }) {
+				if ((~drones.notNil and: { ~drones[i].notNil }) and: { oldEngines[i] == instance.engine }) {
 					~updateDrone.(i);
 				} {
 					~startDrone.(i);

@@ -97,7 +97,7 @@ OSCdef.new(
 								~dreads.synths[instanceIndex][paramKey] = value;
 								~pushMuteToVis.(instanceIndex);
 								// Forward mute to drone synth
-								if (~drones.notNil && ~drones[instanceIndex].notNil) {
+								if (~drones.notNil and: { ~drones[instanceIndex].notNil }) {
 									if (value == 1) {
 										~drones[instanceIndex].set(\mul, 0);
 									} {
@@ -109,7 +109,7 @@ OSCdef.new(
 								var cache, modVal;
 								~dreads.synths[instanceIndex][paramKey] = value;
 								// Forward to drone synth if active
-								if (~drones.notNil && ~drones[instanceIndex].notNil) {
+								if (~drones.notNil and: { ~drones[instanceIndex].notNil }) {
 									~drones[instanceIndex].set(paramKey, value);
 								};
 								// Drone-mode UI responsiveness stop-gap: for FX sends, echo the
@@ -301,7 +301,7 @@ OSCdef.new(
 
 					// Log sample metadata
 					metadata = ~sampleLibrary.metadata[lookup.bankName];
-					if (metadata.notNil && metadata[lookup.variant].notNil) {
+					if (metadata.notNil and: { metadata[lookup.variant].notNil }) {
 						duration = metadata[lookup.variant].duration;
 						["  Sample duration:", duration, "seconds"].postln;
 					};
@@ -653,10 +653,10 @@ OSCdef.new(
 					// ["Sending resolved sample path:", path, filepath].postln;
 					ui.sendMsg(path, filepath);
 				} {
-					["WARNING: Variant", instance.variant.asInteger, "not found in bank", instance.bankName].postln;
+					("Variant " ++ instance.variant.asInteger ++ " not found in bank " ++ instance.bankName).warn;
 				};
 			} {
-				["WARNING: Bank", instance.bankName, "not found in sample library"].postln;
+				("Bank " ++ instance.bankName ++ " not found in sample library").warn;
 			};
 		};
 	};

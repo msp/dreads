@@ -38,7 +38,7 @@
 			// Update UI with new file path
 			instanceNum = instanceIndex + 1;
 			bankPaths = ~sampleLibrary.paths[bankName];
-			if (bankPaths.notNil && bankPaths[newVariant].notNil) {
+			if (bankPaths.notNil and: { bankPaths[newVariant].notNil }) {
 				filepath = bankPaths[newVariant];
 				~ui.().sendMsg("/samples/" ++ instanceNum ++ "/samplePath", filepath);
 			};
