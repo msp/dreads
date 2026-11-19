@@ -21,6 +21,8 @@ The required SuperCollider extensions (MI-UGens — MiPlaits, MiVerb, MiClouds; 
 
    <img src="images/github-desktop.png" alt="GitHub Desktop Clone" width="200px">
 
+   *Didn't open the app? [Other ways to get the project](docs/manual-setup.md#getting-the-project).*
+
 2. **Install the extensions** *(first run only)* — open `dreads.scd` in SuperCollider and run each line in turn (put the cursor in the line, press **Cmd+Enter**):
 
    ```supercollider

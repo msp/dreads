@@ -5,6 +5,14 @@
 > download fails (a firewall blocks it, or the pinned release URLs have moved), or when something
 > isn't working and you need to dig in.
 
+## Getting the project
+
+If **Code → Open with GitHub Desktop** on the repository page doesn't launch the app (some browsers just load the GitHub Desktop download page instead), clone it manually — any of:
+
+- **GitHub Desktop**: *File → Clone Repository → URL*, paste `https://github.com/msp/dreads.git`, choose a location
+- **Command line**: `git clone https://github.com/msp/dreads.git`
+- **No git**: on the repository page, *Code → Download ZIP*, then unzip
+
 ## Manual extension install
 
 If `~app.install.()` can't download the extensions, install them by hand.
