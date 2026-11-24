@@ -262,12 +262,12 @@ Event.addEventType(\oneShotSample, {
 });
 
 // Load sub-modules
-(Document.current.dir ++ "/lib/patterns.scd").load;
-(Document.current.dir ++ "/lib/drone.scd").load;
-(Document.current.dir ++ "/lib/samples.scd").load;
-(Document.current.dir ++ "/lib/randomise.scd").load;
-(Document.current.dir ++ "/lib/fm.scd").load;
+(Document.current.dir ++ "/lib/utils/patterns.scd").load;
+(Document.current.dir ++ "/lib/utils/drone.scd").load;
+(Document.current.dir ++ "/lib/utils/samples.scd").load;
+(Document.current.dir ++ "/lib/utils/randomise.scd").load;
+(Document.current.dir ++ "/lib/utils/fm.scd").load;
 // (Document.current.dir ++ "/tempo.scd").load;
-(Document.current.dir ++ "/lib/tempo.scd").load;
+(Document.current.dir ++ "/lib/utils/tempo.scd").load;
 
 )
