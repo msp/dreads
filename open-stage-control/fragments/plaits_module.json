@@ -31,7 +31,7 @@
   "justify": "start",
   "gridTemplate": "",
   "contain": true,
-  "scroll": true,
+  "scroll": false,
   "innerPadding": true,
   "tabsPosition": "top",
   "traversing": false,
