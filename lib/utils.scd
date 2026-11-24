@@ -18,27 +18,6 @@
 	~sendToPhones = value;
 };
 
-~sinePattern = { |dur=8.0, lo=0.05, hi=0.5, repeats=inf|
-	Pn(
-		Pif(Ptime(inf) <= dur, Env.sine(dur).range(lo, hi)),
-		repeats
-	)
-};
-
-// Smooth 0..1 sine mapped to [lo, hi], driven by beats
-~sineAtBeat = { |beats, cycleBeats = 16.0, lo = 0.05, hi = 0.5|
-	var phase = (beats.asFloat / cycleBeats).frac;      // 0..1
-	var u     = (phase * 2pi).cos.neg * 0.5 + 0.5;      // 0.5 - 0.5*cos(...), in 0..1
-	lo + u * (hi - lo)
-};
-
-~sineAtBeatWithPhase = { |beats, cycleBeats = 16.0, lo = 0.05, hi = 0.5, phaseOffset = 0|
-	var phase = ((beats.asFloat / cycleBeats) + phaseOffset).frac;
-	var u = (phase * 2pi).cos.neg * 0.5 + 0.5;
-	u.linlin(0, 1, lo, hi);
-};
-
-
 
 // Orchestrator: apply LFO state then push UI — replaces ~pushStateToUI.() in patch footers
 // Note: during initial SETUP boot, ~applyLFOState is nil (defined later in lfo.scd during RUN).
@@ -115,6 +94,7 @@ Event.addEventType(\oneShotSample, {
 // Load sub-modules
 (Document.current.dir ++ "/lib/utils/sequence.scd").load;
 (Document.current.dir ++ "/lib/utils/patterns.scd").load;
+(Document.current.dir ++ "/lib/utils/sine.scd").load;
 (Document.current.dir ++ "/lib/utils/drone.scd").load;
 (Document.current.dir ++ "/lib/utils/samples.scd").load;
 (Document.current.dir ++ "/lib/utils/randomise.scd").load;
